@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useMemo, useState } from 'react';
+import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -17,12 +17,14 @@ import {
   Star,
   Ticket,
   UserRound,
+  Volume2,
+  VolumeX,
   X,
   Zap,
 } from 'lucide-react';
 
-const logoPath = '/media/fondus-logo.jpeg';
-const videoPath = '/media/fondus-bg.mp4';
+const logoPath = `${import.meta.env.BASE_URL}media/fondus-logo.jpeg`;
+const videoPath = `${import.meta.env.BASE_URL}media/fondus-bg.mp4`;
 
 type Goal = 'Moto 0KM' | 'Auto 0KM' | '$20.000.000 en efectivo';
 
@@ -47,27 +49,76 @@ function Logo({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function BackgroundVideo() {
+function BackgroundVideo({
+  videoRef,
+  isMuted,
+}: {
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  isMuted: boolean;
+}) {
   return (
     <div className="fixed inset-0 z-0 overflow-hidden bg-[#0a1f38]">
-      <video className="h-full w-full object-cover opacity-65" autoPlay loop muted playsInline src={videoPath} />
+      <video
+        ref={videoRef}
+        className="h-full w-full object-cover opacity-65"
+        autoPlay
+        loop
+        muted={isMuted}
+        playsInline
+        src={videoPath}
+      />
       <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(5,19,38,.94)_0%,rgba(8,32,58,.72)_48%,rgba(8,27,48,.9)_100%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(195,148,63,.25),transparent_30%)]" />
     </div>
   );
 }
 
-function StepHeader({ step, onBack }: { step: number; onBack: () => void }) {
+function StepHeader({
+  step,
+  onBack,
+  isMuted,
+  onToggleMute,
+}: {
+  step: number;
+  onBack: () => void;
+  isMuted?: boolean;
+  onToggleMute?: () => void;
+}) {
   return (
     <header className="relative z-20 flex items-center justify-between px-5 py-5 sm:px-9 sm:py-7">
-      <button type="button" onClick={onBack} disabled={step === 1} className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-[.16em] transition ${step === 1 ? 'pointer-events-none opacity-0' : 'text-[#d8e1eb] hover:text-[#dfb45d]'}`} data-testid="button-back-step">
+      <button
+        type="button"
+        onClick={onBack}
+        disabled={step === 1}
+        className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-[.16em] transition ${step === 1 ? 'pointer-events-none opacity-0' : 'text-[#d8e1eb] hover:text-[#dfb45d]'}`}
+        data-testid="button-back-step"
+      >
         <ArrowLeft size={15} /> Volver
       </button>
       <Logo compact />
-      <div className="text-right">
-        <p className="font-mono-custom text-[9px] uppercase tracking-[.18em] text-[#bdcbd8]">Simulación privada</p>
-        <div className="mt-2 flex items-center justify-end gap-1.5">
-          {[1, 2, 3, 4, 5].map((item) => <span key={item} className={`h-1 w-5 rounded-full transition-all duration-500 sm:w-7 ${item <= step ? 'bg-[#dfb45d]' : 'bg-white/20'}`} />)}
+      <div className="flex items-center gap-3">
+        {onToggleMute && (
+          <button
+            type="button"
+            onClick={onToggleMute}
+            className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-medium text-[#e2ecf5] backdrop-blur-md transition hover:border-[#dfb45d] hover:text-[#dfb45d]"
+            data-testid="button-toggle-sound"
+            title={isMuted ? 'Activar sonido' : 'Silenciar'}
+          >
+            {isMuted ? <VolumeX size={14} className="text-[#dfb45d]" /> : <Volume2 size={14} className="text-[#dfb45d]" />}
+            <span className="hidden md:inline">{isMuted ? 'Activar audio' : 'Silenciar'}</span>
+          </button>
+        )}
+        <div className="text-right">
+          <p className="font-mono-custom text-[9px] uppercase tracking-[.18em] text-[#bdcbd8]">Simulación privada</p>
+          <div className="mt-2 flex items-center justify-end gap-1.5">
+            {[1, 2, 3, 4, 5].map((item) => (
+              <span
+                key={item}
+                className={`h-1 w-5 rounded-full transition-all duration-500 sm:w-7 ${item <= step ? 'bg-[#dfb45d]' : 'bg-white/20'}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </header>
@@ -213,7 +264,13 @@ function getDrawInfo(now: Date) {
   return { next, afterDraw, days: Math.floor(diff / 86400000), hours: Math.floor((diff % 86400000) / 3600000), minutes: Math.floor((diff % 3600000) / 60000) };
 }
 
-function StepFive() {
+function StepFive({
+  onPlayTestimonial,
+  onPauseTestimonial,
+}: {
+  onPlayTestimonial?: () => void;
+  onPauseTestimonial?: () => void;
+}) {
   const [now, setNow] = useState(() => new Date());
   const [submitted, setSubmitted] = useState(false);
   useEffect(() => { const interval = window.setInterval(() => setNow(new Date()), 60000); return () => window.clearInterval(interval); }, []);
@@ -221,12 +278,31 @@ function StepFive() {
   const [form, setForm] = useState({ name: '', phone: '', debit: 'Tarjeta de débito' });
   const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); if (form.name && form.phone) setSubmitted(true); };
   return (
-    <motion.main {...fadeUp} className="relative z-10 min-h-screen bg-[#0b203a] text-[#f8f6f0]">
+    <motion.main {...fadeUp} className="relative z-10 min-h-screen text-[#f8f6f0]">
       <div className="mx-auto max-w-6xl px-5 pb-12 sm:px-9 lg:px-12">
         <div className="flex items-center justify-between border-b border-white/10 py-5"><Logo /><span className="hidden items-center gap-2 text-xs text-[#aec0ce] sm:flex"><ShieldCheck size={15} className="text-[#dfb45d]" /> Plataforma segura y transparente</span><button type="button" className="rounded-full border border-white/15 p-2 text-[#c6d2dc] sm:hidden" data-testid="button-open-menu"><Menu size={18} /></button></div>
         <section className="grid gap-8 py-12 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:py-20">
           <div><p className="font-mono-custom text-[10px] uppercase tracking-[.24em] text-[#dfb45d]">Tu plan toma forma</p><h1 className="mt-5 max-w-xl font-display text-[clamp(2.65rem,6vw,5.6rem)] font-800 leading-[.95] tracking-[-.065em]">Ahora sí, <span className="text-[#dfb45d]">hacelo tangible.</span></h1><p className="mt-6 max-w-lg text-base leading-relaxed text-[#bdcbd8]">Una cuota accesible puede convertirse en una oportunidad real de adjudicación. Conocé cómo funciona y elegí tu próximo paso.</p><div className="mt-7 inline-flex items-center gap-2 rounded-full border border-[#dfb45d]/40 bg-[#dfb45d]/10 px-4 py-2 text-xs text-[#f0ca78]"><Star size={14} fill="currentColor" /> Google Rating 4.9 Estrellas</div></div>
-          <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-[#142f4d] shadow-[0_25px_70px_rgba(0,0,0,.24)]"><video controls playsInline poster={logoPath} className="aspect-video w-full object-cover opacity-90" src={videoPath} /><div className="flex items-center gap-3 px-5 py-4"><div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#dfb45d] text-[#102844]"><Play size={14} fill="currentColor" /></div><div><p className="text-sm font-bold">Historias que ya avanzaron</p><p className="text-xs text-[#9fb1c0]">Conocé la experiencia de nuestros adjudicados</p></div></div></div>
+          <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-[#142f4d]/90 shadow-[0_25px_70px_rgba(0,0,0,.24)] backdrop-blur-sm">
+            <div className="aspect-video w-full overflow-hidden">
+              <iframe
+                className="h-full w-full border-0"
+                src="https://www.youtube.com/embed/AdyrPXND35c?rel=0&modestbranding=1"
+                title="Historias que ya avanzaron - Fondus"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+            <div className="flex items-center gap-3 px-5 py-4">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#dfb45d] text-[#102844]">
+                <Play size={14} fill="currentColor" />
+              </div>
+              <div>
+                <p className="text-sm font-bold">Historias que ya avanzaron</p>
+                <p className="text-xs text-[#9fb1c0]">Conocé la experiencia de nuestros adjudicados</p>
+              </div>
+            </div>
+          </div>
         </section>
         <section className="grid gap-4 border-y border-white/10 py-8 sm:grid-cols-3 sm:gap-6 sm:py-10"><div className="sm:col-span-2"><p className="font-mono-custom text-[10px] uppercase tracking-[.2em] text-[#dfb45d]">Próximo sorteo</p><h2 className="mt-2 font-display text-2xl font-800">{draw.afterDraw ? 'El próximo sorteo ya está en camino' : 'Tu oportunidad tiene fecha'}</h2><p className="mt-2 text-sm text-[#aebdca]">{draw.afterDraw ? 'Participá durante este mes para entrar en la próxima fecha.' : 'El último sábado de cada mes, tu aporte puede acercarte a la adjudicación.'}</p></div><div className="flex items-end gap-2 sm:justify-end"><div><span className="font-mono-custom text-3xl font-bold text-[#f3cf82]">{String(draw.days).padStart(2, '0')}</span><span className="ml-1 text-[9px] uppercase text-[#91a6b8]">días</span></div><span className="pb-2 text-[#dfb45d]">:</span><div><span className="font-mono-custom text-3xl font-bold text-[#f3cf82]">{String(draw.hours).padStart(2, '0')}</span><span className="ml-1 text-[9px] uppercase text-[#91a6b8]">hs</span></div><span className="pb-2 text-[#dfb45d]">:</span><div><span className="font-mono-custom text-3xl font-bold text-[#f3cf82]">{String(draw.minutes).padStart(2, '0')}</span><span className="ml-1 text-[9px] uppercase text-[#91a6b8]">min</span></div></div></section>
         <section className="grid gap-10 py-12 lg:grid-cols-[.82fr_1.18fr] lg:py-16"><div><div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#dfb45d] text-[#102844]"><Ticket size={21} /></div><h2 className="font-display text-3xl font-800 tracking-[-.04em]">Demos el siguiente paso.</h2><p className="mt-4 max-w-sm text-sm leading-relaxed text-[#aebdca]">Dejanos tus datos y un asesor te contacta para mostrarte el plan exacto para tu objetivo.</p><div className="mt-7 space-y-3 text-sm text-[#c5d2dc]"><p className="flex items-center gap-3"><Check size={16} className="text-[#dfb45d]" /> Aportes claros y previsibles</p><p className="flex items-center gap-3"><Check size={16} className="text-[#dfb45d]" /> Sorteos y licitaciones transparentes</p><p className="flex items-center gap-3"><Check size={16} className="text-[#dfb45d]" /> Acompañamiento durante todo el camino</p></div></div>
@@ -243,6 +319,67 @@ function App() {
   const [goal, setGoal] = useState<Goal | null>(null);
   const [contribution, setContribution] = useState('');
   const [calculating, setCalculating] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = false;
+    const playPromise = video.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsMuted(false);
+        })
+        .catch(() => {
+          // Si el navegador restringe el autoplay con sonido, se silencia para continuar la reproducción
+          video.muted = true;
+          setIsMuted(true);
+          video.play().catch(() => {});
+        });
+    }
+
+    // Al primer clic o interacción del usuario, activar el audio automáticamente
+    const handleFirstInteraction = () => {
+      if (videoRef.current && videoRef.current.muted) {
+        videoRef.current.muted = false;
+        setIsMuted(false);
+        videoRef.current.play().catch(() => {});
+      }
+      cleanup();
+    };
+
+    const cleanup = () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('touchstart', handleFirstInteraction);
+    window.addEventListener('keydown', handleFirstInteraction);
+
+    return () => {
+      cleanup();
+    };
+  }, []);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      const nextMuted = !videoRef.current.muted;
+      videoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
+      if (!nextMuted) {
+        videoRef.current.play().catch(() => {});
+      }
+    } else {
+      setIsMuted((prev) => !prev);
+    }
+  };
+
   const chooseGoal = (selected: Goal) => {
     setGoal(selected);
     setCalculating(true);
@@ -251,17 +388,39 @@ function App() {
   const answer = (amount: string) => { setContribution(amount); window.setTimeout(() => setStep(4), 800); };
   const back = () => { if (step > 1 && !calculating) setStep(step - 1); };
   return (
-    <div className={`grain min-h-[100dvh] overflow-hidden ${step <= 2 ? 'bg-[#0a1f38]' : 'bg-[#0b203a]'}`}>
-      {step <= 2 && <BackgroundVideo />}
-      {step < 5 && <StepHeader step={step} onBack={back} />}
+    <div className="grain min-h-[100dvh] overflow-hidden bg-[#0a1f38]">
+      <BackgroundVideo videoRef={videoRef} isMuted={isMuted} />
+      {step < 5 && <StepHeader step={step} onBack={back} isMuted={isMuted} onToggleMute={toggleMute} />}
       <AnimatePresence mode="wait">
         {calculating ? <motion.div key="calculating" {...fadeUp} className="relative z-10 flex min-h-[calc(100dvh-93px)] flex-col items-center justify-center px-6 text-center"><div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#dfb45d]/35"><span className="absolute inset-1 rounded-full border border-dashed border-[#dfb45d] animate-spin" /><Zap className="text-[#dfb45d]" size={27} /></div><h2 className="mt-8 font-display text-2xl font-800 text-[#f8f6f0]">Calculando posibilidades...</h2><p className="mt-3 text-sm text-[#b9c9d6]">Buscando una cuota que pueda acompañar tu meta.</p></motion.div> :
           step === 1 ? <StepOne key="step1" onStart={() => setStep(2)} /> :
             step === 2 ? <StepTwo key="step2" onChoose={chooseGoal} goal={goal} /> :
               step === 3 ? <StepThree key="step3" goal={goal} onAnswer={answer} /> :
                 step === 4 ? <StepFour key="step4" onContinue={() => setStep(5)} /> :
-                  <StepFive key="step5" />}
+                  <StepFive
+                    key="step5"
+                    onPlayTestimonial={() => { if (videoRef.current) videoRef.current.pause(); }}
+                    onPauseTestimonial={() => { if (videoRef.current) videoRef.current.play().catch(() => {}); }}
+                  />}
       </AnimatePresence>
+      <button
+        type="button"
+        onClick={toggleMute}
+        className="fixed bottom-6 right-6 z-30 flex items-center gap-2.5 rounded-full border border-[#dfb45d]/40 bg-[#0a1f38]/90 px-4 py-2.5 text-xs font-semibold text-[#f8f6f0] shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-md transition hover:scale-105 hover:border-[#dfb45d] hover:bg-[#102d4d]"
+        data-testid="button-floating-audio"
+      >
+        {isMuted ? (
+          <>
+            <VolumeX size={16} className="text-[#dfb45d]" />
+            <span>Activar audio</span>
+          </>
+        ) : (
+          <>
+            <Volume2 size={16} className="text-[#dfb45d]" />
+            <span>Audio activado</span>
+          </>
+        )}
+      </button>
       {step === 3 && contribution && <span className="sr-only">{contribution}</span>}
     </div>
   );
