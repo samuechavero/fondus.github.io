@@ -1,6 +1,6 @@
-# [Project name]
+# Fondus — Embudo Gamificado
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+SPA móvil-first de Fondus para guiar a potenciales clientes desde una simulación de capitalización hasta una adhesión informada.
 
 ## Run & Operate
 
@@ -22,23 +22,30 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/fondus-embudo/src/App.tsx` — recorrido completo de los cinco pasos y estado de la experiencia.
+- `artifacts/fondus-embudo/src/index.css` — tokens visuales y estilos globales de la experiencia.
+- `artifacts/fondus-embudo/public/media/` — logo de Fondus y video vertical de fondo.
+- `artifacts/fondus-embudo/.replit-artifact/artifact.toml` — configuración del artefacto web y su ruta de preview.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- La primera versión es frontend-only: el recorrido completo funciona localmente sin bloquearse por un backend.
+- La navegación se mantiene dentro de una SPA mediante `currentStep`, con transiciones y estado de sesión en memoria.
+- El video de fondo solo acompaña los pasos 1 y 2; el resto cambia a superficies oscuras para mejorar legibilidad y foco.
+- La fecha del sorteo se calcula en el cliente para mostrar siempre el último sábado del mes y el siguiente ciclo.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+El usuario atraviesa una introducción cinematográfica, elige una meta, conversa con un asesor simulado, descubre números de sorteo, recibe la palabra clave `FONDUS2026` y completa un formulario de adhesión con método de débito.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+El brief solicita una experiencia premium, inmersiva, móvil-first, en español y sin emojis en la interfaz.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- El workflow web inyecta `PORT` y `BASE_PATH`; para ver la app hay que usar el workflow administrado del artefacto.
+- Los recursos adjuntos se sirven desde `public/media` para que Vite pueda entregarlos directamente.
 
 ## Pointers
 

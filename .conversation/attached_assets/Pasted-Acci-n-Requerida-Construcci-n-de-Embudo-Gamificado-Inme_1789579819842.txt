@@ -1,0 +1,78 @@
+Acción Requerida: Construcción de Embudo Gamificado Inmersivo para Fondus
+Eres un desarrollador Frontend experto en React, Vite, Tailwind CSS y Framer Motion. Necesito crear una Single Page Application (SPA) móvil-first de altísima persuasión para la empresa financiera "Fondus". Toda la navegación se manejará sin recargas mediante un estado currentStep (del 1 al 5).
+
+Diseño Global y Estética:
+La paleta debe ser azul marino oscuro corporativo con acentos dorados metálicos y blancos. La aplicación debe transmitir exclusividad y seguridad financiera.
+
+El "Motor Inmersivo" (Video Continuo):
+Crea un componente contenedor maestro (Layout) que mantenga una etiqueta <video> nativa reproduciéndose en el fondo (con autoPlay, loop, muted, playsInline, object-cover, y w-full h-screen fixed inset-0 z-0). Aplica un overlay (bg-slate-900/70) sobre el video para que los textos sean legibles. Este video de fondo SÓLO debe ser visible en el Paso 1 y Paso 2.
+
+Implementa los siguientes 5 pasos con transiciones suaves (fade-in) de Framer Motion (asegurándote de que el contenido tenga un z-index superior al video de fondo):
+
+Paso 1: La Interrupción Cinematográfica (Sin Formulario)
+
+Visual: El video de fondo en pantalla completa.
+
+Hook: Un título impactante y persuasivo: "¿El sistema tradicional no te deja avanzar? Descubrí el poder de tus ahorros."
+
+Acción: Un botón central pulsante y dorado: "[ INICIAR SIMULACIÓN DE CAPITALIZACIÓN ]".
+
+Al hacer clic, avanza al Paso 2 (sin pedir datos).
+
+Paso 2: El Micro-Compromiso
+
+Visual: El mismo video de fondo continúa reproduciéndose sin cortes.
+
+Interacción: Aparece la pregunta desde abajo: "¿Cuál es tu meta financiera principal hoy?".
+
+Renderiza 3 botones con efecto cristal (backdrop-blur): "A. Moto 0KM", "B. Auto 0KM", "C. $20.000.000 en efectivo".
+
+Al hacer clic, simula un estado de "Calculando posibilidades..." por 1.5 segundos y pasa al Paso 3.
+
+Paso 3: El Asesor Experto (Chat Interactivo)
+
+Visual: El fondo de video desaparece (o se difumina al máximo) y entra una interfaz de chat oscuro y elegante.
+
+Lógica de Chat: Simula a un asesor experto. Muestra el indicador "Escribiendo..." y luego revela este mensaje (dividido en 2 burbujas para mayor realismo):
+
+"Hola, soy tu asesor experto de Fondus. Veo que tenés una gran meta. Nuestro sistema te permite hacer aportes mensuales accesibles a un fondo común."
+
+"Podés adjudicar tu capital anticipadamente por sorteo o licitación, siempre de forma transparente. ¿De cuánto es la cuota mensual que te resultaría cómoda para empezar hoy?"
+
+Renderiza opciones de respuesta rápida para el usuario (ej. "$15.000", "$30.000", "Más de $50.000").
+
+Al responder, el chat dice: "Perfecto, estamos configurando tu plan..." y pasa al Paso 4.
+
+Paso 4: La Gamificación (El Sorteo Explosivo y Pop-up)
+
+Visual: Pantalla interactiva. Una "caja de regalo" en el centro.
+
+Interacción: Al tocarla, la caja explota (animación) y revela 3 "Números de Sorteo" dinámicos. Incluye un botón para "Volver a intentar".
+
+Pop-up Persuasivo: A los 3 segundos de estar en esta pantalla, lanza un Pop-up modal que simula que más gente se está uniendo. El mensaje debe ser un regalo: "¡Felicidades! Recordá esta palabra clave (FONDUS2026) para que tengas tu suscripción bonificada al registrarte hoy". Botón: "Entendido".
+
+Botón para avanzar al Paso 5: "VER PLANES Y ADJUDICADOS".
+
+Paso 5: Conversión, Prueba Social y Legales
+
+Visual: Layout institucional y limpio (azul oscuro).
+
+Sección 1 (Videos): Espacio tipo scroll horizontal o grilla para subir videos de clientes adjudicados.
+
+Sección 2 (Cuenta Regresiva): Un contador estilizado que diga "Próximo Sorteo". Lógica: El sorteo es el último sábado del mes. Si ya pasó, debe mostrar el número ganador hasta el último miércoles del mes, día en que se reinicia el contador para el mes siguiente.
+
+Sección 3: Formulario de adhesión final (Nombre, Teléfono, Adhesión al débito automático/NaranjaX).
+
+FOOTER LEGAL OBLIGATORIO (Fijo o al final de la página):
+
+"Botón de arrepentimiento - Tenés 10 días para arrepentirte"
+
+Condiciones generales linkeadas.
+
+"No contamos con cobradores a domicilio."
+
+Logotipo de IGJ.
+
+Badge destacado flotante: "Google Rating 4.9 Estrellas - La empresa de capitalización y ahorro mejor calificada".
+
+El código debe estar en componentes funcionales de React, usando lucide-react para iconos. Prepara la estructura en App.jsx y components/ listos para funcionar en el entorno de Vite.
