@@ -27,6 +27,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
+import { SocialProofToasts } from './components/SocialProofToasts';
 
 const logoPath = `${import.meta.env.BASE_URL}media/fondus-logo.jpeg`;
 const videoPath = `${import.meta.env.BASE_URL}media/fondus-bg.mp4`;
@@ -1611,6 +1612,9 @@ function App() {
           </>
         )}
       </button>
+
+      {/* Notificaciones dinámicas de prueba social en tiempo real */}
+      <SocialProofToasts />
 
       {/* Modales Institucionales */}
       <ArrepentimientoModal
