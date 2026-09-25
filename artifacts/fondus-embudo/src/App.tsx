@@ -8,15 +8,11 @@ import {
   CheckCircle2,
   ChevronRight,
   CreditCard,
-  FileText,
   Gift,
   LockKeyhole,
-  Mail,
-  Menu,
   MessageCircle,
   Play,
   RefreshCw,
-  Send,
   ShieldCheck,
   Sparkles,
   Star,
@@ -28,6 +24,14 @@ import {
   Zap,
 } from 'lucide-react';
 import { SocialProof } from './components/SocialProof';
+import { LegalFooterSection } from './components/LegalSection';
+
+declare global {
+  interface Window {
+    YT?: any;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
 
 const logoPath = `${import.meta.env.BASE_URL}media/fondus-logo.jpeg`;
 const videoPath = `${import.meta.env.BASE_URL}media/fondus-bg.mp4`;
@@ -46,7 +50,7 @@ export const PLANS: Plan[] = [
   {
     id: 'plan-7.5m',
     tag: 'Ideal para empezar',
-    capital: '$7.500.000',
+    capital: 'ORDEN DE COMPRA $7.500.000',
     cuotas1a4: '$43.800',
     cuotaDesde5: '$25.875',
     benefits: [
@@ -57,12 +61,12 @@ export const PLANS: Plan[] = [
     ],
   },
   {
-    id: 'plan-10m',
+    id: 'plan-15m',
     tag: 'MÁS ELEGIDO',
     isPopular: true,
-    capital: '$10.000.000',
-    cuotas1a4: '$58.400',
-    cuotaDesde5: '$34.500',
+    capital: 'ORDEN DE COMPRA $15.000.000',
+    cuotas1a4: '$87.600',
+    cuotaDesde5: '$51.750',
     benefits: [
       'Sorteos mensuales desde cuota 1. Si ganas, no pagas más.',
       'Disponibilidad de fondos desde cuota 18.',
@@ -73,7 +77,7 @@ export const PLANS: Plan[] = [
   {
     id: 'plan-20m',
     tag: 'Mayor capital disponible',
-    capital: '$20.000.000',
+    capital: 'ORDEN DE COMPRA $20.000.000',
     cuotas1a4: '$116.800',
     cuotaDesde5: '$69.000',
     benefits: [
@@ -97,13 +101,13 @@ function Logo({ compact = false }: { compact?: boolean }) {
       <img
         src={logoPath}
         alt="Fondus"
-        className={`${compact ? 'h-9 w-9' : 'h-11 w-11'} rounded-xl object-cover shadow-sm`}
+        className={`${compact ? 'h-9 w-9' : 'h-11 w-11'} rounded-xl object-cover shadow-sm border border-[#93c46d]/40`}
       />
       <div className="flex flex-col text-left">
-        <span className={`font-display font-800 tracking-[-.04em] text-[#f6f1e8] leading-tight ${compact ? 'text-[17px]' : 'text-[20px]'}`}>
+        <span className={`font-display font-800 tracking-[-.04em] text-white leading-tight ${compact ? 'text-[17px]' : 'text-[20px]'}`}>
           fondus
         </span>
-        <span className="font-mono-custom text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.22em] text-[#dfb45d] -mt-0.5">
+        <span className="font-mono-custom text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.22em] text-[#93c46d] -mt-0.5">
           Agencia Digital
         </span>
       </div>
@@ -119,18 +123,18 @@ function BackgroundVideo({
   isMuted: boolean;
 }) {
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden bg-[#0a1f38]">
+    <div className="fixed inset-0 z-0 overflow-hidden bg-[#1d497f]">
       <video
         ref={videoRef}
-        className="h-full w-full object-cover opacity-65"
+        className="bg-video h-full w-full object-cover opacity-60"
         autoPlay
         loop
         muted={isMuted}
         playsInline
         src={videoPath}
       />
-      <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(5,19,38,.94)_0%,rgba(8,32,58,.72)_48%,rgba(8,27,48,.9)_100%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(195,148,63,.25),transparent_30%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(15,40,71,.95)_0%,rgba(29,73,127,.82)_50%,rgba(13,34,60,.94)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(147,196,109,.22),transparent_35%)]" />
     </div>
   );
 }
@@ -152,7 +156,7 @@ function StepHeader({
         type="button"
         onClick={onBack}
         disabled={step === 1}
-        className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-[.16em] transition ${step === 1 ? 'pointer-events-none opacity-0' : 'text-[#d8e1eb] hover:text-[#dfb45d]'}`}
+        className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-[.16em] transition ${step === 1 ? 'pointer-events-none opacity-0' : 'text-[#d8e3ed] hover:text-[#93c46d]'}`}
         data-testid="button-back-step"
       >
         <ArrowLeft size={15} /> Volver
@@ -163,21 +167,21 @@ function StepHeader({
           <button
             type="button"
             onClick={onToggleMute}
-            className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-medium text-[#e2ecf5] backdrop-blur-md transition hover:border-[#dfb45d] hover:text-[#dfb45d]"
+            className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-xs font-medium text-[#e2ecf5] backdrop-blur-md transition hover:border-[#93c46d] hover:text-[#93c46d]"
             data-testid="button-toggle-sound"
             title={isMuted ? 'Activar sonido' : 'Silenciar'}
           >
-            {isMuted ? <VolumeX size={14} className="text-[#dfb45d]" /> : <Volume2 size={14} className="text-[#dfb45d]" />}
+            {isMuted ? <VolumeX size={14} className="text-[#93c46d]" /> : <Volume2 size={14} className="text-[#93c46d]" />}
             <span className="hidden md:inline">{isMuted ? 'Activar audio' : 'Silenciar'}</span>
           </button>
         )}
         <div className="text-right">
-          <p className="font-mono-custom text-[9px] uppercase tracking-[.18em] text-[#bdcbd8]">Simulación privada</p>
+          <p className="font-mono-custom text-[9px] uppercase tracking-[.18em] text-[#c0d1e3]">Simulación privada</p>
           <div className="mt-2 flex items-center justify-end gap-1.5">
             {[1, 2, 3, 4, 5].map((item) => (
               <span
                 key={item}
-                className={`h-1 w-5 rounded-full transition-all duration-500 sm:w-7 ${item <= step ? 'bg-[#dfb45d]' : 'bg-white/20'}`}
+                className={`h-1 w-5 rounded-full transition-all duration-500 sm:w-7 ${item <= step ? 'bg-[#93c46d]' : 'bg-white/20'}`}
               />
             ))}
           </div>
@@ -188,26 +192,27 @@ function StepHeader({
 }
 
 // ----------------------------------------------------
-// PASO 1: Cabecera y Pantalla Inicial
+// HERO SECTION
 // ----------------------------------------------------
-function StepOne({ onStart }: { onStart: () => void }) {
+function StepHero({ onStart }: { onStart: () => void }) {
   return (
     <motion.main {...fadeUp} className="relative z-10 flex min-h-[calc(100dvh-93px)] items-center px-6 pb-14 sm:px-14 lg:px-[11vw]">
       <div className="max-w-3xl">
         <motion.div initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }} className="mb-7 flex items-center gap-3">
-          <span className="h-px w-10 bg-[#dfb45d]" />
-          <span className="font-mono-custom text-[10px] uppercase tracking-[.28em] text-[#dfb45d]">Una nueva forma de proyectarte</span>
+          <span className="h-px w-10 bg-[#93c46d]" />
+          <span className="font-mono-custom text-[10px] uppercase tracking-[.28em] text-[#93c46d]">Una nueva forma de proyectarte</span>
         </motion.div>
         
-        <h1 className="font-display max-w-4xl text-[clamp(2.65rem,7.5vw,6.4rem)] font-800 leading-[.97] tracking-[-.06em] text-[#f8f6f0]">
-          Con <span className="text-[#dfb45d]">FONDUS</span> vas a poder
+        {/* Titular Principal Exacto */}
+        <h1 className="font-display max-w-4xl text-[clamp(2.65rem,7.5vw,6.4rem)] font-800 leading-[.97] tracking-[-.06em] text-white">
+          Con <span className="text-[#93c46d]">FONDUS</span> vas a poder
         </h1>
         
-        <p className="mt-6 max-w-xl text-lg font-medium leading-relaxed text-[#f3cf82] sm:text-xl">
+        <p className="mt-6 max-w-xl text-lg font-medium leading-relaxed text-[#93c46d] sm:text-xl">
           En dos minutos te explicamos todo
         </p>
 
-        <p className="mt-3 max-w-lg text-sm leading-relaxed text-[#c8d4de] sm:text-base">
+        <p className="mt-3 max-w-lg text-sm leading-relaxed text-[#d8e3ed] sm:text-base">
           Una simulación ágil y guiada para convertir tu capacidad de ahorro en un capital concreto y adjudicado. Sin vueltas ni letra chica.
         </p>
 
@@ -215,24 +220,24 @@ function StepOne({ onStart }: { onStart: () => void }) {
           <button
             type="button"
             onClick={onStart}
-            className="group relative flex items-center gap-4 overflow-hidden rounded-full bg-[#dfb45d] px-7 py-4 text-xs font-bold uppercase tracking-[.15em] text-[#102844] shadow-[0_13px_34px_rgba(223,180,93,.25)] transition hover:-translate-y-0.5 hover:bg-[#efc975]"
+            className="group relative flex items-center gap-4 overflow-hidden rounded-full bg-[#93c46d] px-7 py-4 text-xs font-black uppercase tracking-[.15em] text-[#1d497f] shadow-[0_13px_34px_rgba(147,196,109,.35)] transition hover:-translate-y-0.5 hover:bg-[#82b55c]"
             data-testid="button-start-simulation"
           >
             <span className="absolute inset-0 -translate-x-full bg-white/20 transition-transform duration-500 group-hover:translate-x-full" />
-            <span className="relative font-bold">[ INICIAR SIMULACIÓN ]</span>
+            <span className="relative font-black">[ INICIAR SIMULACIÓN ]</span>
             <ArrowRight className="relative transition-transform group-hover:translate-x-1" size={17} />
           </button>
-          <div className="flex items-center gap-2 text-xs text-[#b7c8d6]">
-            <ShieldCheck size={16} className="text-[#dfb45d]" /> Tus datos quedan protegidos
+          <div className="flex items-center gap-2 text-xs text-[#c0d1e3]">
+            <ShieldCheck size={16} className="text-[#93c46d]" /> Tus datos quedan protegidos
           </div>
         </div>
 
-        <div className="mt-16 flex flex-wrap gap-x-8 gap-y-3 border-t border-white/15 pt-5 text-[11px] uppercase tracking-[.12em] text-[#a9bac8]">
+        <div className="mt-16 flex flex-wrap gap-x-8 gap-y-3 border-t border-white/15 pt-5 text-[11px] uppercase tracking-[.12em] text-[#b3c7db]">
           <span className="flex items-center gap-2">
-            <LockKeyhole size={13} className="text-[#dfb45d]" /> Capitalización transparente
+            <LockKeyhole size={13} className="text-[#93c46d]" /> Capitalización transparente
           </span>
           <span className="flex items-center gap-2">
-            <Award size={13} className="text-[#dfb45d]" /> Acompañamiento real
+            <Award size={13} className="text-[#93c46d]" /> Acompañamiento real
           </span>
         </div>
       </div>
@@ -240,9 +245,9 @@ function StepOne({ onStart }: { onStart: () => void }) {
       <div className="absolute bottom-8 right-8 hidden max-w-[220px] text-right lg:block">
         <p className="font-display text-3xl font-800 leading-none text-white/80">
           Tu meta<br />
-          <span className="text-[#dfb45d]">empieza hoy.</span>
+          <span className="text-[#93c46d]">empieza hoy.</span>
         </p>
-        <p className="mt-3 text-xs leading-relaxed text-[#a5b9c8]">
+        <p className="mt-3 text-xs leading-relaxed text-[#b3c7db]">
           Elegí un plan. Nosotros te mostramos el camino de capitalización posible.
         </p>
       </div>
@@ -251,9 +256,9 @@ function StepOne({ onStart }: { onStart: () => void }) {
 }
 
 // ----------------------------------------------------
-// PASO 2: Selector de Planes (3 Tarjetas Oficiales)
+// PASO 1: Simulación y Selección de Planes (Tarjetas Dinámicas)
 // ----------------------------------------------------
-function StepTwo({
+function StepOnePlans({
   onSelectPlan,
   selectedPlan,
 }: {
@@ -263,13 +268,13 @@ function StepTwo({
   return (
     <motion.main {...fadeUp} className="relative z-10 mx-auto flex min-h-[calc(100dvh-93px)] w-full max-w-6xl flex-col justify-center px-4 pb-14 pt-2 sm:px-8">
       <div className="mb-8 max-w-2xl text-left">
-        <p className="mb-2 font-mono-custom text-[10px] uppercase tracking-[.24em] text-[#dfb45d]">
-          Paso 02 / Elegí tu orden de compra
+        <p className="mb-2 font-mono-custom text-[10px] uppercase tracking-[.24em] text-[#93c46d]">
+          Paso 01 / Elegí tu orden de compra
         </p>
-        <h1 className="font-display text-[clamp(2.1rem,5vw,4.2rem)] font-800 leading-[1.02] tracking-[-.05em] text-[#f8f6f0]">
+        <h1 className="font-display text-[clamp(2.1rem,5vw,4.2rem)] font-800 leading-[1.02] tracking-[-.05em] text-white">
           Seleccioná tu plan de capitalización
         </h1>
-        <p className="mt-3 text-sm leading-relaxed text-[#c4d2dd] sm:text-base">
+        <p className="mt-3 text-sm leading-relaxed text-[#d8e3ed] sm:text-base">
           Elegí el capital que querés alcanzar. Cuotas fijas en pesos pensadas para avanzar sin desbalancear tu economía.
         </p>
       </div>
@@ -282,67 +287,70 @@ function StepTwo({
               key={plan.id}
               className={`relative flex flex-col justify-between rounded-3xl border transition-all duration-300 backdrop-blur-md ${
                 plan.isPopular
-                  ? 'border-[#dfb45d] bg-[#122e4d]/90 shadow-[0_16px_40px_rgba(223,180,93,0.18)]'
+                  ? 'border-[#93c46d] bg-[#1d497f]/90 shadow-[0_16px_40px_rgba(147,196,109,0.22)] ring-1 ring-[#93c46d]'
                   : 'border-white/20 bg-white/[.07] hover:border-white/40'
-              } ${isSelected ? 'ring-2 ring-[#dfb45d]' : ''} p-6 sm:p-7`}
+              } ${isSelected ? 'ring-2 ring-[#93c46d]' : ''} p-6 sm:p-7`}
             >
               {plan.isPopular && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-[#f3cf82] bg-gradient-to-r from-[#dfb45d] to-[#efc975] px-4 py-1 text-[10px] font-black uppercase tracking-[.18em] text-[#102844] shadow-md">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#93c46d] px-4 py-1 text-[10px] font-black uppercase tracking-[.18em] text-[#1d497f] shadow-md">
                   ★ MÁS ELEGIDO ★
                 </div>
               )}
 
               <div>
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs font-bold uppercase tracking-[.14em] ${plan.isPopular ? 'text-[#dfb45d]' : 'text-[#a2b5c6]'}`}>
+                  <span className={`text-xs font-bold uppercase tracking-[.14em] ${plan.isPopular ? 'text-[#93c46d]' : 'text-[#b3c7db]'}`}>
                     {plan.tag}
                   </span>
-                  <span className="font-mono-custom text-[10px] text-[#8fa6b8]">
-                    {plan.id.replace('plan-', '').toUpperCase()}
+                  <span className="font-mono-custom text-[10px] text-[#9bb3ca]">
+                    FONDUS
                   </span>
                 </div>
 
                 <div className="mt-4 border-b border-white/10 pb-5">
-                  <p className="text-[11px] font-medium uppercase tracking-[.14em] text-[#9eb1c1]">
+                  <p className="text-[11px] font-medium uppercase tracking-[.14em] text-[#c0d1e3]">
                     Orden de compra
                   </p>
-                  <p className="font-display mt-1 text-3xl font-800 tracking-tight text-[#f8f6f0] sm:text-4xl">
+                  <p className="font-display mt-1 text-2xl sm:text-3xl font-800 tracking-tight text-white">
                     {plan.capital}
                   </p>
                 </div>
 
-                <div className="mt-5 space-y-2.5 rounded-2xl bg-black/20 p-4">
+                {/* Estructura de Precios: Cuotas 1 a 4 y Desde cuota 5 */}
+                <div className="mt-5 space-y-2.5 rounded-2xl bg-black/25 p-4">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-[#aebecd]">Cuotas 1 a 4:</span>
-                    <span className="font-mono-custom font-bold text-[#f3cf82]">{plan.cuotas1a4}</span>
+                    <span className="text-[#c0d1e3]">Cuotas 1 a 4:</span>
+                    <span className="font-mono-custom font-bold text-white text-sm">{plan.cuotas1a4}</span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-[#aebecd]">Desde cuota 5:</span>
-                    <span className="font-mono-custom font-bold text-[#70c7a3]">{plan.cuotaDesde5}</span>
+                    <span className="text-[#c0d1e3]">Desde cuota 5:</span>
+                    <span className="font-mono-custom font-bold text-[#93c46d] text-sm">{plan.cuotaDesde5}</span>
                   </div>
                 </div>
 
+                {/* Beneficios con checks en #93c46d */}
                 <div className="mt-6 space-y-2.5">
-                  <p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#8ea3b5]">
+                  <p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#a4bdd4]">
                     Beneficios incluidos:
                   </p>
                   {plan.benefits.map((benefit, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 text-xs text-[#d1dce6] leading-tight">
-                      <CheckCircle2 size={16} className="shrink-0 text-emerald-400 mt-0.5" />
+                    <div key={idx} className="flex items-start gap-2.5 text-xs text-[#e0eaf3] leading-tight">
+                      <CheckCircle2 size={16} className="shrink-0 text-[#93c46d] mt-0.5" />
                       <span>{benefit}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
+              {/* Botón: "Elegir este plan" */}
               <button
                 type="button"
                 onClick={() => onSelectPlan(plan)}
                 disabled={Boolean(selectedPlan)}
-                className={`mt-7 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-xs font-bold uppercase tracking-[.14em] transition ${
+                className={`mt-7 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-xs font-black uppercase tracking-[.14em] transition ${
                   plan.isPopular
-                    ? 'bg-[#dfb45d] text-[#102844] hover:bg-[#efc975] shadow-lg'
-                    : 'border border-[#dfb45d]/70 bg-[#dfb45d]/10 text-[#f3cf82] hover:bg-[#dfb45d] hover:text-[#102844]'
+                    ? 'bg-[#93c46d] text-[#1d497f] hover:bg-[#82b55c] shadow-lg'
+                    : 'border border-[#93c46d] bg-[#93c46d]/15 text-[#93c46d] hover:bg-[#93c46d] hover:text-[#1d497f]'
                 }`}
                 data-testid={`button-select-${plan.id}`}
               >
@@ -356,9 +364,9 @@ function StepTwo({
 
       <AnimatePresence>
         {selectedPlan && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 flex items-center justify-center gap-3 text-sm text-[#dce6ed]">
-            <span className="relative flex h-5 w-5 items-center justify-center rounded-full bg-[#dfb45d] text-[#102844]">
-              <span className="absolute inset-0 rounded-full border border-[#dfb45d] animate-pulse-ring" />
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 flex items-center justify-center gap-3 text-sm text-[#e0eaf3]">
+            <span className="relative flex h-5 w-5 items-center justify-center rounded-full bg-[#93c46d] text-[#1d497f]">
+              <span className="absolute inset-0 rounded-full border border-[#93c46d] animate-pulse-ring" />
               <Check size={13} strokeWidth={3} />
             </span>
             <span>Configurando sistema con {selectedPlan.capital}...</span>
@@ -370,9 +378,9 @@ function StepTwo({
 }
 
 // ----------------------------------------------------
-// PASO 3: Sofia, tu asesora digital (Chat)
+// PASO 2: El Asesor Digital (Bot Sofía) y Gamificación
 // ----------------------------------------------------
-function StepThree({
+function StepTwoSofia({
   selectedPlan,
   onChooseMode,
 }: {
@@ -383,111 +391,91 @@ function StepThree({
 
   useEffect(() => {
     setPhase(0);
-    const firstTimer = window.setTimeout(() => setPhase(1), 900);
-    const secondTimer = window.setTimeout(() => setPhase(2), 2400);
-    const thirdTimer = window.setTimeout(() => setPhase(3), 4200);
+    const firstTimer = window.setTimeout(() => setPhase(1), 800);
+    const secondTimer = window.setTimeout(() => setPhase(2), 2200);
     return () => {
       window.clearTimeout(firstTimer);
       window.clearTimeout(secondTimer);
-      window.clearTimeout(thirdTimer);
     };
   }, []);
 
   return (
     <motion.main {...fadeUp} className="relative z-10 mx-auto flex min-h-[calc(100dvh-93px)] w-full max-w-3xl flex-col px-5 pb-12 sm:px-10">
-      {/* Cabecera del Asesor */}
-      <div className="mb-6 flex items-center gap-3.5 border-b border-[#29435f] pb-4">
-        <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#dfb45d] to-[#996a1a] text-[#102844] shadow-md">
-          <MessageCircle size={22} className="text-[#0e243d]" />
-          <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#0a1f38] bg-[#10b981]" />
+      {/* Cabecera de Sofía */}
+      <div className="mb-6 flex items-center gap-3.5 border-b border-white/15 pb-4">
+        <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-[#93c46d] text-[#1d497f] shadow-md font-bold">
+          <MessageCircle size={22} className="text-[#1d497f]" />
+          <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#1d497f] bg-[#93c46d]" />
         </div>
         <div>
-          <p className="font-display font-800 text-[17px] text-[#f7f3e9]">Sofia, tu asesora digital</p>
-          <p className="text-[11px] text-[#9eb1c1] flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#10b981] animate-pulse" /> En línea ahora
+          <p className="font-display font-800 text-[18px] text-white">Sofía</p>
+          <p className="text-[11px] text-[#c0d1e3] flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#93c46d] animate-pulse" /> En línea ahora
           </p>
         </div>
         {selectedPlan && (
-          <span className="ml-auto rounded-full border border-[#29435f] bg-[#122e4d]/80 px-3 py-1 font-mono-custom text-[10px] uppercase tracking-[.12em] text-[#dfb45d]">
-            Plan {selectedPlan.capital}
+          <span className="ml-auto rounded-full border border-white/20 bg-[#1d497f]/90 px-3 py-1 font-mono-custom text-[10px] uppercase tracking-[.12em] text-[#93c46d]">
+            {selectedPlan.capital}
           </span>
         )}
       </div>
 
-      {/* Secuencia exacta de burbujas del bot */}
+      {/* Globo de Diálogo con Texto Exacto */}
       <div className="flex-1 space-y-4 overflow-hidden pt-2">
         <AnimatePresence>
           {phase === 0 && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 text-xs text-[#9eb1c1]">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 text-xs text-[#c0d1e3]">
               <span className="flex gap-1">
-                <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#dfb45d]" />
-                <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#dfb45d] [animation-delay:120ms]" />
-                <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#dfb45d] [animation-delay:240ms]" />
+                <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#93c46d]" />
+                <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#93c46d] [animation-delay:120ms]" />
+                <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#93c46d] [animation-delay:240ms]" />
               </span>
-              Sofia está escribiendo...
+              Sofía está escribiendo...
             </motion.div>
           )}
 
           {phase >= 1 && (
             <motion.div
               {...fadeUp}
-              className="max-w-[90%] rounded-2xl rounded-tl-sm bg-[#173653] px-5 py-4 text-[15px] leading-relaxed text-[#e0e9ef] shadow-[0_8px_22px_rgba(3,13,27,.22)] border border-white/5"
+              className="max-w-[94%] rounded-2xl rounded-tl-sm bg-[#153863] px-5 py-4 text-[15px] leading-relaxed text-[#e0eaf3] shadow-md border border-white/10"
             >
-              Hola soy Sofia, tu asesora digital ¡Felicitaciones por el sistema que acabas de seleccionar!
-            </motion.div>
-          )}
-
-          {phase >= 2 && (
-            <motion.div
-              {...fadeUp}
-              className="max-w-[92%] rounded-2xl rounded-tl-sm bg-[#173653] px-5 py-4 text-[15px] leading-relaxed text-[#e0e9ef] shadow-[0_8px_22px_rgba(3,13,27,.22)] border border-white/5"
-            >
-              Tu plan seleccionado es en cuotas fijas y en pesos las primeras 4 tienen un valor mayor pero desde la 5ta en adelenta ya baja, hasta que salgas adjudicado o decidas continuar con tu sistema de capitalización y recorda que si salis adjudicado ¡NO VAS A PAGAR MAS!
-            </motion.div>
-          )}
-
-          {phase >= 3 && (
-            <motion.div
-              {...fadeUp}
-              className="max-w-[80%] rounded-2xl rounded-tl-sm bg-[#173653] px-5 py-3.5 text-[15px] font-semibold text-[#f3cf82] shadow-[0_8px_22px_rgba(3,13,27,.22)] border border-[#dfb45d]/25"
-            >
-              Antes de continuar decime:
+              Hola soy Sofia, tu asesora digital ¡Felicitaciones por el sistema que acabas de seleccionar! Tu plan seleccionado es en cuotas fijas y en pesos las primeras 4 tienen un valor mayor pero desde la 5ta en adelenta ya baja, hasta que salgas adjudicado o decidas continuar con tu sistema de capitalización y recorda que si salis adjudicado ¡NO VAS A PAGAR MAS! Antes de continuar decime:
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Respuestas del usuario: estrictamente 2 botones */}
-      {phase >= 3 && (
+      {/* Opciones Interactivas: 2 Botones de Gamificación */}
+      {phase >= 2 && (
         <motion.div {...fadeUp} className="mt-8 space-y-3 pt-2">
-          <p className="text-xs uppercase tracking-[.16em] text-[#9eb1c1] font-semibold">
-            Elegí cómo obtener tu número de sorteo:
+          <p className="text-xs uppercase tracking-[.16em] text-[#c0d1e3] font-semibold">
+            Seleccioná cómo querés obtener tu número:
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <button
               type="button"
               onClick={() => onChooseMode('manual')}
-              className="flex items-center justify-between rounded-2xl border border-[#dfb45d]/70 bg-[#dfb45d]/10 px-5 py-4 text-sm font-bold text-[#f3cf82] transition hover:bg-[#dfb45d] hover:text-[#102844] shadow-md group"
+              className="flex items-center justify-between rounded-2xl border border-[#93c46d] bg-[#93c46d]/15 px-5 py-4 text-sm font-bold text-white transition hover:bg-[#93c46d] hover:text-[#1d497f] shadow-md group"
               data-testid="button-choose-manual"
             >
-              <span>[ Me gustaría seleccionar mi numero ]</span>
-              <Ticket size={18} className="transition-transform group-hover:scale-110" />
+              <span>Me gustaría seleccionar mi numero</span>
+              <Ticket size={18} className="text-[#93c46d] group-hover:text-[#1d497f] transition-transform group-hover:scale-110" />
             </button>
             <button
               type="button"
               onClick={() => onChooseMode('random')}
-              className="flex items-center justify-between rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-sm font-bold text-[#f8f6f0] transition hover:border-[#dfb45d] hover:bg-[#dfb45d] hover:text-[#102844] shadow-md group"
+              className="flex items-center justify-between rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-sm font-bold text-white transition hover:border-[#93c46d] hover:bg-[#93c46d] hover:text-[#1d497f] shadow-md group"
               data-testid="button-choose-random"
             >
-              <span>[ Que me toque aleatoriamente ]</span>
-              <Sparkles size={18} className="transition-transform group-hover:scale-110 text-[#dfb45d] group-hover:text-[#102844]" />
+              <span>Que me toque aleatoriamente</span>
+              <Sparkles size={18} className="text-[#93c46d] group-hover:text-[#1d497f] transition-transform group-hover:scale-110" />
             </button>
           </div>
         </motion.div>
       )}
 
-      <div className="mt-7 flex items-center gap-2 text-[11px] text-[#7790a4]">
-        <LockKeyhole size={13} /> Conversación segura y encriptada · Sin compromiso
+      <div className="mt-7 flex items-center gap-2 text-[11px] text-[#a4bdd4]">
+        <LockKeyhole size={13} className="text-[#93c46d]" /> Conversación confidencial · 100% Digital y Segura
       </div>
     </motion.main>
   );
@@ -509,9 +497,9 @@ function generateThreeOptions(): string[] {
 }
 
 // ----------------------------------------------------
-// PASO 4: Gamificación, Pop-up y Asignación
+// GAMIFICACIÓN Y MODAL DE ÉXITO ("Continuar")
 // ----------------------------------------------------
-function StepFour({
+function StepGamificationModal({
   mode,
   selectedNumber,
   onSelectNumber,
@@ -526,13 +514,12 @@ function StepFour({
   const [options, setOptions] = useState<string[]>(() => generateThreeOptions());
   const [showModal, setShowModal] = useState(false);
 
-  // Pop-up automático a los 3 segundos
+  // Pop-up modal de suscripción
   useEffect(() => {
-    const timer = window.setTimeout(() => setShowModal(true), 3000);
+    const timer = window.setTimeout(() => setShowModal(true), 2500);
     return () => window.clearTimeout(timer);
   }, []);
 
-  // Si es automático, revelar directamente al abrir o iniciar
   const handleReveal = () => {
     setOpened(true);
     if (mode === 'random') {
@@ -555,25 +542,25 @@ function StepFour({
 
   return (
     <motion.main {...fadeUp} className="relative z-10 mx-auto flex min-h-[calc(100dvh-93px)] w-full max-w-4xl flex-col items-center px-6 pb-12 pt-4 text-center">
-      <p className="font-mono-custom text-[10px] uppercase tracking-[.24em] text-[#dfb45d]">
-        Paso 04 / Tu número oficial de sorteo
+      <p className="font-mono-custom text-[10px] uppercase tracking-[.24em] text-[#93c46d]">
+        Paso 02 / Asignación de Número Oficial
       </p>
 
-      <h1 className="mt-4 max-w-2xl font-display text-[clamp(2.2rem,5.5vw,4.5rem)] font-800 leading-[.98] tracking-[-.06em] text-[#f8f6f0]">
+      <h1 className="mt-4 max-w-2xl font-display text-[clamp(2.2rem,5.5vw,4.5rem)] font-800 leading-[.98] tracking-[-.06em] text-white">
         {mode === 'manual' ? (
-          <>Elegí tu número <span className="text-[#dfb45d]">ganador.</span></>
+          <>Elegí tu número <span className="text-[#93c46d]">ganador.</span></>
         ) : (
-          <>Tu número asignado <span className="text-[#dfb45d]">te espera.</span></>
+          <>Tu número asignado <span className="text-[#93c46d]">te espera.</span></>
         )}
       </h1>
 
-      <p className="mt-4 max-w-md text-sm leading-relaxed text-[#bdcbd8]">
+      <p className="mt-4 max-w-md text-sm leading-relaxed text-[#d8e3ed]">
         {mode === 'manual'
           ? 'Abrí la caja y seleccioná uno de los 3 números disponibles para participar el último sábado de cada mes.'
-          : 'Abrí la caja para revelar el número que el sistema de asignación aleatoria preparó para vos.'}
+          : 'Abrí la caja para revelar el número que el sistema preparó aleatoriamente para vos.'}
       </p>
 
-      {/* Caja de regalo interactiva */}
+      {/* Caja de regalo */}
       {!opened ? (
         <button
           type="button"
@@ -581,21 +568,21 @@ function StepFour({
           className="group relative mt-9 flex h-44 w-44 items-center justify-center sm:mt-10 sm:h-52 sm:w-52"
           data-testid="button-open-gift"
         >
-          <span className="absolute inset-0 rounded-full border border-[#dfb45d]/30 animate-pulse-ring" />
-          <span className="absolute inset-4 rounded-full bg-[#dfb45d]/10" />
+          <span className="absolute inset-0 rounded-full border border-[#93c46d]/30 animate-pulse-ring" />
+          <span className="absolute inset-4 rounded-full bg-[#93c46d]/10" />
           <motion.span
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative flex h-28 w-28 items-center justify-center rounded-2xl border border-[#f2d18b]/60 bg-[linear-gradient(140deg,#e8c477,#b77d2b)] text-[#102844] shadow-[0_22px_50px_rgba(214,163,72,.35)] sm:h-32 sm:w-32"
+            className="relative flex h-28 w-28 items-center justify-center rounded-2xl border border-[#93c46d] bg-gradient-to-br from-[#93c46d] to-[#1d497f] text-white shadow-xl sm:h-32 sm:w-32"
           >
-            <Gift size={52} strokeWidth={1.4} />
+            <Gift size={52} strokeWidth={1.5} className="text-white" />
           </motion.span>
         </button>
       ) : (
         <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} className="mt-8 w-full">
           {mode === 'manual' ? (
             <div>
-              <p className="mb-4 font-mono-custom text-xs uppercase tracking-[.2em] text-[#9eb1c1]">
+              <p className="mb-4 font-mono-custom text-xs uppercase tracking-[.2em] text-[#c0d1e3]">
                 Hacé clic en el número que querés seleccionar:
               </p>
               <div className="mx-auto flex max-w-md justify-center gap-3 sm:gap-4">
@@ -611,8 +598,8 @@ function StepFour({
                       onClick={() => handleSelectOption(number)}
                       className={`relative flex h-20 w-28 flex-col items-center justify-center rounded-2xl border transition-all duration-300 ${
                         isPicked
-                          ? 'border-[#dfb45d] bg-[#dfb45d] text-[#102844] shadow-[0_0_25px_rgba(223,180,93,0.4)] scale-105'
-                          : 'border-[#dfb45d]/40 bg-white/[.08] text-[#f2d18b] hover:border-[#dfb45d] hover:bg-white/[.15]'
+                          ? 'border-[#93c46d] bg-[#93c46d] text-[#1d497f] shadow-[0_0_25px_rgba(147,196,109,0.5)] scale-105 font-bold'
+                          : 'border-white/20 bg-white/[.08] text-white hover:border-[#93c46d] hover:bg-white/[.15]'
                       }`}
                       data-testid={`button-pick-number-${number}`}
                     >
@@ -620,8 +607,8 @@ function StepFour({
                         {number}
                       </span>
                       {isPicked && (
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#102844]">
-                          Seleccionado ✓
+                        <span className="text-[9px] font-black uppercase tracking-wider text-[#1d497f]">
+                          Elegido ✓
                         </span>
                       )}
                     </motion.button>
@@ -632,7 +619,7 @@ function StepFour({
               <button
                 type="button"
                 onClick={handleReroll}
-                className="mt-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#afc0ce] transition hover:text-[#dfb45d]"
+                className="mt-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em] text-[#b3c7db] transition hover:text-[#93c46d]"
                 data-testid="button-retry-numbers"
               >
                 <RefreshCw size={14} /> Generar otros 3 números
@@ -640,87 +627,87 @@ function StepFour({
             </div>
           ) : (
             <div>
-              <p className="mb-3 font-mono-custom text-xs uppercase tracking-[.2em] text-[#9eb1c1]">
+              <p className="mb-3 font-mono-custom text-xs uppercase tracking-[.2em] text-[#c0d1e3]">
                 Tu número asignado oficialmente:
               </p>
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="mx-auto flex h-24 w-44 items-center justify-center rounded-3xl border-2 border-[#dfb45d] bg-gradient-to-br from-[#dfb45d]/20 to-[#dfb45d]/5 text-[#f3cf82] shadow-[0_12px_35px_rgba(223,180,93,0.3)]"
+                className="mx-auto flex h-24 w-44 items-center justify-center rounded-3xl border-2 border-[#93c46d] bg-[#93c46d]/20 text-[#93c46d] shadow-[0_12px_35px_rgba(147,196,109,0.3)]"
               >
-                <span className="font-mono-custom text-4xl sm:text-5xl font-black tracking-[.15em]">
+                <span className="font-mono-custom text-4xl sm:text-5xl font-black tracking-[.15em] text-white">
                   {selectedNumber || options[0]}
                 </span>
               </motion.div>
-              <p className="mt-3 text-xs text-[#a3b7c8]">
+              <p className="mt-3 text-xs text-[#c0d1e3]">
                 Asignado automáticamente para los sorteos mensuales de fin de mes
               </p>
             </div>
           )}
 
-          {/* Botón final para continuar al Paso 5 */}
+          {/* Botón principal de este paso: "Continuar" */}
           <div className="mt-9">
             <button
               type="button"
               onClick={onContinue}
               disabled={!selectedNumber && mode === 'manual'}
-              className="inline-flex items-center gap-3 rounded-full bg-[#dfb45d] px-9 py-4 text-xs font-bold uppercase tracking-[.15em] text-[#102844] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#efc975] disabled:opacity-50 disabled:pointer-events-none"
+              className="inline-flex items-center gap-3 rounded-full bg-[#93c46d] px-9 py-4 text-xs font-black uppercase tracking-[.15em] text-[#1d497f] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#82b55c] disabled:opacity-50 disabled:pointer-events-none"
               data-testid="button-view-plans"
             >
               <span>Continuar</span>
               <ArrowRight size={17} />
             </button>
             {!selectedNumber && mode === 'manual' && (
-              <p className="mt-2 text-xs text-[#dfb45d]">Por favor seleccioná uno de los 3 números para continuar</p>
+              <p className="mt-2 text-xs text-[#93c46d]">Por favor seleccioná un número para continuar</p>
             )}
           </div>
         </motion.div>
       )}
 
-      {/* Pop-up de Bonificación (Texto Exacto Obligatorio) */}
+      {/* Modal de Éxito / Suscripción (Texto Exacto) */}
       <AnimatePresence>
         {showModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#06172b]/80 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md"
           >
             <motion.div
               initial={{ y: 28, scale: 0.95, opacity: 0 }}
               animate={{ y: 0, scale: 1, opacity: 1 }}
               exit={{ y: 15, scale: 0.95, opacity: 0 }}
-              className="relative w-full max-w-lg rounded-3xl border border-[#dfb45d]/50 bg-[#112d4b] p-7 sm:p-9 text-left shadow-[0_30px_90px_rgba(0,0,0,.6)]"
+              className="relative w-full max-w-lg rounded-3xl border border-[#93c46d]/40 bg-[#1d497f] p-7 sm:p-9 text-left shadow-2xl text-white"
             >
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="absolute right-5 top-5 rounded-full p-1.5 text-[#9eb1c1] transition hover:bg-white/10 hover:text-white"
+                className="absolute right-5 top-5 rounded-full p-1.5 text-slate-300 transition hover:bg-white/10 hover:text-white"
                 data-testid="button-close-gift-modal"
               >
                 <X size={20} />
               </button>
 
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#dfb45d] to-[#b77d2b] text-[#102844] shadow-md">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#93c46d] text-[#1d497f] shadow-md">
                 <Sparkles size={28} />
               </div>
 
-              <p className="font-mono-custom text-[11px] font-bold uppercase tracking-[.22em] text-[#dfb45d]">
+              <p className="font-mono-custom text-[11px] font-bold uppercase tracking-[.22em] text-[#93c46d]">
                 Beneficio Exclusivo Validado
               </p>
 
-              {/* Texto exacto solicitado en el prompt */}
-              <h2 className="mt-3 font-display text-2xl font-800 leading-tight text-[#f8f6f0] sm:text-3xl">
+              {/* Texto Exacto Solicitado */}
+              <h2 className="mt-3 font-display text-2xl font-800 leading-tight text-white sm:text-3xl">
                 ¡FELICITACIONES! Guarda este código, si continuas con el proceso de adhesión tenes la suscripción 100% bonificada
               </h2>
 
-              <div className="mt-6 rounded-2xl border border-[#dfb45d]/40 bg-[#dfb45d]/10 p-4 text-center">
-                <p className="text-xs uppercase tracking-wider text-[#a5b8c9]">Código de bonificación digital:</p>
-                <p className="mt-1 font-mono-custom text-2xl font-black tracking-[.2em] text-[#f3cf82]">
+              <div className="mt-6 rounded-2xl border border-[#93c46d]/40 bg-black/25 p-4 text-center">
+                <p className="text-xs uppercase tracking-wider text-[#c0d1e3]">Código de bonificación digital:</p>
+                <p className="mt-1 font-mono-custom text-2xl font-black tracking-[.2em] text-[#93c46d]">
                   FONDUS2026
                 </p>
-                <p className="mt-1 text-[11px] text-[#70c7a3] font-medium">
-                  ✓ Suscripción bonificada aplicada automáticamente en el Paso 5
+                <p className="mt-1 text-[11px] text-[#93c46d] font-semibold">
+                  ✓ Suscripción 100% bonificada aplicada automáticamente
                 </p>
               </div>
 
@@ -730,10 +717,10 @@ function StepFour({
                   setShowModal(false);
                   if (!opened) handleReveal();
                 }}
-                className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#dfb45d] py-4 text-sm font-bold uppercase tracking-wider text-[#102844] transition hover:bg-[#efc975] shadow-md"
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] transition hover:bg-[#82b55c] shadow-md"
                 data-testid="button-dismiss-gift-modal"
               >
-                <span>Entendido</span>
+                <span>Continuar</span>
                 <Check size={18} />
               </button>
             </motion.div>
@@ -745,695 +732,128 @@ function StepFour({
 }
 
 // ----------------------------------------------------
-// Cálculo del próximo sorteo (Último sábado de cada mes)
+// Modal de Bases y Condiciones con Exigencia de Scroll
 // ----------------------------------------------------
-function getDrawInfo(now: Date) {
-  const lastSaturday = (year: number, month: number) => {
-    const date = new Date(year, month + 1, 0);
-    date.setDate(date.getDate() - ((date.getDay() + 1) % 7));
-    return date;
-  };
-  const monthDraw = lastSaturday(now.getFullYear(), now.getMonth());
-  const afterDraw = now > new Date(monthDraw.getFullYear(), monthDraw.getMonth(), monthDraw.getDate(), 23, 59, 59);
-  const next = afterDraw ? lastSaturday(now.getFullYear(), now.getMonth() + 1) : monthDraw;
-  const diff = Math.max(0, next.getTime() - now.getTime());
-  return {
-    next,
-    afterDraw,
-    days: Math.floor(diff / 86400000),
-    hours: Math.floor((diff % 86400000) / 3600000),
-    minutes: Math.floor((diff % 3600000) / 60000),
-    formattedDate: next.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' }),
-  };
-}
-
-// ----------------------------------------------------
-// PASO 5: Cierre de Adhesión (Checkout Automatizado)
-// ----------------------------------------------------
-function StepFive({
-  selectedPlan,
-  assignedNumber,
-  onOpenConditions,
-  onOpenArrepentimiento,
+function BasesScrollModal({
+  isOpen,
+  onClose,
+  onAccept,
 }: {
-  selectedPlan: Plan;
-  assignedNumber: string;
-  onOpenConditions: () => void;
-  onOpenArrepentimiento: () => void;
+  isOpen: boolean;
+  onClose: () => void;
+  onAccept: () => void;
 }) {
-  const [now, setNow] = useState(() => new Date());
-  const [submitted, setSubmitted] = useState(false);
-
-  // Checkboxes obligatorios
-  const [acceptedCapitalization, setAcceptedCapitalization] = useState(false);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-
-  // Formulario
-  const [form, setForm] = useState({
-    name: '',
-    dni: '',
-    phone: '',
-    debitMethod: 'Tarjeta de débito',
-    cardOrCbu: '',
-  });
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
 
   useEffect(() => {
-    const interval = window.setInterval(() => setNow(new Date()), 60000);
-    return () => window.clearInterval(interval);
-  }, []);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
-  const draw = useMemo(() => getDrawInfo(now), [now]);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!acceptedCapitalization || !acceptedTerms) return;
-    if (form.name && form.dni && form.phone) {
-      setSubmitted(true);
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollTop + clientHeight >= scrollHeight - 30) {
+      setHasScrolledToBottom(true);
     }
   };
 
-  return (
-    <motion.main {...fadeUp} className="relative z-10 min-h-screen text-[#f8f6f0]">
-      <div className="mx-auto max-w-6xl px-5 pb-16 sm:px-9 lg:px-12">
-        {/* Barra superior de checkout */}
-        <div className="flex items-center justify-between border-b border-white/10 py-5">
-          <Logo />
-          <div className="flex items-center gap-3">
-            <span className="hidden items-center gap-2 text-xs text-[#aec0ce] sm:flex">
-              <ShieldCheck size={16} className="text-[#dfb45d]" /> Proceso 100% Automático y Encriptado
-            </span>
-            <div className="rounded-full border border-[#70c7a3]/40 bg-[#70c7a3]/10 px-3 py-1 text-[11px] font-bold text-[#70c7a3]">
-              Suscripción 100% Bonificada
-            </div>
-          </div>
-        </div>
-
-        {/* Título de sección exacto: "Repasemos juntos" */}
-        <section className="pt-10 pb-8 text-left">
-          <p className="font-mono-custom text-[11px] uppercase tracking-[.24em] text-[#dfb45d]">
-            Paso 05 / Adhesión Digital Bonificada
-          </p>
-          <h1 className="font-display mt-2 text-[clamp(2.4rem,5.5vw,4.6rem)] font-800 leading-[1] tracking-[-.05em]">
-            Repasemos juntos
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-[#bdcbd8]">
-            Validá los datos de tu orden de capitalización y completá tu adhesión automática para asegurar tu número de sorteo y bonificación total.
-          </p>
-        </section>
-
-        {/* Resumen dinámico estructurado */}
-        <section className="mb-10 rounded-3xl border border-[#dfb45d]/40 bg-gradient-to-br from-[#122e4d] to-[#0a1c31] p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-          <div className="grid gap-6 md:grid-cols-3 md:items-center">
-            {/* Plan y cuotas */}
-            <div className="space-y-2 border-b border-white/10 pb-5 md:border-b-0 md:border-r md:border-white/10 md:pb-0 md:pr-6">
-              <span className="text-[10px] font-bold uppercase tracking-[.18em] text-[#dfb45d]">
-                Plan Seleccionado
-              </span>
-              <p className="font-display text-3xl font-800 text-white">
-                {selectedPlan.capital}
-              </p>
-              <div className="mt-3 space-y-1.5 text-xs text-[#cddae5]">
-                <p>
-                  <strong className="text-[#f3cf82]">Cuotas 1 a 4:</strong> {selectedPlan.cuotas1a4}
-                </p>
-                <p>
-                  <strong className="text-[#70c7a3]">Desde cuota 5 en adelante:</strong> {selectedPlan.cuotaDesde5}
-                </p>
-              </div>
-            </div>
-
-            {/* Número y Sorteo */}
-            <div className="space-y-2 border-b border-white/10 pb-5 md:border-b-0 md:border-r md:border-white/10 md:pb-0 md:pr-6">
-              <span className="text-[10px] font-bold uppercase tracking-[.18em] text-[#dfb45d]">
-                Tu Participación en Sorteos
-              </span>
-              <div className="flex items-center gap-3">
-                <div className="flex h-14 w-20 items-center justify-center rounded-2xl border border-[#dfb45d] bg-[#dfb45d]/20 font-mono-custom text-2xl font-black text-[#f3cf82]">
-                  {assignedNumber}
-                </div>
-                <div className="text-xs text-[#cddae5] leading-snug">
-                  <p className="font-semibold text-white">
-                    Vas a participar el último sábado de cada mes con el número: <span className="text-[#dfb45d] font-bold">{assignedNumber}</span>
-                  </p>
-                </div>
-              </div>
-              <p className="text-[11px] text-[#9eb1c1]">
-                Próximo sorteo: {draw.formattedDate}
-              </p>
-            </div>
-
-            {/* Garantía de adjudicación y retiro mes 18 */}
-            <div className="space-y-2.5">
-              <span className="text-[10px] font-bold uppercase tracking-[.18em] text-[#70c7a3]">
-                Garantías del Sistema
-              </span>
-              <p className="text-sm font-semibold text-white leading-snug">
-                Si salís adjudicado, no pagás más. A partir del mes 18, tenés disponibilidad de retiro.
-              </p>
-              <div className="flex items-center gap-2 text-xs text-[#dfb45d]">
-                <Sparkles size={15} /> Suscripción 100% Bonificada aplicada
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Grilla principal: Video de casos de éxito + Formulario con validación crítica */}
-        <section className="grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:items-start">
-          {/* Columna izquierda: Prueba social y video testimonial */}
-          <div className="space-y-6">
-            <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-[#142f4d]/90 shadow-[0_25px_70px_rgba(0,0,0,.24)] backdrop-blur-sm">
-              <div className="aspect-video w-full overflow-hidden">
-                <iframe
-                  className="h-full w-full border-0"
-                  src="https://www.youtube.com/embed/AdyrPXND35c?rel=0&modestbranding=1"
-                  title="Historias que ya avanzaron - Fondus"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
-              <div className="flex items-center gap-3 px-5 py-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#dfb45d] text-[#102844]">
-                  <Play size={14} fill="currentColor" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold">Historias que ya avanzaron</p>
-                  <p className="text-xs text-[#9fb1c0]">Conocé la experiencia de nuestros adjudicados reales</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Contador al sorteo */}
-            <div className="rounded-2xl border border-white/10 bg-white/[.04] p-5">
-              <p className="font-mono-custom text-[10px] uppercase tracking-[.2em] text-[#dfb45d]">
-                Tiempo restante para el sorteo mensual
-              </p>
-              <div className="mt-3 flex items-center gap-3">
-                <div className="text-center">
-                  <span className="font-mono-custom text-2xl font-bold text-[#f3cf82]">
-                    {String(draw.days).padStart(2, '0')}
-                  </span>
-                  <span className="block text-[9px] uppercase text-[#91a6b8]">días</span>
-                </div>
-                <span className="text-[#dfb45d] font-bold">:</span>
-                <div className="text-center">
-                  <span className="font-mono-custom text-2xl font-bold text-[#f3cf82]">
-                    {String(draw.hours).padStart(2, '0')}
-                  </span>
-                  <span className="block text-[9px] uppercase text-[#91a6b8]">hs</span>
-                </div>
-                <span className="text-[#dfb45d] font-bold">:</span>
-                <div className="text-center">
-                  <span className="font-mono-custom text-2xl font-bold text-[#f3cf82]">
-                    {String(draw.minutes).padStart(2, '0')}
-                  </span>
-                  <span className="block text-[9px] uppercase text-[#91a6b8]">min</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#dfb45d]/40 bg-[#dfb45d]/10 px-4 py-2 text-xs text-[#f0ca78]">
-              <Star size={14} fill="currentColor" /> Google Rating 4.9 Estrellas (Líder en capitalización)
-            </div>
-          </div>
-
-          {/* Columna derecha: Formulario de adhesión automática 100% */}
-          <div className="rounded-3xl border border-white/15 bg-[#112d4b] p-6 sm:p-8 shadow-xl">
-            {submitted ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex min-h-[380px] flex-col items-center justify-center text-center"
-              >
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#10b981] text-[#102844] shadow-lg">
-                  <Check size={32} strokeWidth={3} className="text-white" />
-                </div>
-                <h3 className="font-display mt-6 text-2xl sm:text-3xl font-800 text-white">
-                  ¡Adhesión Registrada con Éxito!
-                </h3>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-[#c3d3e0]">
-                  Tu suscripción 100% bonificada ha sido procesada de manera automática. Estás formalmente registrado para participar en el sorteo mensual con tu orden de <strong>{selectedPlan.capital}</strong>.
-                </p>
-
-                <div className="mt-6 w-full max-w-sm rounded-2xl border border-[#dfb45d]/50 bg-[#dfb45d]/10 p-4 text-center">
-                  <p className="text-xs uppercase tracking-wider text-[#b4c8d9]">Tu número oficial activo:</p>
-                  <p className="font-mono-custom text-3xl font-black text-[#f3cf82] tracking-[.15em]">
-                    {assignedNumber}
-                  </p>
-                  <p className="text-[11px] text-[#70c7a3] mt-1 font-semibold">
-                    ✓ Bonificación de Suscripción: 100% Bonificada
-                  </p>
-                </div>
-
-                <p className="mt-4 text-xs text-[#8ca4b6]">
-                  Hemos enviado la constancia digital y las bases del sistema a tus datos registrados.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() => setSubmitted(false)}
-                  className="mt-6 text-xs font-bold uppercase tracking-[.14em] text-[#dfb45d] underline hover:text-[#efc975]"
-                  data-testid="button-edit-submission"
-                >
-                  Modificar datos de adhesión
-                </button>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <h3 className="font-display text-xl font-bold text-[#f8f6f0]">
-                    Datos de Adhesión Digital
-                  </h3>
-                  <p className="text-xs text-[#9eb1c1]">
-                    Validá las condiciones y completá tus datos para activar tu número inmediatamente.
-                  </p>
-                </div>
-
-                {/* VALIDACIÓN DE CAPITALIZACIÓN (CRÍTICO) */}
-                <div className="rounded-2xl border-2 border-[#dfb45d]/40 bg-[#dfb45d]/10 p-4 transition">
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={acceptedCapitalization}
-                      onChange={(e) => setAcceptedCapitalization(e.target.checked)}
-                      className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#dfb45d] focus:ring-[#dfb45d]"
-                      data-testid="checkbox-capitalization"
-                    />
-                    <span className="text-xs font-semibold leading-relaxed text-[#f8f6f0]">
-                      Entiendo que me estoy suscribiendo a un sistema de capitalización y ahorro.
-                    </span>
-                  </label>
-                  {!acceptedCapitalization && (
-                    <p className="mt-2 text-[11px] font-medium text-[#f3cf82] flex items-center gap-1.5 pl-7">
-                      <LockKeyhole size={13} /> Marcá este casillero obligatorio para habilitar el formulario de captura.
-                    </p>
-                  )}
-                </div>
-
-                {/* SEGUNDO CHECKBOX: Acepto bases y condiciones */}
-                <div className="rounded-xl border border-white/10 bg-white/[.04] p-3">
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={acceptedTerms}
-                      onChange={(e) => setAcceptedTerms(e.target.checked)}
-                      className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#dfb45d] focus:ring-[#dfb45d]"
-                      data-testid="checkbox-terms"
-                    />
-                    <span className="text-xs text-[#c2d1db]">
-                      Acepto bases y condiciones del sistema de capitalización Fondus.
-                    </span>
-                  </label>
-                </div>
-
-                {/* FORMULARIO DE CAPTURA: Sólo habilitado si acceptedCapitalization está marcado */}
-                <fieldset disabled={!acceptedCapitalization} className={`space-y-4 transition-all duration-300 ${!acceptedCapitalization ? 'opacity-40 pointer-events-none filter blur-[0.5px]' : ''}`}>
-                  {/* Nombre y apellido */}
-                  <div>
-                    <label htmlFor="name" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#c2d1db]">
-                      Nombre y apellido
-                    </label>
-                    <div className="relative">
-                      <UserRound className="absolute left-4 top-3.5 text-[#8097a9]" size={16} />
-                      <input
-                        id="name"
-                        required
-                        value={form.name}
-                        onChange={(event) => setForm({ ...form, name: event.target.value })}
-                        className="w-full rounded-xl border border-white/15 bg-[#0b203a] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-[#6f879b] focus:border-[#dfb45d]"
-                        placeholder="Ej. Juan Pérez"
-                        data-testid="input-name"
-                      />
-                    </div>
-                  </div>
-
-                  {/* DNI */}
-                  <div>
-                    <label htmlFor="dni" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#c2d1db]">
-                      DNI (Documento Nacional de Identidad)
-                    </label>
-                    <div className="relative">
-                      <CreditCard className="absolute left-4 top-3.5 text-[#8097a9]" size={16} />
-                      <input
-                        id="dni"
-                        type="text"
-                        required
-                        value={form.dni}
-                        onChange={(event) => setForm({ ...form, dni: event.target.value })}
-                        className="w-full rounded-xl border border-white/15 bg-[#0b203a] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-[#6f879b] focus:border-[#dfb45d]"
-                        placeholder="Sin puntos ni espacios (Ej. 38450123)"
-                        data-testid="input-dni"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Teléfono */}
-                  <div>
-                    <label htmlFor="phone" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#c2d1db]">
-                      Teléfono / WhatsApp
-                    </label>
-                    <div className="relative">
-                      <MessageCircle className="absolute left-4 top-3.5 text-[#8097a9]" size={16} />
-                      <input
-                        id="phone"
-                        type="tel"
-                        required
-                        value={form.phone}
-                        onChange={(event) => setForm({ ...form, phone: event.target.value })}
-                        className="w-full rounded-xl border border-white/15 bg-[#0b203a] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-[#6f879b] focus:border-[#dfb45d]"
-                        placeholder="11 5555 5555"
-                        data-testid="input-phone"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Medio de débito */}
-                  <div>
-                    <label htmlFor="debitMethod" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#c2d1db]">
-                      Medio de débito automático
-                    </label>
-                    <select
-                      id="debitMethod"
-                      value={form.debitMethod}
-                      onChange={(event) => setForm({ ...form, debitMethod: event.target.value })}
-                      className="w-full appearance-none rounded-xl border border-white/15 bg-[#0b203a] px-4 py-3 text-sm text-white outline-none focus:border-[#dfb45d]"
-                      data-testid="select-debit"
-                    >
-                      <option>Tarjeta de débito</option>
-                      <option>CBU / cuenta bancaria</option>
-                      <option>NaranjaX</option>
-                      <option>Tarjeta de crédito</option>
-                    </select>
-                  </div>
-
-                  {/* Datos del medio (Tarjeta / CBU) */}
-                  <div>
-                    <label htmlFor="cardOrCbu" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#c2d1db]">
-                      Número de tarjeta o CBU
-                    </label>
-                    <input
-                      id="cardOrCbu"
-                      value={form.cardOrCbu}
-                      onChange={(event) => setForm({ ...form, cardOrCbu: event.target.value })}
-                      className="w-full rounded-xl border border-white/15 bg-[#0b203a] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[#6f879b] focus:border-[#dfb45d]"
-                      placeholder="Para vincular el aporte mensual sin traslados"
-                      data-testid="input-card-or-cbu"
-                    />
-                  </div>
-                </fieldset>
-
-                <button
-                  type="submit"
-                  disabled={!acceptedCapitalization || !acceptedTerms}
-                  className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#dfb45d] py-4 text-sm font-bold uppercase tracking-wider text-[#102844] shadow-lg transition hover:bg-[#efc975] disabled:opacity-50 disabled:cursor-not-allowed"
-                  data-testid="button-submit-adhesion"
-                >
-                  <span>Confirmar adhesión bonificada</span>
-                  <ArrowRight size={17} />
-                </button>
-
-                <p className="flex items-center justify-center gap-2 text-[10px] text-[#8197a9]">
-                  <LockKeyhole size={12} /> Tus datos están protegidos bajo estricto secreto financiero y encriptación SSL.
-                </p>
-              </form>
-            )}
-          </div>
-        </section>
-
-        {/* Footer Institucional */}
-        <footer className="mt-16 border-t border-white/15 pt-8 text-[11px] leading-relaxed text-[#8fa3b4]">
-          <div className="grid gap-8 sm:grid-cols-[1fr_auto]">
-            <div>
-              <Logo compact />
-              
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                {/* Botón de arrepentimiento */}
-                <button
-                  type="button"
-                  onClick={onOpenArrepentimiento}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/5 px-3 py-1.5 font-semibold text-[#f8f6f0] transition hover:border-[#dfb45d] hover:text-[#dfb45d]"
-                  data-testid="button-arrepentimiento"
-                >
-                  <Mail size={13} className="text-[#dfb45d]" />
-                  <span>Botón de arrepentimiento</span>
-                  <span className="text-[10px] text-[#a4b6c6] font-normal">(Tenés 10 días para revocar)</span>
-                </button>
-
-                {/* Condiciones Generales */}
-                <button
-                  type="button"
-                  onClick={onOpenConditions}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/5 px-3 py-1.5 font-semibold text-[#f8f6f0] transition hover:border-[#dfb45d] hover:text-[#dfb45d]"
-                  data-testid="button-general-conditions"
-                >
-                  <FileText size={13} className="text-[#dfb45d]" />
-                  <span>Condiciones Generales</span>
-                </button>
-              </div>
-
-              {/* Leyenda obligatoria */}
-              <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs font-bold text-[#f3cf82] max-w-md">
-                ⚠️ NO contamos con cobradores a domicilio.
-              </div>
-            </div>
-
-            {/* Sello de la IGJ */}
-            <div className="flex items-center gap-4 sm:flex-col sm:items-end">
-              <div className="flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/5 px-4 py-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#dfb45d] font-mono-custom text-xs font-black text-[#102844]">
-                  IGJ
-                </div>
-                <div className="text-left">
-                  <p className="font-bold text-[#f8f6f0] text-xs">Inspección General de Justicia</p>
-                  <p className="text-[10px] text-[#8fa3b4]">Sociedad de Capitalización Inscripta y Regulada</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="mt-8 border-t border-white/10 pt-5 text-[10px] text-[#657f94]">
-            La presente simulación es informativa y no vinculante hasta la formalización del contrato digital de capitalización y ahorro. Planes autorizados por la Inspección General de Justicia.
-          </p>
-        </footer>
-      </div>
-    </motion.main>
-  );
-}
-
-// ----------------------------------------------------
-// Modal: Formulario del Botón de Arrepentimiento
-// ----------------------------------------------------
-function ArrepentimientoModal({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
-  const [name, setName] = useState('');
-  const [dni, setDni] = useState('');
-  const [email, setEmail] = useState('');
-  const [reason, setReason] = useState('');
-  const [sent, setSent] = useState(false);
-
-  const handleSendEmail = (e: FormEvent) => {
-    e.preventDefault();
-    const subject = encodeURIComponent(`Solicitud de Arrepentimiento - DNI ${dni} - ${name}`);
-    const body = encodeURIComponent(
-      `Estimado equipo de Fondus:\n\nPor medio de la presente, solicito ejercer mi derecho legal de revocación/arrepentimiento de mi solicitud de adhesión conforme a los términos de la Ley de Defensa del Consumidor.\n\nDatos del titular:\nNombre: ${name}\nDNI: ${dni}\nEmail: ${email}\nMotivo: ${reason || 'Revocación voluntaria'}\n\nQuedo a la espera de la confirmación formal.`
-    );
-    window.location.href = `mailto:arrepentimiento@fondus.com.ar?subject=${subject}&body=${body}`;
-    setSent(true);
-  };
-
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#06172b]/80 p-4 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="relative w-full max-w-lg rounded-3xl border border-white/20 bg-[#112d4b] p-6 sm:p-8 text-left shadow-2xl"
+        className="relative flex max-h-[85vh] w-full max-w-xl flex-col rounded-2xl bg-white text-slate-800 shadow-2xl overflow-hidden"
       >
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute right-5 top-5 rounded-full p-1.5 text-[#9eb1c1] transition hover:bg-white/10 hover:text-white"
-        >
-          <X size={20} />
-        </button>
-
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-500/20 text-rose-400">
-            <Mail size={22} />
-          </div>
-          <div>
-            <h3 className="font-display text-xl font-bold text-white">Botón de Arrepentimiento</h3>
-            <p className="text-xs text-[#9eb1c1]">Derecho de revocación en 10 días corridos</p>
-          </div>
-        </div>
-
-        {sent ? (
-          <div className="mt-6 text-center py-6">
-            <CheckCircle2 size={44} className="mx-auto text-emerald-400" />
-            <h4 className="mt-4 font-bold text-lg text-white">Solicitud Iniciada</h4>
-            <p className="mt-2 text-xs text-[#c2d1db] leading-relaxed">
-              Se ha abierto tu cliente de correo electrónico para enviar formalmente la solicitud a <strong>arrepentimiento@fondus.com.ar</strong>. Tu caso tiene número de seguimiento asignado.
-            </p>
-            <button
-              type="button"
-              onClick={onClose}
-              className="mt-6 rounded-xl bg-[#dfb45d] px-6 py-2.5 text-xs font-bold uppercase text-[#102844]"
-            >
-              Cerrar
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={handleSendEmail} className="mt-5 space-y-3.5">
-            <p className="text-xs text-[#a9bccd] leading-relaxed">
-              Conforme a la Ley de Defensa del Consumidor, tenés 10 días corridos contados a partir de la firma del contrato para solicitar la revocación sin costo alguno.
-            </p>
-
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#cbd7e2]">Nombre completo</label>
-              <input
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-white/15 bg-[#0b203a] px-3.5 py-2.5 text-xs text-white outline-none focus:border-[#dfb45d]"
-                placeholder="Ej. Juan Pérez"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#cbd7e2]">DNI</label>
-              <input
-                required
-                value={dni}
-                onChange={(e) => setDni(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-white/15 bg-[#0b203a] px-3.5 py-2.5 text-xs text-white outline-none focus:border-[#dfb45d]"
-                placeholder="Número de documento"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#cbd7e2]">Correo electrónico</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-white/15 bg-[#0b203a] px-3.5 py-2.5 text-xs text-white outline-none focus:border-[#dfb45d]"
-                placeholder="correo@ejemplo.com"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#cbd7e2]">Motivo (opcional)</label>
-              <textarea
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                rows={2}
-                className="mt-1 w-full rounded-xl border border-white/15 bg-[#0b203a] px-3.5 py-2.5 text-xs text-white outline-none focus:border-[#dfb45d]"
-                placeholder="Indicanos brevemente el motivo..."
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#dfb45d] py-3 text-xs font-bold uppercase tracking-wider text-[#102844] transition hover:bg-[#efc975]"
-            >
-              <Send size={14} /> Enviar correo de revocación
-            </button>
-          </form>
-        )}
-      </motion.div>
-    </div>
-  );
-}
-
-// ----------------------------------------------------
-// Modal: Condiciones Generales
-// ----------------------------------------------------
-function ConditionsModal({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#06172b]/80 p-4 backdrop-blur-md">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-white/20 bg-[#112d4b] p-6 sm:p-8 text-left shadow-2xl"
-      >
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute right-5 top-5 rounded-full p-1.5 text-[#9eb1c1] transition hover:bg-white/10 hover:text-white"
-        >
-          <X size={20} />
-        </button>
-
-        <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#dfb45d]/20 text-[#dfb45d]">
-            <FileText size={22} />
-          </div>
-          <div>
-            <h3 className="font-display text-xl font-bold text-white">Condiciones Generales</h3>
-            <p className="text-xs text-[#dfb45d]">Sistema de Capitalización y Ahorro Fondus</p>
-          </div>
-        </div>
-
-        <div className="mt-5 space-y-4 text-xs leading-relaxed text-[#c6d5e2]">
-          <div>
-            <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">1. Naturaleza del Sistema</h4>
-            <p className="mt-1">
-              Fondus opera mediante planes de capitalización y ahorro debidamente registrados y aprobados por la Inspección General de Justicia (IGJ). El suscriptor efectúa aportes mensuales periódicos integrando un fondo común.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">2. Sorteos Mensuales y Adjudicación</h4>
-            <p className="mt-1">
-              Los sorteos se celebran el último sábado de cada mes mediante la Lotería de la Ciudad de Buenos Aires / Lotería Nacional. En caso de resultar adjudicado con el número asignado en el título, el suscriptor accede a la orden de compra o capital correspondiente y queda liberado del pago de cuotas futuras (¡no paga más!).
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">3. Esquema de Cuotas Fijas</h4>
-            <p className="mt-1">
-              Las cuotas 1 a 4 incluyen los costos iniciales de emisión y administración. A partir de la cuota 5, el valor de la cuota se reduce y permanece en valor base accesible.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">4. Derecho de Rescate (Mes 18)</h4>
-            <p className="mt-1">
-              A partir del mes 18 ininterrumpido de aporte, el suscriptor cuenta con el derecho de solicitar el retiro o rescate de sus fondos según la tabla matemática oficial estipulada en el contrato de capitalización.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">5. Medios de Pago y Cobranza</h4>
-            <p className="mt-1 font-semibold text-amber-300">
-              Fondus NO cuenta con cobradores a domicilio. Los pagos se canalizan exclusivamente por débito automático bancario, tarjetas de crédito/débito habilitadas o redes oficiales de pago autorizadas.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-6 border-t border-white/10 pt-4">
+        <div className="flex items-center justify-between border-b-2 border-[#93c46d] bg-[#1d497f] px-6 py-4 text-white">
+          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-white">
+            Bases y Condiciones del Sistema Fondus
+          </h3>
           <button
             type="button"
             onClick={onClose}
-            className="w-full rounded-xl bg-[#dfb45d] py-3 text-xs font-bold uppercase text-[#102844] transition hover:bg-[#efc975]"
+            className="rounded-lg p-1 text-slate-200 hover:text-white"
           >
-            Entendido
+            <X size={18} />
+          </button>
+        </div>
+
+        <div
+          onScroll={handleScroll}
+          className="flex-1 overflow-y-auto px-6 py-5 text-xs text-slate-700 space-y-4 leading-relaxed"
+        >
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 font-medium text-[11px]">
+            ⚠️ Requisito de adhesión: Por favor desplazate hasta el final de este documento para validar la lectura de las bases técnicas y poder tildar la confirmación.
+          </div>
+
+          <div>
+            <h4 className="font-bold text-slate-900 uppercase">1. Objeto del Sistema</h4>
+            <p className="mt-1">
+              FONDUS S.A. DE CAPITALIZACIÓN Y AHORRO administra planes de capitalización conforme al Decreto N° 142.277/43, aprobados por la Inspección General de Justicia bajo Resolución IGJ RES 000289/11. El suscriptor efectúa cuotas fijas en pesos para formar un capital garantizado o adjudicarse anticipadamente por sorteo.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-slate-900 uppercase">2. Dinámica de Sorteos</h4>
+            <p className="mt-1">
+              Los sorteos se celebran el último sábado de cada mes mediante la Lotería de la Ciudad de Buenos Aires (LOTBA S.E.). El título resulta favorecido si coincide con las tres últimas cifras del premio mayor. En caso de resultar adjudicado, el suscriptor accede al capital u orden de compra y queda eximido de continuar abonando (¡NO PAGA MÁS!).
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-slate-900 uppercase">3. Esquema de Cuotas Fijas</h4>
+            <p className="mt-1">
+              Las cuotas 1 a 4 incluyen los costos de suscripción y cargas administrativas iniciales. A partir de la cuota 5, la cuota disminuye sensiblemente y permanece fija en pesos durante toda la vigencia del plan.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-slate-900 uppercase">4. Disponibilidad de Fondos y Rescate (Mes 18)</h4>
+            <p className="mt-1">
+              A partir de la cuota comercial N° 18 en planes de 300 meses (o N° 15 en planes de 180 meses), el titular goza del derecho irrestricto de solicitar el rescate de sus fondos según la tabla matemática oficial anexa al título.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-slate-900 uppercase">5. Seguridad en Medios de Pago</h4>
+            <p className="mt-1 font-semibold text-slate-900">
+              Fondus NO cuenta con cobradores a domicilio. Los aportes se debitan automáticamente a través de entidades bancarias, CBU o tarjetas de crédito/débito autorizadas.
+            </p>
+          </div>
+
+          <div className="pt-2 text-center text-slate-400 font-mono-custom text-[10px]">
+            &mdash; Fin del documento oficial &mdash;
+          </div>
+        </div>
+
+        <div className="border-t border-slate-200 px-6 py-4 bg-slate-50 flex items-center justify-between">
+          <span className="text-[11px] font-medium text-slate-600">
+            {hasScrolledToBottom ? (
+              <span className="text-[#1d497f] font-bold flex items-center gap-1">
+                <CheckCircle2 size={14} className="text-[#93c46d]" /> Lectura completa verificada
+              </span>
+            ) : (
+              'Deslizá hasta el final para habilitar'
+            )}
+          </span>
+          <button
+            type="button"
+            disabled={!hasScrolledToBottom}
+            onClick={() => {
+              onAccept();
+              onClose();
+            }}
+            className="rounded-xl bg-[#93c46d] px-5 py-2.5 text-xs font-black uppercase tracking-wider text-[#1d497f] shadow-md transition disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#82b55c]"
+          >
+            Aceptar Bases
           </button>
         </div>
       </motion.div>
@@ -1442,19 +862,486 @@ function ConditionsModal({
 }
 
 // ----------------------------------------------------
-// APP PRINCIPAL
+// PASO 3: Revisión y Checkout ("Repasemos juntos")
+// ----------------------------------------------------
+function StepThreeCheckout({
+  selectedPlan,
+  assignedNumber,
+}: {
+  selectedPlan: Plan;
+  assignedNumber: string;
+}) {
+  const [submitted, setSubmitted] = useState(false);
+  const [acceptedCapitalization, setAcceptedCapitalization] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [isBasesModalOpen, setIsBasesModalOpen] = useState(false);
+
+  const [form, setForm] = useState({
+    name: '',
+    dni: '',
+    phone: '',
+    debitMethod: 'Tarjeta de débito',
+    cardOrCbu: '',
+  });
+
+  // API de YouTube IFrame para pausar video de fondo
+  useEffect(() => {
+    if (!submitted) return;
+
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    let player: any = null;
+
+    const initPlayer = () => {
+      if (window.YT && window.YT.Player && document.getElementById('fondus-explainer-player')) {
+        player = new window.YT.Player('fondus-explainer-player', {
+          events: {
+            onStateChange: (event: any) => {
+              // 1 es YT.PlayerState.PLAYING
+              if (event.data === 1) {
+                const bgVideo = document.querySelector('video.bg-video') as HTMLVideoElement | null;
+                if (bgVideo && !bgVideo.paused) {
+                  bgVideo.pause();
+                }
+              }
+            },
+          },
+        });
+      }
+    };
+
+    if (window.YT && window.YT.Player) {
+      initPlayer();
+    } else {
+      window.onYouTubeIframeAPIReady = () => {
+        initPlayer();
+      };
+    }
+
+    return () => {
+      if (player && typeof player.destroy === 'function') {
+        try {
+          player.destroy();
+        } catch (e) {}
+      }
+    };
+  }, [submitted]);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!acceptedCapitalization || !acceptedTerms) return;
+    if (form.name && form.dni && form.phone) {
+      setSubmitted(true);
+    }
+  };
+
+  return (
+    <motion.main {...fadeUp} className="relative z-10 min-h-screen text-white">
+      <div className="mx-auto max-w-6xl px-5 pb-16 sm:px-9 lg:px-12">
+        {/* Barra superior de checkout */}
+        <div className="flex items-center justify-between border-b border-white/10 py-5">
+          <Logo />
+          <div className="flex items-center gap-3">
+            <span className="hidden items-center gap-2 text-xs text-[#c0d1e3] sm:flex">
+              <ShieldCheck size={16} className="text-[#93c46d]" /> Proceso 100% Automático y Encriptado
+            </span>
+            <div className="rounded-full bg-[#93c46d]/20 px-3.5 py-1 text-[11px] font-bold text-[#93c46d] border border-[#93c46d]/40">
+              Suscripción 100% Bonificada
+            </div>
+          </div>
+        </div>
+
+        {!submitted ? (
+          <>
+            {/* 4. Sección de Transición */}
+            <section className="pt-10 pb-6 text-left">
+              <p className="font-mono-custom text-[11px] uppercase tracking-[.24em] text-[#93c46d]">
+                Paso 03 / Adhesión Digital Inmediata
+              </p>
+              {/* Título Superior Exacto */}
+              <h1 className="font-display mt-2 text-[clamp(2.4rem,5.5vw,4.6rem)] font-800 leading-[1] tracking-[-.05em]">
+                Repasemos juntos
+              </h1>
+              {/* Frase de transición solicitada */}
+              <p className="mt-3 max-w-2xl text-base text-[#d8e3ed] font-medium">
+                Ahora sí, hacerlo tangible. Estás a un paso de terminar el proceso de adhesión
+              </p>
+            </section>
+
+            {/* 4. Bloque del Contador de Sorteos con Textos Actualizados */}
+            <section className="mb-10 rounded-3xl border border-[#93c46d]/40 bg-[#153863]/90 p-6 sm:p-8 shadow-xl">
+              <div className="grid gap-6 md:grid-cols-2 md:items-center">
+                <div>
+                  <p className="text-xs uppercase font-bold tracking-[.18em] text-[#93c46d]">
+                    Sorteo de Adjudicación Mensual
+                  </p>
+                  <h3 className="font-display text-xl sm:text-2xl font-bold mt-1 text-white">
+                    Último número ganador: 390. Tu oportunidad tiene fecha.
+                  </h3>
+                  <p className="mt-2 text-sm text-[#d8e3ed]">
+                    Si te suscribís hoy, participás por el sorteo de la adjudicación
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-start md:justify-end gap-3 text-center">
+                  <div className="rounded-2xl bg-black/25 px-4 py-3 border border-white/10">
+                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">04</span>
+                    <span className="block text-[9px] uppercase text-[#a4bdd4]">días</span>
+                  </div>
+                  <span className="text-[#93c46d] font-bold text-xl">:</span>
+                  <div className="rounded-2xl bg-black/25 px-4 py-3 border border-white/10">
+                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">18</span>
+                    <span className="block text-[9px] uppercase text-[#a4bdd4]">hs</span>
+                  </div>
+                  <span className="text-[#93c46d] font-bold text-xl">:</span>
+                  <div className="rounded-2xl bg-black/25 px-4 py-3 border border-white/10">
+                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">35</span>
+                    <span className="block text-[9px] uppercase text-[#a4bdd4]">min</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Grilla Principal: Cuadro de Resumen Obligatorio + Formulario */}
+            <section className="grid gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
+              {/* 5. Cuadro de Resumen Obligatorio */}
+              <div className="rounded-3xl border border-[#93c46d]/40 bg-[#153863]/90 p-6 sm:p-8 shadow-xl space-y-6">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-[.18em] text-[#93c46d]">
+                    Resumen de tu Adhesión
+                  </span>
+                  <p className="font-display text-2xl font-800 text-white mt-1">
+                    {selectedPlan.capital}
+                  </p>
+                </div>
+
+                {/* Número elegido */}
+                <div className="rounded-2xl bg-black/25 p-4 border border-white/10 flex items-center justify-between">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-wider text-[#a4bdd4]">Tu número elegido:</p>
+                    <p className="font-mono-custom text-3xl font-black text-[#93c46d] mt-0.5">
+                      {assignedNumber}
+                    </p>
+                  </div>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#93c46d]/15 text-[#93c46d]">
+                    <Ticket size={24} />
+                  </div>
+                </div>
+
+                {/* Detalle obligatorio */}
+                <div className="space-y-3 text-sm text-[#e0eaf3]">
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={17} className="text-[#93c46d] shrink-0 mt-0.5" />
+                    <span>Participás el último sábado de cada mes.</span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={17} className="text-[#93c46d] shrink-0 mt-0.5" />
+                    <span>
+                      Cuota 1 a 4: <strong className="text-white">{selectedPlan.cuotas1a4}</strong> / Desde cuota 5: <strong className="text-[#93c46d]">{selectedPlan.cuotaDesde5}</strong>.
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={17} className="text-[#93c46d] shrink-0 mt-0.5" />
+                    <span>Si salís adjudicado no pagás más.</span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={17} className="text-[#93c46d] shrink-0 mt-0.5" />
+                    <span>Disponibilidad de retiro a partir del mes 18.</span>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-[#93c46d] font-semibold">
+                  <Sparkles size={16} /> Bonificación del 100% de suscripción activa
+                </div>
+              </div>
+
+              {/* Formulario de Checkout 100% Digital */}
+              <div className="rounded-3xl border border-white/15 bg-[#153863] p-6 sm:p-8 shadow-xl">
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div>
+                    <h3 className="font-display text-xl font-bold text-white">
+                      Confirmá tus Datos Personales
+                    </h3>
+                    <p className="text-xs text-[#c0d1e3]">
+                      Flujo 100% digital. Completá tu información para emitir tu título oficial.
+                    </p>
+                  </div>
+
+                  {/* Checkbox Obligatorio con Pop-up de scroll */}
+                  <div className="rounded-2xl border-2 border-[#93c46d]/40 bg-[#93c46d]/10 p-4 transition">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={acceptedCapitalization}
+                        onChange={(e) => {
+                          if (!acceptedCapitalization) {
+                            setIsBasesModalOpen(true);
+                          } else {
+                            setAcceptedCapitalization(e.target.checked);
+                          }
+                        }}
+                        className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d]"
+                        data-testid="checkbox-capitalization"
+                      />
+                      <span className="text-xs font-semibold leading-relaxed text-white">
+                        Entiendo que me estoy suscribiendo a un sistema de capitalización y ahorro.
+                      </span>
+                    </label>
+
+                    {!acceptedCapitalization ? (
+                      <button
+                        type="button"
+                        onClick={() => setIsBasesModalOpen(true)}
+                        className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#93c46d] underline hover:text-white pl-7"
+                      >
+                        [ Leer bases y condiciones completas para habilitar el tilde ]
+                      </button>
+                    ) : (
+                      <p className="mt-1.5 text-[11px] text-[#93c46d] flex items-center gap-1 pl-7 font-semibold">
+                        <CheckCircle2 size={13} /> Bases leídas y aceptadas conforme a normativa IGJ.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Segundo Checkbox: Acepto bases y condiciones */}
+                  <div className="rounded-xl border border-white/10 bg-white/[.04] p-3">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={acceptedTerms}
+                        onChange={(e) => setAcceptedTerms(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d]"
+                        data-testid="checkbox-terms"
+                      />
+                      <span className="text-xs text-[#d8e3ed]">
+                        Acepto bases y condiciones del sistema de capitalización Fondus.
+                      </span>
+                    </label>
+                  </div>
+
+                  {/* Campos habilitados si aceptó capitalización */}
+                  <fieldset disabled={!acceptedCapitalization} className={`space-y-4 transition-all duration-300 ${!acceptedCapitalization ? 'opacity-40 pointer-events-none filter blur-[0.4px]' : ''}`}>
+                    <div>
+                      <label htmlFor="name" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#d8e3ed]">
+                        Nombre y apellido
+                      </label>
+                      <div className="relative">
+                        <UserRound className="absolute left-4 top-3.5 text-[#9bb3ca]" size={16} />
+                        <input
+                          id="name"
+                          required
+                          value={form.name}
+                          onChange={(e) => setForm({ ...form, name: e.target.value })}
+                          className="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                          placeholder="Ej. Juan Pérez"
+                          data-testid="input-name"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="dni" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#d8e3ed]">
+                        DNI (Documento Nacional de Identidad)
+                      </label>
+                      <div className="relative">
+                        <CreditCard className="absolute left-4 top-3.5 text-[#9bb3ca]" size={16} />
+                        <input
+                          id="dni"
+                          type="text"
+                          required
+                          value={form.dni}
+                          onChange={(e) => setForm({ ...form, dni: e.target.value })}
+                          className="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                          placeholder="Sin puntos ni espacios (Ej. 38450123)"
+                          data-testid="input-dni"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="phone" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#d8e3ed]">
+                        Teléfono / WhatsApp
+                      </label>
+                      <div className="relative">
+                        <MessageCircle className="absolute left-4 top-3.5 text-[#9bb3ca]" size={16} />
+                        <input
+                          id="phone"
+                          type="tel"
+                          required
+                          value={form.phone}
+                          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                          className="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                          placeholder="11 5555 5555"
+                          data-testid="input-phone"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="debitMethod" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#d8e3ed]">
+                        Medio de débito automático
+                      </label>
+                      <select
+                        id="debitMethod"
+                        value={form.debitMethod}
+                        onChange={(e) => setForm({ ...form, debitMethod: e.target.value })}
+                        className="w-full appearance-none rounded-xl border border-white/15 bg-[#102c4f] px-4 py-3 text-sm text-white outline-none focus:border-[#93c46d]"
+                        data-testid="select-debit"
+                      >
+                        <option>Tarjeta de débito</option>
+                        <option>CBU / cuenta bancaria</option>
+                        <option>NaranjaX</option>
+                        <option>Tarjeta de crédito</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="cardOrCbu" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#d8e3ed]">
+                        Número de tarjeta o CBU
+                      </label>
+                      <input
+                        id="cardOrCbu"
+                        value={form.cardOrCbu}
+                        onChange={(e) => setForm({ ...form, cardOrCbu: e.target.value })}
+                        className="w-full rounded-xl border border-white/15 bg-[#102c4f] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                        placeholder="Para vincular el aporte mensual sin traslados"
+                        data-testid="input-card-or-cbu"
+                      />
+                    </div>
+                  </fieldset>
+
+                  <button
+                    type="submit"
+                    disabled={!acceptedCapitalization || !acceptedTerms}
+                    className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c] disabled:opacity-50 disabled:cursor-not-allowed"
+                    data-testid="button-submit-adhesion"
+                  >
+                    <span>Confirmar adhesión bonificada</span>
+                    <ArrowRight size={17} />
+                  </button>
+
+                  <p className="flex items-center justify-center gap-2 text-[10px] text-[#a4bdd4]">
+                    <LockKeyhole size={12} className="text-[#93c46d]" /> Tus datos están protegidos bajo estricto secreto financiero y encriptación SSL.
+                  </p>
+                </form>
+              </div>
+            </section>
+          </>
+        ) : (
+          /* 6. Pantalla Final: Adhesión Exitosa con Reproductor YouTube Inteligente */
+          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="pt-8 space-y-12">
+            <div className="rounded-3xl border border-[#93c46d]/40 bg-[#153863] p-8 text-center max-w-2xl mx-auto shadow-2xl">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#93c46d] text-[#1d497f] shadow-lg">
+                <Check size={36} strokeWidth={3} />
+              </div>
+              <h2 className="font-display mt-5 text-3xl font-extrabold text-white">
+                ¡Adhesión Registrada con Éxito!
+              </h2>
+              <p className="mt-2 text-sm text-[#d8e3ed]">
+                Tu proceso se ha completado automáticamente. Tu suscripción está 100% bonificada y tu participación se encuentra activa.
+              </p>
+
+              <div className="mt-6 rounded-2xl bg-black/25 p-4 border border-[#93c46d]/30 max-w-xs mx-auto">
+                <p className="text-xs uppercase text-[#a4bdd4]">Número Oficial Asignado:</p>
+                <p className="font-mono-custom text-4xl font-black text-[#93c46d] mt-1">{assignedNumber}</p>
+                <p className="text-[11px] text-white mt-1">{selectedPlan.capital}</p>
+              </div>
+            </div>
+
+            {/* VIDEO PRINCIPAL GRANDE: "Te explico como funciona Fondus en 1 minuto" */}
+            <div className="rounded-3xl border border-[#93c46d]/40 bg-[#153863] p-6 sm:p-8 shadow-2xl">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#93c46d] text-[#1d497f]">
+                  <Play size={20} fill="currentColor" />
+                </div>
+                <div>
+                  <h3 className="font-display text-xl font-bold text-white">
+                    Te explico como funciona Fondus en 1 minuto
+                  </h3>
+                  <p className="text-xs text-[#93c46d] font-semibold">
+                    Mirá este breve video explicativo sobre tu sistema de capitalización
+                  </p>
+                </div>
+              </div>
+
+              {/* IFrame de YouTube con API jsapi habilitada */}
+              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10 shadow-lg bg-black">
+                <iframe
+                  id="fondus-explainer-player"
+                  className="h-full w-full border-0"
+                  src="https://www.youtube.com/embed/_JywDCltepk?enablejsapi=1"
+                  title="Te explico como funciona Fondus en 1 minuto"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+
+            {/* Sección de Testimonios debajo del video explicativo */}
+            <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-[#153863]/90 p-6 sm:p-8 shadow-xl">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#93c46d]/20 text-[#93c46d]">
+                  <Play size={16} fill="currentColor" />
+                </div>
+                <div>
+                  <h4 className="font-display text-lg font-bold text-white">Historias que ya avanzaron</h4>
+                  <p className="text-xs text-[#c0d1e3]">Conocé la experiencia de nuestros adjudicados reales</p>
+                </div>
+              </div>
+
+              <div className="aspect-video w-full overflow-hidden rounded-2xl bg-black border border-white/10">
+                <iframe
+                  className="h-full w-full border-0"
+                  src="https://www.youtube.com/embed/AdyrPXND35c?rel=0&modestbranding=1"
+                  title="Historias que ya avanzaron - Fondus"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Footer Institucional con Módulo Legal Híbrido */}
+        <footer className="mt-16 border-t border-white/15 pt-8 text-[11px] leading-relaxed text-[#b3c7db]">
+          <div className="mb-6">
+            <Logo compact />
+          </div>
+          <LegalFooterSection />
+          <p className="mt-8 border-t border-white/10 pt-5 text-[10px] text-[#8ca3ba]">
+            La presente simulación es informativa y no vinculante hasta la formalización del contrato digital de capitalización y ahorro. Planes autorizados por la Inspección General de Justicia.
+          </p>
+        </footer>
+      </div>
+
+      {/* Modal con Scroll Obligatorio de Bases */}
+      <BasesScrollModal
+        isOpen={isBasesModalOpen}
+        onClose={() => setIsBasesModalOpen(false)}
+        onAccept={() => {
+          setAcceptedCapitalization(true);
+          setAcceptedTerms(true);
+        }}
+      />
+    </motion.main>
+  );
+}
+
+// ----------------------------------------------------
+// APP PRINCIPAL (EMBUDO INTERACTIVO)
 // ----------------------------------------------------
 function App() {
   const [step, setStep] = useState(1);
-  const [selectedPlan, setSelectedPlan] = useState<Plan>(PLANS[1]); // Default al plan más elegido ($10M)
+  const [selectedPlan, setSelectedPlan] = useState<Plan>(PLANS[1]); // Default $15M
   const [numberMode, setNumberMode] = useState<'manual' | 'random'>('random');
-  const [assignedNumber, setAssignedNumber] = useState<string>('714');
+  const [assignedNumber, setAssignedNumber] = useState<string>('815');
   const [calculating, setCalculating] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-
-  // Modales del Footer
-  const [isArrepentimientoOpen, setIsArrepentimientoOpen] = useState(false);
-  const [isConditionsOpen, setIsConditionsOpen] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -1519,8 +1406,8 @@ function App() {
     setCalculating(true);
     window.setTimeout(() => {
       setCalculating(false);
-      setStep(3);
-    }, 1300);
+      setStep(3); // Pasa a Sofia
+    }, 1200);
   };
 
   const handleChooseMode = (mode: 'manual' | 'random') => {
@@ -1528,7 +1415,7 @@ function App() {
     if (mode === 'random') {
       setAssignedNumber(generateRandomThreeDigit());
     }
-    window.setTimeout(() => setStep(4), 500);
+    window.setTimeout(() => setStep(4), 500); // Pasa a Gamificación
   };
 
   const back = () => {
@@ -1538,7 +1425,7 @@ function App() {
   };
 
   return (
-    <div className="grain min-h-[100dvh] overflow-hidden bg-[#0a1f38]">
+    <div className="grain min-h-[100dvh] overflow-hidden bg-[#1d497f]">
       <BackgroundVideo videoRef={videoRef} isMuted={isMuted} />
       
       {step < 5 && (
@@ -1557,38 +1444,36 @@ function App() {
             {...fadeUp}
             className="relative z-10 flex min-h-[calc(100dvh-93px)] flex-col items-center justify-center px-6 text-center"
           >
-            <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#dfb45d]/35">
-              <span className="absolute inset-1 rounded-full border border-dashed border-[#dfb45d] animate-spin" />
-              <Zap className="text-[#dfb45d]" size={27} />
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#93c46d]/40">
+              <span className="absolute inset-1 rounded-full border border-dashed border-[#93c46d] animate-spin" />
+              <Zap className="text-[#93c46d]" size={28} />
             </div>
-            <h2 className="mt-8 font-display text-2xl font-800 text-[#f8f6f0]">
+            <h2 className="mt-8 font-display text-2xl font-800 text-white">
               Configurando posibilidades con {selectedPlan.capital}...
             </h2>
-            <p className="mt-3 text-sm text-[#b9c9d6]">
+            <p className="mt-3 text-sm text-[#d8e3ed]">
               Ajustando el esquema de cuotas fijas y sorteos mensuales.
             </p>
           </motion.div>
         ) : step === 1 ? (
-          <StepOne key="step1" onStart={() => setStep(2)} />
+          <StepHero key="hero" onStart={() => setStep(2)} />
         ) : step === 2 ? (
-          <StepTwo key="step2" onSelectPlan={handleSelectPlan} selectedPlan={calculating ? selectedPlan : null} />
+          <StepOnePlans key="step1" onSelectPlan={handleSelectPlan} selectedPlan={calculating ? selectedPlan : null} />
         ) : step === 3 ? (
-          <StepThree key="step3" selectedPlan={selectedPlan} onChooseMode={handleChooseMode} />
+          <StepTwoSofia key="step2" selectedPlan={selectedPlan} onChooseMode={handleChooseMode} />
         ) : step === 4 ? (
-          <StepFour
-            key="step4"
+          <StepGamificationModal
+            key="step3"
             mode={numberMode}
             selectedNumber={assignedNumber}
             onSelectNumber={(num) => setAssignedNumber(num)}
             onContinue={() => setStep(5)}
           />
         ) : (
-          <StepFive
-            key="step5"
+          <StepThreeCheckout
+            key="step4"
             selectedPlan={selectedPlan}
             assignedNumber={assignedNumber}
-            onOpenConditions={() => setIsConditionsOpen(true)}
-            onOpenArrepentimiento={() => setIsArrepentimientoOpen(true)}
           />
         )}
       </AnimatePresence>
@@ -1597,17 +1482,17 @@ function App() {
       <button
         type="button"
         onClick={toggleMute}
-        className="fixed bottom-6 right-6 z-30 flex items-center gap-2.5 rounded-full border border-[#dfb45d]/40 bg-[#0a1f38]/90 px-4 py-2.5 text-xs font-semibold text-[#f8f6f0] shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-md transition hover:scale-105 hover:border-[#dfb45d] hover:bg-[#102d4d]"
+        className="fixed bottom-6 right-6 z-30 flex items-center gap-2.5 rounded-full border border-[#93c46d]/40 bg-[#1d497f]/90 px-4 py-2.5 text-xs font-semibold text-white shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-md transition hover:scale-105 hover:border-[#93c46d] hover:bg-[#255793]"
         data-testid="button-floating-audio"
       >
         {isMuted ? (
           <>
-            <VolumeX size={16} className="text-[#dfb45d]" />
+            <VolumeX size={16} className="text-[#93c46d]" />
             <span>Activar audio</span>
           </>
         ) : (
           <>
-            <Volume2 size={16} className="text-[#dfb45d]" />
+            <Volume2 size={16} className="text-[#93c46d]" />
             <span>Audio activado</span>
           </>
         )}
@@ -1615,16 +1500,6 @@ function App() {
 
       {/* Pop-ups Dinámicos de Prueba Social (Superpuesto z-50) */}
       <SocialProof />
-
-      {/* Modales Institucionales */}
-      <ArrepentimientoModal
-        isOpen={isArrepentimientoOpen}
-        onClose={() => setIsArrepentimientoOpen(false)}
-      />
-      <ConditionsModal
-        isOpen={isConditionsOpen}
-        onClose={() => setIsConditionsOpen(false)}
-      />
     </div>
   );
 }

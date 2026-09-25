@@ -91,16 +91,16 @@ export function SocialProof() {
             transition={{ type: 'spring', damping: 20, stiffness: 260 }}
             className={`pointer-events-auto fixed ${
               currentToast.position === 'left' ? 'bottom-4 left-4' : 'bottom-4 right-4'
-            } z-50 flex max-w-[90vw] items-center gap-3 rounded-xl border border-sky-100 border-l-4 border-l-green-500 bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md sm:max-w-sm`}
+            } z-50 flex max-w-[90vw] items-center gap-3 rounded-xl border border-slate-100 border-l-4 border-l-[#93c46d] bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md sm:max-w-sm`}
           >
-            {/* Ícono de validación en verde institucional */}
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-green-50 text-green-600 shadow-sm">
-              <CheckCircle2 size={20} className="text-green-600 stroke-[2.5]" />
+            {/* Ícono de validación en verde institucional Fondus */}
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#93c46d]/15 text-[#93c46d] shadow-sm">
+              <CheckCircle2 size={20} className="text-[#93c46d] stroke-[2.5]" />
             </div>
 
             <div className="min-w-0 flex-1 text-left">
               {/* Título en Azul marino: "[Nombre] de [Ubicación]" */}
-              <p className="truncate text-xs font-bold text-[#0a1f38]">
+              <p className="truncate text-xs font-bold text-[#1d497f]">
                 {currentToast.name} de {currentToast.location}
               </p>
 
