@@ -1139,51 +1139,8 @@ function StepThreeCheckout({
                     </p>
                   </div>
 
-                  {/* Checkbox Obligatorio: Términos y Condiciones - Autorización de débito automático */}
-                  <div
-                    onClick={() => {
-                      if (!acceptedCapitalization) {
-                        setIsBasesModalOpen(true);
-                      }
-                    }}
-                    className="rounded-2xl border-2 border-[#93c46d]/40 bg-[#93c46d]/10 p-4 transition cursor-pointer hover:border-[#93c46d]"
-                  >
-                    <div className="flex items-start gap-3">
-                      <input
-                        type="checkbox"
-                        checked={acceptedCapitalization}
-                        readOnly
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!acceptedCapitalization) {
-                            setIsBasesModalOpen(true);
-                          } else {
-                            setAcceptedCapitalization(false);
-                            setAcceptedTerms(false);
-                          }
-                        }}
-                        className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
-                        data-testid="checkbox-capitalization"
-                      />
-                      <div className="flex-1 text-left">
-                        <span className="text-xs font-semibold leading-relaxed text-white">
-                          Acepto Términos y Condiciones - Autorización de débito automático del sistema de capitalización.
-                        </span>
-                        {!acceptedCapitalization ? (
-                          <p className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#93c46d] underline hover:text-white">
-                            [ Hacer clic aquí para leer y validar autorización ]
-                          </p>
-                        ) : (
-                          <p className="mt-1.5 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
-                            <CheckCircle2 size={13} /> Términos y débito automático autorizados conforme a normativa IGJ.
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Campos habilitados si aceptó capitalización */}
-                  <fieldset disabled={!acceptedCapitalization} className={`space-y-4 transition-all duration-300 ${!acceptedCapitalization ? 'opacity-40 pointer-events-none filter blur-[0.4px]' : ''}`}>
+                  {/* Campos de datos personales */}
+                  <div className="space-y-4">
                     <div>
                       <label htmlFor="name" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#d8e3ed]">
                         Nombre y apellido
@@ -1239,11 +1196,91 @@ function StepThreeCheckout({
                         />
                       </div>
                     </div>
-                  </fieldset>
+                  </div>
+
+                  {/* Doble Checkbox de Validación Legal */}
+                  <div className="space-y-3 pt-2">
+                    {/* Casilla 1: Acepto Términos y Condiciones */}
+                    <div
+                      onClick={() => {
+                        if (!acceptedTerms) {
+                          setIsBasesModalOpen(true);
+                        } else {
+                          setAcceptedTerms(false);
+                        }
+                      }}
+                      className={`rounded-2xl border-2 p-4 transition cursor-pointer ${
+                        acceptedTerms
+                          ? 'border-[#93c46d] bg-[#93c46d]/15'
+                          : 'border-white/15 bg-[#102c4f]/80 hover:border-[#93c46d]/60'
+                      }`}
+                      data-testid="box-checkbox-terms"
+                    >
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="checkbox"
+                          checked={acceptedTerms}
+                          readOnly
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!acceptedTerms) {
+                              setIsBasesModalOpen(true);
+                            } else {
+                              setAcceptedTerms(false);
+                            }
+                          }}
+                          className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
+                          data-testid="checkbox-terms"
+                        />
+                        <div className="flex-1 text-left">
+                          <span className="text-xs font-semibold leading-relaxed text-white">
+                            Acepto Términos y Condiciones.
+                          </span>
+                          {!acceptedTerms ? (
+                            <p className="mt-1 text-[11px] font-bold text-[#93c46d] underline hover:text-white">
+                              [ Tocar aquí para leer y validar términos ]
+                            </p>
+                          ) : (
+                            <p className="mt-1 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
+                              <CheckCircle2 size={13} /> Términos validados y autorizados.
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Casilla 2: Entiendo que me estoy suscribiendo a un plan de capitalización y ahorro */}
+                    <label
+                      className={`flex items-start gap-3 rounded-2xl border-2 p-4 transition cursor-pointer ${
+                        acceptedCapitalization
+                          ? 'border-[#93c46d] bg-[#93c46d]/15'
+                          : 'border-white/15 bg-[#102c4f]/80 hover:border-[#93c46d]/60'
+                      }`}
+                      data-testid="box-checkbox-capitalization"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={acceptedCapitalization}
+                        onChange={(e) => setAcceptedCapitalization(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
+                        data-testid="checkbox-capitalization"
+                      />
+                      <div className="flex-1 text-left">
+                        <span className="text-xs font-semibold leading-relaxed text-white">
+                          Entiendo que me estoy suscribiendo a un plan de capitalización y ahorro.
+                        </span>
+                        {acceptedCapitalization && (
+                          <p className="mt-1 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
+                            <CheckCircle2 size={13} /> Confirmado y comprendido.
+                          </p>
+                        )}
+                      </div>
+                    </label>
+                  </div>
 
                   <button
                     type="submit"
-                    disabled={!acceptedCapitalization || !acceptedTerms}
+                    disabled={!acceptedTerms || !acceptedCapitalization}
                     className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c] disabled:opacity-50 disabled:cursor-not-allowed"
                     data-testid="button-submit-adhesion"
                   >
@@ -1350,7 +1387,6 @@ function StepThreeCheckout({
         isOpen={isBasesModalOpen}
         onClose={() => setIsBasesModalOpen(false)}
         onAccept={() => {
-          setAcceptedCapitalization(true);
           setAcceptedTerms(true);
         }}
       />

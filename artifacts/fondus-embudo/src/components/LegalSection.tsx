@@ -99,6 +99,10 @@ export function InteractiveDocumentModal({
 
   if (!isOpen || !activeDocument) return null;
 
+  const docSrc = activeDocument.startsWith('/')
+    ? `${import.meta.env.BASE_URL}${activeDocument.replace(/^\//, '')}`
+    : activeDocument;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-2 sm:p-4 backdrop-blur-md">
       <motion.div
@@ -177,19 +181,21 @@ export function InteractiveDocumentModal({
               {/* Área del Visor con TransformComponent y soporte táctil */}
               <div className="relative flex-1 overflow-hidden bg-slate-100 flex items-center justify-center">
                 <TransformComponent 
-                  wrapperClass="w-full h-full overflow-hidden touch-pan-x touch-pan-y" 
+                  wrapperClass="w-full h-[80vh] overflow-hidden touch-pan-x touch-pan-y rounded-md bg-gray-100" 
                   contentClass="w-full h-full flex justify-center items-center"
                 >
                   {activeDocument.endsWith('.pdf') ? (
-                    <iframe
-                      src={`${activeDocument}#toolbar=0&view=FitH`}
-                      className="w-full h-[80vh] border-none bg-white rounded-md"
-                      title="Documento Legal Fondus"
-                    />
+                    <object
+                      data={docSrc}
+                      type="application/pdf"
+                      className="w-full h-full"
+                    >
+                      <iframe src={docSrc} className="w-full h-full border-none" title="Documento Fondus" />
+                    </object>
                   ) : (
                     <img 
-                      src={activeDocument} 
-                      alt="Documento Legal Fondus" 
+                      src={docSrc} 
+                      alt="Documento Oficial Fondus" 
                       className="w-full h-auto object-contain cursor-zoom-in" 
                     />
                   )}
@@ -579,7 +585,7 @@ export function LegalFooterSection() {
           {/* Botón 5: Modal PARTICIPACIÓN Y RENDIMIENTOS */}
           <button
             type="button"
-            onClick={() => setActiveDocument('/participaciondelosresultados.jpg')}
+            onClick={() => setActiveDocument('/participacion.jpg')}
             className="group flex flex-col justify-between rounded-xl border border-white/15 bg-[#153863] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#93c46d] hover:bg-[#1d497f] hover:shadow-lg text-left"
             data-testid="button-modal-rendimientos"
           >
