@@ -791,49 +791,45 @@ function BasesScrollModal({
 
         <div
           onScroll={handleScroll}
-          className="flex-1 overflow-y-auto px-6 py-5 text-xs text-slate-700 space-y-4 leading-relaxed"
+          className="flex-1 overflow-y-auto px-6 py-6 text-left"
         >
-          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 font-medium text-[11px]">
-            ⚠️ Requisito de adhesión: Por favor desplazate hasta el final de este documento para validar la lectura de la autorización de débito y términos técnicos antes de habilitar la aceptación.
+          <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-[11px] font-medium text-amber-900">
+            ⚠️ Requisito legal: Por favor desplazate hasta el final de este documento para validar la lectura de la autorización de débito antes de habilitar la aceptación.
           </div>
 
-          <div>
-            <h4 className="font-bold text-slate-900 uppercase">1. Objeto y Autorización de Débito Automático</h4>
-            <p className="mt-1">
-              Por la presente, el solicitante autoriza a FONDUS S.A. DE CAPITALIZACIÓN Y AHORRO a cursar los débitos automáticos mensuales correspondientes a la cuota del plan de capitalización elegido sobre la cuenta bancaria (CBU) o tarjeta de débito/crédito provista en el formulario de adhesión.
-            </p>
-          </div>
+          <p className="mb-4 text-sm font-bold text-gray-800">
+            Términos y Condiciones - Autorización de débito automático<br />
+            Fondus S.A. de Capitalización y Ahorro<br />
+            Presente<br />
+            De mi mayor consideración:
+          </p>
 
-          <div>
-            <h4 className="font-bold text-slate-900 uppercase">2. Esquema de Cuotas Fijas y Bonificación</h4>
-            <p className="mt-1">
-              El plan opera bajo el régimen de cuotas fijas en pesos aprobado por la Inspección General de Justicia (RES IGJ 000289/11). La suscripción se encuentra 100% bonificada por adhesión digital inmediata. Las cuotas 1 a 4 reflejan el tramo inicial de conformación y, desde la cuota 5 en adelante, el valor desciende sensiblemente manteniéndose fijo durante toda la vigencia del plan.
-            </p>
-          </div>
+          <p className="mb-4 text-sm text-gray-700">
+            Por la presente les solicito que los importes correspondientes al servicio de pagos mensuales del plan de capitalización contratado a vuestra empresa sean facturados y cobrados a través de mi tarjeta de crédito/débito.
+          </p>
 
-          <div>
-            <h4 className="font-bold text-slate-900 uppercase">3. Participación en Sorteos Mensuales (¡NO PAGA MÁS!)</h4>
-            <p className="mt-1">
-              El suscriptor participa en los sorteos mensuales que celebra la Lotería de la Ciudad de Buenos Aires (LOTBA S.E.) el último sábado de cada mes con el número de tres cifras asignado. En caso de resultar favorecido en el premio mayor, el suscriptor adquiere el derecho de cobro de la orden de compra o capital pactado y cesa inmediatamente la obligación de abonar cuotas futuras (¡NO PAGA MÁS!).
-            </p>
-          </div>
+          <p className="mb-4 text-sm text-gray-700">
+            En tal sentido, autorizo expresamente a Fondus S.A. de Capitalización y Ahorro a realizar el cobro de las cuotas mencionadas a través de mi tarjeta de crédito/débito.
+          </p>
 
-          <div>
-            <h4 className="font-bold text-slate-900 uppercase">4. Rescate de Fondos (Disponibilidad desde el Mes 18)</h4>
-            <p className="mt-1">
-              Conforme al Decreto N° 142.277/43, a partir de la cuota comercial 18 cumplida e integrada, el titular puede ejercer su derecho de rescate sobre la reserva matemática acumulada de acuerdo a las tablas oficiales aprobadas.
-            </p>
-          </div>
+          <p className="mb-4 text-sm text-gray-700">
+            La presente continuará vigente hasta tanto medie comunicación fehaciente de mi parte para revocarla. Reconozco expresamente que tanto la presentación del servicio por parte de vuestra entidad como los importes que autorizo a debitar de mi resumen tiene como causa exclusiva la relación contractual existente entre Fondus S.A. de Capitalización y Ahorro y el suscriptor. Es de mi conocimiento que el abono mensual se facturará por mes calendario adelantado, como asimismo debe ser cancelado de la misma manera.
+          </p>
 
-          <div>
-            <h4 className="font-bold text-slate-900 uppercase">5. Seguridad en Medios de Pago y Cobranzas</h4>
-            <p className="mt-1 font-semibold text-slate-900">
-              Fondus NO cuenta con cobradores a domicilio. Toda transacción se procesa de forma directa, digital y bancarizada para máxima seguridad del suscriptor.
-            </p>
-          </div>
+          <p className="mb-4 text-sm text-gray-700">
+            A su vez, declaro que he completado esta autorización de manera electrónica a través de la plataforma de vuestra empresa, proveyendo libremente de datos necesarios a los fines del débito. Expreso que a los efectos de la autorización otorgada, proveo de datos imprescindibles para la efectivización del débito aquí autorizado, razón por la cuál asumo la exclusiva responsabilidad por la información correcta y precisa de tales datos para la realización de los débitos autorizados, motivo por el cual libero a vuestra empresa por incorrecta, imprecisa y/o errónea información que he brindado.
+          </p>
+
+          <p className="mb-4 text-sm text-gray-700">
+            Por otro lado, informo que no se me ha solicitado clave o información confidencial que no sea necesaria para la ejecución de las tareas relativas a los débitos que les permito efectuar, como por ejemplo claves de banca electrónica, homebanking, token, o similares con las mismas características.
+          </p>
+
+          <p className="mb-4 text-sm text-gray-700">
+            Por último, declaro que comprendo el contenido íntegro de la presente por haberme sido explicado de manera completa, suficiente y eficaz por vuestra entidad para el otorgamiento de esta autorización.
+          </p>
 
           <div className="pt-2 text-center text-slate-400 font-mono-custom text-[10px]">
-            &mdash; Fin de la autorización oficial de débito y condiciones generales &mdash;
+            &mdash; Fin del documento oficial &mdash;
           </div>
         </div>
 

@@ -76,5 +76,9 @@
     "vite": "catalog:",
     "wouter": "^3.3.5",
     "zod": "catalog:"
+  },
+  "dependencies": {
+    "react-pdf": "^11.0.0",
+    "react-zoom-pan-pinch": "^4.2.0"
   }
 }
