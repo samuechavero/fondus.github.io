@@ -942,8 +942,6 @@ function StepThreeCheckout({
     name: '',
     dni: '',
     phone: '',
-    debitMethod: 'Tarjeta de débito',
-    cardOrCbu: '',
   });
 
   // API de YouTube IFrame para pausar video de fondo
@@ -1241,38 +1239,6 @@ function StepThreeCheckout({
                         />
                       </div>
                     </div>
-
-                    <div>
-                      <label htmlFor="debitMethod" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#d8e3ed]">
-                        Medio de débito automático
-                      </label>
-                      <select
-                        id="debitMethod"
-                        value={form.debitMethod}
-                        onChange={(e) => setForm({ ...form, debitMethod: e.target.value })}
-                        className="w-full appearance-none rounded-xl border border-white/15 bg-[#102c4f] px-4 py-3 text-sm text-white outline-none focus:border-[#93c46d]"
-                        data-testid="select-debit"
-                      >
-                        <option>Tarjeta de débito</option>
-                        <option>CBU / cuenta bancaria</option>
-                        <option>NaranjaX</option>
-                        <option>Tarjeta de crédito</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label htmlFor="cardOrCbu" className="mb-1.5 block text-xs font-bold uppercase tracking-[.12em] text-[#d8e3ed]">
-                        Número de tarjeta o CBU
-                      </label>
-                      <input
-                        id="cardOrCbu"
-                        value={form.cardOrCbu}
-                        onChange={(e) => setForm({ ...form, cardOrCbu: e.target.value })}
-                        className="w-full rounded-xl border border-white/15 bg-[#102c4f] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
-                        placeholder="Para vincular el aporte mensual sin traslados"
-                        data-testid="input-card-or-cbu"
-                      />
-                    </div>
                   </fieldset>
 
                   <button
@@ -1281,7 +1247,7 @@ function StepThreeCheckout({
                     className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c] disabled:opacity-50 disabled:cursor-not-allowed"
                     data-testid="button-submit-adhesion"
                   >
-                    <span>Confirmar adhesión bonificada</span>
+                    <span>Confirmar adhesión</span>
                     <ArrowRight size={17} />
                   </button>
 
@@ -1538,22 +1504,22 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* Botón flotante de audio */}
+      {/* Botón flotante de audio en la parte superior para no bloquear modales */}
       <button
         type="button"
         onClick={toggleMute}
-        className="fixed bottom-6 right-6 z-30 flex items-center gap-2.5 rounded-full border border-[#93c46d]/40 bg-[#1d497f]/90 px-4 py-2.5 text-xs font-semibold text-white shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-md transition hover:scale-105 hover:border-[#93c46d] hover:bg-[#255793]"
+        className="fixed top-4 right-4 z-[60] flex items-center gap-2 rounded-full border border-[#93c46d]/40 bg-[#1d497f]/90 px-3.5 py-2 text-xs font-semibold text-white shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-md transition hover:scale-105 hover:border-[#93c46d] hover:bg-[#255793]"
         data-testid="button-floating-audio"
       >
         {isMuted ? (
           <>
-            <VolumeX size={16} className="text-[#93c46d]" />
-            <span>Activar audio</span>
+            <VolumeX size={15} className="text-[#93c46d]" />
+            <span className="hidden sm:inline">Activar audio</span>
           </>
         ) : (
           <>
-            <Volume2 size={16} className="text-[#93c46d]" />
-            <span>Audio activado</span>
+            <Volume2 size={15} className="text-[#93c46d]" />
+            <span className="hidden sm:inline">Audio activado</span>
           </>
         )}
       </button>

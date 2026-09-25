@@ -81,18 +81,16 @@ export function SocialProof() {
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed bottom-4 left-4 z-40 flex flex-col gap-2 pointer-events-none">
       <AnimatePresence>
         {currentToast && (
           <motion.div
             key={currentToast.id}
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            initial={{ y: 40, opacity: 0, scale: 0.95 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ opacity: 0, y: 15, transition: { duration: 0.35, ease: 'easeOut' } }}
             transition={{ type: 'spring', damping: 20, stiffness: 260 }}
-            className={`pointer-events-auto fixed ${
-              currentToast.position === 'left' ? 'bottom-4 left-4' : 'bottom-4 right-4'
-            } z-50 flex max-w-[90vw] items-center gap-3 rounded-xl border border-slate-100 border-l-4 border-l-[#93c46d] bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md sm:max-w-sm`}
+            className="pointer-events-auto flex max-w-[90vw] items-center gap-3 rounded-xl border border-slate-100 border-l-4 border-l-[#93c46d] bg-white/95 px-4 py-3 shadow-xl backdrop-blur-md sm:max-w-sm"
           >
             {/* Ícono de validación en verde institucional Fondus */}
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#93c46d]/15 text-[#93c46d] shadow-sm">

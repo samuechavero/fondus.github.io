@@ -16,12 +16,6 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-
-// Configuración del worker de pdfjs para react-pdf compatible con navegadores y bundlers
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface LegalModalProps {
   isOpen: boolean;
@@ -92,19 +86,6 @@ export function InteractiveDocumentModal({
   activeDocument: string;
   title: string;
 }) {
-  const [numPages, setNumPages] = useState<number>(1);
-  const [pageWidth, setPageWidth] = useState<number>(() =>
-    typeof window !== 'undefined' && window.innerWidth > 768 ? 700 : (typeof window !== 'undefined' ? window.innerWidth - 40 : 360)
-  );
-
-  useEffect(() => {
-    const handleResize = () => {
-      setPageWidth(window.innerWidth > 768 ? 700 : window.innerWidth - 40);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -117,8 +98,6 @@ export function InteractiveDocumentModal({
   }, [isOpen]);
 
   if (!isOpen || !activeDocument) return null;
-
-  const isPdf = activeDocument.toLowerCase().endsWith('.pdf');
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-2 sm:p-4 backdrop-blur-md">
@@ -197,49 +176,23 @@ export function InteractiveDocumentModal({
 
               {/* Área del Visor con TransformComponent y soporte táctil */}
               <div className="relative flex-1 overflow-hidden bg-slate-100 flex items-center justify-center">
-                <TransformComponent wrapperClass="w-full h-full overflow-auto touch-pan-x touch-pan-y flex items-center justify-center">
-                  <div className="p-4 flex flex-col items-center justify-center min-w-full min-h-full">
-                    {isPdf ? (
-                      <Document
-                        file={activeDocument}
-                        onLoadSuccess={({ numPages: total }) => setNumPages(total)}
-                        loading={
-                          <div className="flex flex-col items-center justify-center p-12 text-slate-600 gap-3">
-                            <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#1d497f] border-t-transparent" />
-                            <p className="text-xs font-semibold">Cargando documento PDF oficial...</p>
-                          </div>
-                        }
-                        error={
-                          <div className="p-8 text-center text-slate-700">
-                            <p className="text-sm font-semibold">No se pudo cargar la vista previa del PDF.</p>
-                            <iframe
-                              src={`${activeDocument}#toolbar=0`}
-                              className="mt-4 w-full h-[65vh] border rounded-lg"
-                              title={title}
-                            />
-                          </div>
-                        }
-                        className="flex flex-col items-center gap-6 shadow-xl"
-                      >
-                        {Array.from(new Array(numPages), (_, index) => (
-                          <div key={`page_${index + 1}`} className="rounded-lg shadow-lg overflow-hidden bg-white">
-                            <Page
-                              pageNumber={index + 1}
-                              width={pageWidth}
-                              renderTextLayer={true}
-                              renderAnnotationLayer={true}
-                            />
-                          </div>
-                        ))}
-                      </Document>
-                    ) : (
-                      <img
-                        src={activeDocument}
-                        alt="Documento Legal"
-                        className="w-full h-auto max-w-4xl object-contain cursor-zoom-in rounded-lg shadow-lg"
-                      />
-                    )}
-                  </div>
+                <TransformComponent 
+                  wrapperClass="w-full h-full overflow-hidden touch-pan-x touch-pan-y" 
+                  contentClass="w-full h-full flex justify-center items-center"
+                >
+                  {activeDocument.endsWith('.pdf') ? (
+                    <iframe
+                      src={`${activeDocument}#toolbar=0&view=FitH`}
+                      className="w-full h-[80vh] border-none bg-white rounded-md"
+                      title="Documento Legal Fondus"
+                    />
+                  ) : (
+                    <img 
+                      src={activeDocument} 
+                      alt="Documento Legal Fondus" 
+                      className="w-full h-auto object-contain cursor-zoom-in" 
+                    />
+                  )}
                 </TransformComponent>
               </div>
 
