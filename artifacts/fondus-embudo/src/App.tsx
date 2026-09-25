@@ -697,17 +697,17 @@ function StepGamificationModal({
               </p>
 
               {/* Texto Exacto Solicitado */}
-              <h2 className="mt-3 font-display text-2xl font-800 leading-tight text-white sm:text-3xl">
-                ¡FELICITACIONES! Guarda este código, si continuas con el proceso de adhesión tenes la suscripción 100% bonificada
+              <h2 className="mt-3 font-display text-xl sm:text-2xl font-800 leading-snug text-white">
+                Beneficio exclusivo, si completás el proceso de adhesión de manera automática tenés la suscripción bonificada.
               </h2>
 
               <div className="mt-6 rounded-2xl border border-[#93c46d]/40 bg-black/25 p-4 text-center">
-                <p className="text-xs uppercase tracking-wider text-[#c0d1e3]">Código de bonificación digital:</p>
-                <p className="mt-1 font-mono-custom text-2xl font-black tracking-[.2em] text-[#93c46d]">
-                  FONDUS2026
+                <p className="text-xs uppercase tracking-wider text-[#c0d1e3]">Estado de la adhesión:</p>
+                <p className="mt-1 font-mono-custom text-xl sm:text-2xl font-black tracking-wider text-[#93c46d]">
+                  100% BONIFICADA
                 </p>
                 <p className="mt-1 text-[11px] text-[#93c46d] font-semibold">
-                  ✓ Suscripción 100% bonificada aplicada automáticamente
+                  ✓ Bonificación automática aplicada a tu solicitud
                 </p>
               </div>
 
@@ -720,7 +720,7 @@ function StepGamificationModal({
                 className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] transition hover:bg-[#82b55c] shadow-md"
                 data-testid="button-dismiss-gift-modal"
               >
-                <span>Continuar</span>
+                <span>Continuar suscripción bonificada.</span>
                 <Check size={18} />
               </button>
             </motion.div>
@@ -774,9 +774,12 @@ function BasesScrollModal({
         className="relative flex max-h-[85vh] w-full max-w-xl flex-col rounded-2xl bg-white text-slate-800 shadow-2xl overflow-hidden"
       >
         <div className="flex items-center justify-between border-b-2 border-[#93c46d] bg-[#1d497f] px-6 py-4 text-white">
-          <h3 className="font-display text-sm font-bold uppercase tracking-wider text-white">
-            Bases y Condiciones del Sistema Fondus
-          </h3>
+          <div>
+            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-white">
+              Términos y Condiciones - Autorización de débito automático
+            </h3>
+            <p className="text-[10px] text-[#93c46d] font-mono-custom mt-0.5">Fondus S.A. de Capitalización y Ahorro</p>
+          </div>
           <button
             type="button"
             onClick={onClose}
@@ -791,46 +794,46 @@ function BasesScrollModal({
           className="flex-1 overflow-y-auto px-6 py-5 text-xs text-slate-700 space-y-4 leading-relaxed"
         >
           <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 font-medium text-[11px]">
-            ⚠️ Requisito de adhesión: Por favor desplazate hasta el final de este documento para validar la lectura de las bases técnicas y poder tildar la confirmación.
+            ⚠️ Requisito de adhesión: Por favor desplazate hasta el final de este documento para validar la lectura de la autorización de débito y términos técnicos antes de habilitar la aceptación.
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 uppercase">1. Objeto del Sistema</h4>
+            <h4 className="font-bold text-slate-900 uppercase">1. Objeto y Autorización de Débito Automático</h4>
             <p className="mt-1">
-              FONDUS S.A. DE CAPITALIZACIÓN Y AHORRO administra planes de capitalización conforme al Decreto N° 142.277/43, aprobados por la Inspección General de Justicia bajo Resolución IGJ RES 000289/11. El suscriptor efectúa cuotas fijas en pesos para formar un capital garantizado o adjudicarse anticipadamente por sorteo.
+              Por la presente, el solicitante autoriza a FONDUS S.A. DE CAPITALIZACIÓN Y AHORRO a cursar los débitos automáticos mensuales correspondientes a la cuota del plan de capitalización elegido sobre la cuenta bancaria (CBU) o tarjeta de débito/crédito provista en el formulario de adhesión.
             </p>
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 uppercase">2. Dinámica de Sorteos</h4>
+            <h4 className="font-bold text-slate-900 uppercase">2. Esquema de Cuotas Fijas y Bonificación</h4>
             <p className="mt-1">
-              Los sorteos se celebran el último sábado de cada mes mediante la Lotería de la Ciudad de Buenos Aires (LOTBA S.E.). El título resulta favorecido si coincide con las tres últimas cifras del premio mayor. En caso de resultar adjudicado, el suscriptor accede al capital u orden de compra y queda eximido de continuar abonando (¡NO PAGA MÁS!).
+              El plan opera bajo el régimen de cuotas fijas en pesos aprobado por la Inspección General de Justicia (RES IGJ 000289/11). La suscripción se encuentra 100% bonificada por adhesión digital inmediata. Las cuotas 1 a 4 reflejan el tramo inicial de conformación y, desde la cuota 5 en adelante, el valor desciende sensiblemente manteniéndose fijo durante toda la vigencia del plan.
             </p>
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 uppercase">3. Esquema de Cuotas Fijas</h4>
+            <h4 className="font-bold text-slate-900 uppercase">3. Participación en Sorteos Mensuales (¡NO PAGA MÁS!)</h4>
             <p className="mt-1">
-              Las cuotas 1 a 4 incluyen los costos de suscripción y cargas administrativas iniciales. A partir de la cuota 5, la cuota disminuye sensiblemente y permanece fija en pesos durante toda la vigencia del plan.
+              El suscriptor participa en los sorteos mensuales que celebra la Lotería de la Ciudad de Buenos Aires (LOTBA S.E.) el último sábado de cada mes con el número de tres cifras asignado. En caso de resultar favorecido en el premio mayor, el suscriptor adquiere el derecho de cobro de la orden de compra o capital pactado y cesa inmediatamente la obligación de abonar cuotas futuras (¡NO PAGA MÁS!).
             </p>
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 uppercase">4. Disponibilidad de Fondos y Rescate (Mes 18)</h4>
+            <h4 className="font-bold text-slate-900 uppercase">4. Rescate de Fondos (Disponibilidad desde el Mes 18)</h4>
             <p className="mt-1">
-              A partir de la cuota comercial N° 18 en planes de 300 meses (o N° 15 en planes de 180 meses), el titular goza del derecho irrestricto de solicitar el rescate de sus fondos según la tabla matemática oficial anexa al título.
+              Conforme al Decreto N° 142.277/43, a partir de la cuota comercial 18 cumplida e integrada, el titular puede ejercer su derecho de rescate sobre la reserva matemática acumulada de acuerdo a las tablas oficiales aprobadas.
             </p>
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 uppercase">5. Seguridad en Medios de Pago</h4>
+            <h4 className="font-bold text-slate-900 uppercase">5. Seguridad en Medios de Pago y Cobranzas</h4>
             <p className="mt-1 font-semibold text-slate-900">
-              Fondus NO cuenta con cobradores a domicilio. Los aportes se debitan automáticamente a través de entidades bancarias, CBU o tarjetas de crédito/débito autorizadas.
+              Fondus NO cuenta con cobradores a domicilio. Toda transacción se procesa de forma directa, digital y bancarizada para máxima seguridad del suscriptor.
             </p>
           </div>
 
           <div className="pt-2 text-center text-slate-400 font-mono-custom text-[10px]">
-            &mdash; Fin del documento oficial &mdash;
+            &mdash; Fin de la autorización oficial de débito y condiciones generales &mdash;
           </div>
         </div>
 
@@ -851,14 +854,69 @@ function BasesScrollModal({
               onAccept();
               onClose();
             }}
-            className="rounded-xl bg-[#93c46d] px-5 py-2.5 text-xs font-black uppercase tracking-wider text-[#1d497f] shadow-md transition disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#82b55c]"
+            className="rounded-xl bg-[#93c46d] px-6 py-2.5 text-xs font-black uppercase tracking-wider text-[#1d497f] shadow-md transition disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#82b55c]"
           >
-            Aceptar Bases
+            Aceptar
           </button>
         </div>
       </motion.div>
     </div>
   );
+}
+
+// Función de cálculo dinámico para el sorteo mensual (último sábado, con corte en miércoles 23:59:59)
+function calculateDrawCountdown(now = new Date()) {
+  const getLastSaturday = (year: number, month: number) => {
+    // Día 0 del mes siguiente es el último día del mes actual
+    const d = new Date(year, month + 1, 0, 21, 0, 0);
+    const day = d.getDay(); // 0 Dom, 6 Sáb
+    const diff = (day - 6 + 7) % 7;
+    d.setDate(d.getDate() - diff);
+    return d;
+  };
+
+  const getCutoffWednesday = (lastSaturday: Date) => {
+    const d = new Date(lastSaturday);
+    d.setDate(d.getDate() - 3); // Miércoles anterior al sábado
+    d.setHours(23, 59, 59, 999);
+    return d;
+  };
+
+  let year = now.getFullYear();
+  let month = now.getMonth();
+  let targetSaturday = getLastSaturday(year, month);
+  let cutoffWednesday = getCutoffWednesday(targetSaturday);
+
+  // Si ya pasó el miércoles a las 23:59:59, pasa al último sábado del mes siguiente
+  if (now > cutoffWednesday) {
+    month += 1;
+    if (month > 11) {
+      month = 0;
+      year += 1;
+    }
+    targetSaturday = getLastSaturday(year, month);
+    cutoffWednesday = getCutoffWednesday(targetSaturday);
+  }
+
+  const diffMs = Math.max(0, targetSaturday.getTime() - now.getTime());
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+  const monthNames = [
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+  ];
+
+  return {
+    days: String(days).padStart(2, '0'),
+    hours: String(hours).padStart(2, '0'),
+    minutes: String(minutes).padStart(2, '0'),
+    seconds: String(seconds).padStart(2, '0'),
+    drawDateFormatted: `${targetSaturday.getDate()} de ${monthNames[targetSaturday.getMonth()]}`,
+    cutoffDateFormatted: `${cutoffWednesday.getDate()} de ${monthNames[cutoffWednesday.getMonth()]} 23:59 hs`,
+  };
 }
 
 // ----------------------------------------------------
@@ -875,6 +933,14 @@ function StepThreeCheckout({
   const [acceptedCapitalization, setAcceptedCapitalization] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isBasesModalOpen, setIsBasesModalOpen] = useState(false);
+  const [countdown, setCountdown] = useState(() => calculateDrawCountdown());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown(calculateDrawCountdown());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const [form, setForm] = useState({
     name: '',
@@ -936,6 +1002,7 @@ function StepThreeCheckout({
     e.preventDefault();
     if (!acceptedCapitalization || !acceptedTerms) return;
     if (form.name && form.dni && form.phone) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       setSubmitted(true);
     }
   };
@@ -973,35 +1040,41 @@ function StepThreeCheckout({
               </p>
             </section>
 
-            {/* 4. Bloque del Contador de Sorteos con Textos Actualizados */}
+            {/* 4. Bloque del Contador de Sorteos con Textos Actualizados y Lógica Dinámica */}
             <section className="mb-10 rounded-3xl border border-[#93c46d]/40 bg-[#153863]/90 p-6 sm:p-8 shadow-xl">
               <div className="grid gap-6 md:grid-cols-2 md:items-center">
                 <div>
-                  <p className="text-xs uppercase font-bold tracking-[.18em] text-[#93c46d]">
-                    Sorteo de Adjudicación Mensual
-                  </p>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-[#93c46d]/20 border border-[#93c46d]/40 px-3 py-1 text-xs font-bold text-[#93c46d] mb-2">
+                    <Sparkles size={13} />
+                    <span>Último número adjudicado: 390</span>
+                  </div>
                   <h3 className="font-display text-xl sm:text-2xl font-bold mt-1 text-white">
-                    Último número ganador: 390. Tu oportunidad tiene fecha.
+                    Tu oportunidad tiene fecha.
                   </h3>
                   <p className="mt-2 text-sm text-[#d8e3ed]">
-                    Si te suscribís hoy, participás por el sorteo de la adjudicación
+                    Si te suscribís hoy, participás por el sorteo de la adjudicación del <strong className="text-white">{countdown.drawDateFormatted}</strong> (Cierre de suscripciones: {countdown.cutoffDateFormatted}).
                   </p>
                 </div>
 
-                <div className="flex items-center justify-start md:justify-end gap-3 text-center">
-                  <div className="rounded-2xl bg-black/25 px-4 py-3 border border-white/10">
-                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">04</span>
+                <div className="flex items-center justify-start md:justify-end gap-2.5 sm:gap-3 text-center">
+                  <div className="rounded-2xl bg-black/25 px-3.5 py-3 border border-white/10 min-w-[62px]">
+                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">{countdown.days}</span>
                     <span className="block text-[9px] uppercase text-[#a4bdd4]">días</span>
                   </div>
                   <span className="text-[#93c46d] font-bold text-xl">:</span>
-                  <div className="rounded-2xl bg-black/25 px-4 py-3 border border-white/10">
-                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">18</span>
+                  <div className="rounded-2xl bg-black/25 px-3.5 py-3 border border-white/10 min-w-[62px]">
+                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">{countdown.hours}</span>
                     <span className="block text-[9px] uppercase text-[#a4bdd4]">hs</span>
                   </div>
                   <span className="text-[#93c46d] font-bold text-xl">:</span>
-                  <div className="rounded-2xl bg-black/25 px-4 py-3 border border-white/10">
-                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">35</span>
+                  <div className="rounded-2xl bg-black/25 px-3.5 py-3 border border-white/10 min-w-[62px]">
+                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">{countdown.minutes}</span>
                     <span className="block text-[9px] uppercase text-[#a4bdd4]">min</span>
+                  </div>
+                  <span className="text-[#93c46d] font-bold text-xl hidden sm:inline">:</span>
+                  <div className="rounded-2xl bg-black/25 px-3.5 py-3 border border-white/10 min-w-[62px] hidden sm:block">
+                    <span className="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">{countdown.seconds}</span>
+                    <span className="block text-[9px] uppercase text-[#a4bdd4]">seg</span>
                   </div>
                 </div>
               </div>
@@ -1072,56 +1145,47 @@ function StepThreeCheckout({
                     </p>
                   </div>
 
-                  {/* Checkbox Obligatorio con Pop-up de scroll */}
-                  <div className="rounded-2xl border-2 border-[#93c46d]/40 bg-[#93c46d]/10 p-4 transition">
-                    <label className="flex items-start gap-3 cursor-pointer">
+                  {/* Checkbox Obligatorio: Términos y Condiciones - Autorización de débito automático */}
+                  <div
+                    onClick={() => {
+                      if (!acceptedCapitalization) {
+                        setIsBasesModalOpen(true);
+                      }
+                    }}
+                    className="rounded-2xl border-2 border-[#93c46d]/40 bg-[#93c46d]/10 p-4 transition cursor-pointer hover:border-[#93c46d]"
+                  >
+                    <div className="flex items-start gap-3">
                       <input
                         type="checkbox"
                         checked={acceptedCapitalization}
-                        onChange={(e) => {
+                        readOnly
+                        onClick={(e) => {
+                          e.stopPropagation();
                           if (!acceptedCapitalization) {
                             setIsBasesModalOpen(true);
                           } else {
-                            setAcceptedCapitalization(e.target.checked);
+                            setAcceptedCapitalization(false);
+                            setAcceptedTerms(false);
                           }
                         }}
-                        className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d]"
+                        className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
                         data-testid="checkbox-capitalization"
                       />
-                      <span className="text-xs font-semibold leading-relaxed text-white">
-                        Entiendo que me estoy suscribiendo a un sistema de capitalización y ahorro.
-                      </span>
-                    </label>
-
-                    {!acceptedCapitalization ? (
-                      <button
-                        type="button"
-                        onClick={() => setIsBasesModalOpen(true)}
-                        className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#93c46d] underline hover:text-white pl-7"
-                      >
-                        [ Leer bases y condiciones completas para habilitar el tilde ]
-                      </button>
-                    ) : (
-                      <p className="mt-1.5 text-[11px] text-[#93c46d] flex items-center gap-1 pl-7 font-semibold">
-                        <CheckCircle2 size={13} /> Bases leídas y aceptadas conforme a normativa IGJ.
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Segundo Checkbox: Acepto bases y condiciones */}
-                  <div className="rounded-xl border border-white/10 bg-white/[.04] p-3">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={acceptedTerms}
-                        onChange={(e) => setAcceptedTerms(e.target.checked)}
-                        className="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d]"
-                        data-testid="checkbox-terms"
-                      />
-                      <span className="text-xs text-[#d8e3ed]">
-                        Acepto bases y condiciones del sistema de capitalización Fondus.
-                      </span>
-                    </label>
+                      <div className="flex-1 text-left">
+                        <span className="text-xs font-semibold leading-relaxed text-white">
+                          Acepto Términos y Condiciones - Autorización de débito automático del sistema de capitalización.
+                        </span>
+                        {!acceptedCapitalization ? (
+                          <p className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#93c46d] underline hover:text-white">
+                            [ Hacer clic aquí para leer y validar autorización ]
+                          </p>
+                        ) : (
+                          <p className="mt-1.5 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
+                            <CheckCircle2 size={13} /> Términos y débito automático autorizados conforme a normativa IGJ.
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Campos habilitados si aceptó capitalización */}

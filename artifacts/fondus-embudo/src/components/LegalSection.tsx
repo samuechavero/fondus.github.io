@@ -46,7 +46,6 @@ export function BaseLegalModal({ isOpen, onClose, title, children }: LegalModalP
         transition={{ duration: 0.22, ease: 'easeOut' }}
         className="relative flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white text-slate-800 shadow-2xl"
       >
-        {/* Cabecera corporativa con acento Verde Fondus */}
         <div className="flex items-center justify-between border-b-2 border-[#93c46d] bg-[#1d497f] px-6 py-4 text-white">
           <h3 className="font-display text-base font-bold uppercase tracking-wider text-white">
             {title}
@@ -61,9 +60,142 @@ export function BaseLegalModal({ isOpen, onClose, title, children }: LegalModalP
           </button>
         </div>
 
-        {/* Contenido scrolleable */}
         <div className="overflow-y-auto px-6 py-6 sm:px-8 sm:py-7">
           {children}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// Modal Visor de Documentos PDF con Controles de Zoom
+// ----------------------------------------------------
+export function PdfViewerModal({
+  isOpen,
+  onClose,
+  title,
+  pdfUrl,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  pdfUrl: string;
+}) {
+  const [zoomLevel, setZoomLevel] = useState(100);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      setZoomLevel(100);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const handleZoomIn = () => setZoomLevel((prev) => Math.min(prev + 20, 200));
+  const handleZoomOut = () => setZoomLevel((prev) => Math.max(prev - 20, 70));
+  const handleResetZoom = () => setZoomLevel(100);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 sm:p-4 backdrop-blur-md">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="relative flex h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white text-slate-800 shadow-2xl border border-slate-300"
+      >
+        {/* Cabecera institucional con controles de zoom */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#93c46d] bg-[#1d497f] px-5 py-3.5 text-white">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#93c46d] text-[#1d497f] font-bold">
+              <FileDown size={17} />
+            </div>
+            <div>
+              <h3 className="font-display text-xs sm:text-sm font-bold uppercase tracking-wider text-white">
+                {title}
+              </h3>
+              <p className="text-[10px] text-[#93c46d] font-mono-custom">Documento Oficial Fondus S.A.</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Controles de Zoom */}
+            <div className="flex items-center gap-1 rounded-xl bg-white/10 px-2 py-1 text-xs">
+              <button
+                type="button"
+                onClick={handleZoomOut}
+                className="rounded px-2 py-0.5 text-slate-200 transition hover:bg-white/20 hover:text-white"
+                title="Alejar"
+              >
+                -
+              </button>
+              <span className="font-mono-custom text-[11px] min-w-[42px] text-center font-bold text-[#93c46d]">
+                {zoomLevel}%
+              </span>
+              <button
+                type="button"
+                onClick={handleZoomIn}
+                className="rounded px-2 py-0.5 text-slate-200 transition hover:bg-white/20 hover:text-white"
+                title="Acercar"
+              >
+                +
+              </button>
+              <button
+                type="button"
+                onClick={handleResetZoom}
+                className="ml-1 rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-slate-200 hover:bg-white/20"
+                title="Restablecer 100%"
+              >
+                Reset
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg p-1.5 text-slate-200 transition hover:bg-white/10 hover:text-white"
+              aria-label="Cerrar modal"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+
+        {/* Visor de Documento PDF con escala interactiva */}
+        <div className="relative flex-1 overflow-auto bg-slate-200 p-2 sm:p-4 flex items-center justify-center">
+          <div
+            className="h-full w-full max-w-4xl bg-white shadow-xl transition-transform duration-200 origin-top rounded-lg overflow-hidden"
+            style={{
+              transform: `scale(${zoomLevel / 100})`,
+              transformOrigin: 'top center',
+            }}
+          >
+            <iframe
+              src={`${pdfUrl}#toolbar=0&navpanes=0`}
+              className="h-full w-full border-0 rounded-lg min-h-[70vh]"
+              title={title}
+            />
+          </div>
+        </div>
+
+        {/* Barra inferior de confirmación / cierre */}
+        <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-5 py-3">
+          <span className="text-[11px] text-slate-500 font-medium">
+            Visualización interactiva in-page · Resolución IGJ RES 000289/11
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl bg-[#1d497f] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#153863]"
+          >
+            Cerrar Visor
+          </button>
         </div>
       </motion.div>
     </div>
@@ -297,11 +429,26 @@ export function LegalFooterSection() {
   const [isRendimientosOpen, setIsRendimientosOpen] = useState(false);
   const [isArrepentimientoOpen, setIsArrepentimientoOpen] = useState(false);
 
+  // Estados para visor in-page de PDFs
+  const [activePdf, setActivePdf] = useState<{ isOpen: boolean; title: string; url: string }>({
+    isOpen: false,
+    title: '',
+    url: '',
+  });
+
   const basePdfPath = import.meta.env.BASE_URL;
+
+  const openPdf = (title: string, filename: string) => {
+    setActivePdf({
+      isOpen: true,
+      title,
+      url: `${basePdfPath}${filename}`,
+    });
+  };
 
   return (
     <div className="w-full">
-      {/* Sección CONDICIONES GENERALES con 5 Botones Híbridos */}
+      {/* Sección CONDICIONES GENERALES con 5 Botones Interactivos in-page */}
       <div className="rounded-2xl border border-white/15 bg-white/[.04] p-6 backdrop-blur-sm sm:p-7">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/10 pb-4">
           <div>
@@ -309,7 +456,7 @@ export function LegalFooterSection() {
               Condiciones Generales & Documentación
             </h4>
             <p className="mt-1 text-xs text-[#d8e3ed]">
-              Descargá los contratos oficiales en PDF o consultá los términos regulatorios de Fondus S.A.
+              Consultá los contratos oficiales y términos regulatorios de Fondus S.A. en pantalla interactiva.
             </p>
           </div>
           <span className="font-mono-custom text-[10px] uppercase tracking-wider text-[#93c46d] bg-[#93c46d]/15 px-3 py-1 rounded-full w-fit">
@@ -317,16 +464,14 @@ export function LegalFooterSection() {
           </span>
         </div>
 
-        {/* Los 5 botones con estilo corporativo Fondus */}
+        {/* Los 5 botones corporativos (todos abren modales in-page sin salir del sitio) */}
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          {/* Botón 1: Descarga CONDICIONES GENERALES */}
-          <a
-            href={`${basePdfPath}condiciones.pdf`}
-            download="condiciones.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Botón 1: Modal CONDICIONES GENERALES */}
+          <button
+            type="button"
+            onClick={() => openPdf('Condiciones Generales', 'condiciones.pdf')}
             className="group flex flex-col justify-between rounded-xl border border-white/15 bg-[#1d497f]/90 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#93c46d] hover:bg-[#255793] hover:shadow-lg text-left"
-            data-testid="link-download-condiciones"
+            data-testid="link-view-condiciones"
           >
             <div className="flex items-center justify-between text-[#93c46d]">
               <FileDown size={19} className="transition-transform group-hover:scale-110" />
@@ -341,19 +486,17 @@ export function LegalFooterSection() {
               </p>
             </div>
             <div className="mt-3 flex items-center gap-1 text-[10px] font-bold text-[#93c46d] uppercase tracking-wider">
-              <span>Descargar PDF</span>
-              <Download size={11} />
+              <span>Ver documento</span>
+              <Info size={11} />
             </div>
-          </a>
+          </button>
 
-          {/* Botón 2: Descarga TÍTULO DE CAPITALIZACIÓN */}
-          <a
-            href={`${basePdfPath}titulo.pdf`}
-            download="titulo.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Botón 2: Modal TÍTULO DE CAPITALIZACIÓN */}
+          <button
+            type="button"
+            onClick={() => openPdf('Título de Capitalización', 'titulo.pdf')}
             className="group flex flex-col justify-between rounded-xl border border-white/15 bg-[#1d497f]/90 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#93c46d] hover:bg-[#255793] hover:shadow-lg text-left"
-            data-testid="link-download-titulo"
+            data-testid="link-view-titulo"
           >
             <div className="flex items-center justify-between text-[#93c46d]">
               <FileDown size={19} className="transition-transform group-hover:scale-110" />
@@ -368,19 +511,17 @@ export function LegalFooterSection() {
               </p>
             </div>
             <div className="mt-3 flex items-center gap-1 text-[10px] font-bold text-[#93c46d] uppercase tracking-wider">
-              <span>Descargar PDF</span>
-              <Download size={11} />
+              <span>Ver documento</span>
+              <Info size={11} />
             </div>
-          </a>
+          </button>
 
-          {/* Botón 3: Descarga TABLA DE RESCATE Y ENDOSO */}
-          <a
-            href={`${basePdfPath}rescate.pdf`}
-            download="rescate.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Botón 3: Modal TABLA DE RESCATE Y ENDOSO */}
+          <button
+            type="button"
+            onClick={() => openPdf('Tabla de Rescate y Endoso', 'rescate.pdf')}
             className="group flex flex-col justify-between rounded-xl border border-white/15 bg-[#1d497f]/90 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#93c46d] hover:bg-[#255793] hover:shadow-lg text-left"
-            data-testid="link-download-rescate"
+            data-testid="link-view-rescate"
           >
             <div className="flex items-center justify-between text-[#93c46d]">
               <FileDown size={19} className="transition-transform group-hover:scale-110" />
@@ -395,10 +536,10 @@ export function LegalFooterSection() {
               </p>
             </div>
             <div className="mt-3 flex items-center gap-1 text-[10px] font-bold text-[#93c46d] uppercase tracking-wider">
-              <span>Descargar PDF</span>
-              <Download size={11} />
+              <span>Ver documento</span>
+              <Info size={11} />
             </div>
-          </a>
+          </button>
 
           {/* Botón 4: Modal SORTEO */}
           <button
@@ -452,8 +593,8 @@ export function LegalFooterSection() {
         </div>
       </div>
 
-      {/* Enlaces complementarios: Arrepentimiento, Advertencia y Sello IGJ */}
-      <div className="mt-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-t border-white/10 pt-5">
+      {/* Enlaces complementarios: Arrepentimiento y Advertencia de cobradores */}
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
@@ -471,20 +612,57 @@ export function LegalFooterSection() {
             <span>NO contamos con cobradores a domicilio.</span>
           </div>
         </div>
+      </div>
 
-        {/* Sello oficial IGJ */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#93c46d] font-mono-custom text-xs font-black text-[#1d497f] shadow-sm">
-            IGJ
+      {/* 6. Bloque Oficial IGJ en el Footer (Gris claro, divisor negro y 3 líneas alineadas) */}
+      <div className="mt-6 rounded-2xl border border-slate-300 bg-slate-100 p-5 sm:p-6 text-slate-800 shadow-md">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
+          {/* Lado Izquierdo: Logo circular IGJ y Ministerio / Presidencia debajo */}
+          <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-2">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1d497f] border-2 border-[#93c46d] font-mono-custom text-sm font-black text-white shadow-sm">
+                IGJ
+              </div>
+              <div className="text-left">
+                <p className="font-extrabold text-slate-900 text-xs uppercase tracking-wider">
+                  Inspección General de Justicia
+                </p>
+                <p className="text-[10px] font-semibold text-[#1d497f]">
+                  Sociedad de Capitalización Inscripta y Regulada
+                </p>
+              </div>
+            </div>
+            <p className="text-[9px] uppercase tracking-wider text-slate-600 font-medium max-w-xs leading-tight">
+              Ministerio de Justicia y Derechos Humanos Presidencia de la Nación
+            </p>
           </div>
-          <div className="text-left text-[11px] leading-tight text-[#d8e3ed]">
-            <p className="font-bold text-white">Inspección General de Justicia</p>
-            <p className="text-[10px] text-[#c0d1e3]">Sociedad de Capitalización Inscripta y Regulada</p>
+
+          {/* Centro: Línea divisoria vertical de color negro */}
+          <div className="hidden sm:block h-14 w-[1.5px] bg-black/80" />
+          <div className="block sm:hidden w-full h-[1px] bg-black/60" />
+
+          {/* Lado Derecho: 3 líneas alineadas a la izquierda */}
+          <div className="flex flex-col items-start text-left space-y-1 sm:pl-2">
+            <p className="text-xs font-black uppercase tracking-wide text-slate-900">
+              Planes Aprobados
+            </p>
+            <p className="font-mono-custom text-xs font-bold text-[#1d497f]">
+              RES 000289/11
+            </p>
+            <p className="font-mono-custom text-xs font-extrabold text-slate-800">
+              0800-3333-445
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Modales Interactivos */}
+      {/* Modales Interactivos in-page */}
+      <PdfViewerModal
+        isOpen={activePdf.isOpen}
+        onClose={() => setActivePdf((prev) => ({ ...prev, isOpen: false }))}
+        title={activePdf.title}
+        pdfUrl={activePdf.url}
+      />
       <SorteoModal isOpen={isSorteoOpen} onClose={() => setIsSorteoOpen(false)} />
       <RendimientosModal isOpen={isRendimientosOpen} onClose={() => setIsRendimientosOpen(false)} />
       <ArrepentimientoModal isOpen={isArrepentimientoOpen} onClose={() => setIsArrepentimientoOpen(false)} />

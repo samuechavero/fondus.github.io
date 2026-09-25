@@ -61,20 +61,21 @@ export function SocialProof() {
         position: nextPos,
       });
 
-      // Permanece en pantalla 2.5 segundos y se desvanece suavemente antes de los 3s
+      // Permanece en pantalla 4.5 segundos y se desvanece suavemente antes de la siguiente
       hideTimer = setTimeout(() => {
         setCurrentToast(null);
-      }, 2500);
+      }, 4500);
     };
 
-    // Primera aparición inmediata
-    showNextToast();
+    // Primera aparición a los 1.5 segundos
+    const initialTimer = setTimeout(showNextToast, 1500);
 
-    // Intervalo de exactamente 3000ms (3 segundos)
-    const interval = setInterval(showNextToast, 3000);
+    // Intervalo de exactamente 10000ms (10 segundos)
+    const interval = setInterval(showNextToast, 10000);
 
     return () => {
       clearInterval(interval);
+      if (initialTimer) clearTimeout(initialTimer);
       if (hideTimer) clearTimeout(hideTimer);
     };
   }, []);
