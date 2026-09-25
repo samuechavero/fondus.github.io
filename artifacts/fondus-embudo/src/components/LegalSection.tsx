@@ -671,45 +671,54 @@ export function LegalFooterSection() {
         </div>
       </div>
 
-      {/* 6. Bloque Oficial IGJ en el Footer (Gris claro, divisor negro y 3 líneas alineadas) */}
-      <div className="mt-6 rounded-2xl border border-slate-300 bg-slate-100 p-5 sm:p-6 text-slate-800 shadow-md">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
-          {/* Lado Izquierdo: Logo circular IGJ y Ministerio / Presidencia debajo */}
-          <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-2">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1d497f] border-2 border-[#93c46d] font-mono-custom text-sm font-black text-white shadow-sm">
-                IGJ
-              </div>
-              <div className="text-left">
-                <p className="font-extrabold text-slate-900 text-xs uppercase tracking-wider">
-                  Inspección General de Justicia
-                </p>
-                <p className="text-[10px] font-semibold text-[#1d497f]">
-                  Sociedad de Capitalización Inscripta y Regulada
-                </p>
-              </div>
+      {/* Bloque Oficial de Certificación IGJ en el Footer */}
+      <div className="mt-8 flex flex-col md:flex-row items-center justify-center rounded-2xl bg-[#e6e6e6] py-8 px-4 shadow-sm">
+        {/* Bloque Izquierdo: Identidad Gubernamental */}
+        <div className="flex flex-col items-center md:items-start">
+          {/* Fila superior: Texto "IGJ" muy grande y logotipo circular azul */}
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-6xl font-bold text-black tracking-tighter leading-none select-none">
+              IGJ
+            </span>
+            <img
+              src={`${import.meta.env.BASE_URL}igj-logo.png`}
+              alt="Logotipo circular azul IGJ"
+              className="h-14 w-14 object-contain"
+            />
+          </div>
+
+          {/* Fila inferior: Escudo argentino alineado a la izquierda junto al texto ministerial */}
+          <div className="mt-3 flex items-center justify-center md:justify-start gap-2">
+            <img
+              src={`${import.meta.env.BASE_URL}escudo-argentina.png`}
+              alt="Escudo de la República Argentina"
+              className="h-7 w-auto object-contain shrink-0"
+            />
+            <div className="text-[10px] leading-tight text-black font-medium text-left">
+              <p>Ministerio de</p>
+              <p>Justicia y Derechos Humanos</p>
+              <p className="border border-black/40 px-1 py-0.2 mt-0.5 inline-block font-semibold">
+                Presidencia de la Nación
+              </p>
             </div>
-            <p className="text-[9px] uppercase tracking-wider text-slate-600 font-medium max-w-xs leading-tight">
-              Ministerio de Justicia y Derechos Humanos Presidencia de la Nación
-            </p>
           </div>
+        </div>
 
-          {/* Centro: Línea divisoria vertical de color negro */}
-          <div className="hidden sm:block h-14 w-[1.5px] bg-black/80" />
-          <div className="block sm:hidden w-full h-[1px] bg-black/60" />
+        {/* Divisor Vertical */}
+        <div className="hidden md:block h-24 w-2 bg-black mx-6 rounded-full" />
+        <div className="block md:hidden w-36 h-1.5 bg-black my-6 rounded-full" />
 
-          {/* Lado Derecho: 3 líneas alineadas a la izquierda */}
-          <div className="flex flex-col items-start text-left space-y-1 sm:pl-2">
-            <p className="text-xs font-black uppercase tracking-wide text-slate-900">
-              Planes Aprobados
-            </p>
-            <p className="font-mono-custom text-xs font-bold text-[#1d497f]">
-              RES 000289/11
-            </p>
-            <p className="font-mono-custom text-xs font-extrabold text-slate-800">
-              0800-3333-445
-            </p>
-          </div>
+        {/* Bloque Derecho: Resolución y Contacto */}
+        <div className="flex flex-col text-left text-black justify-center">
+          <p className="text-xs font-bold leading-snug">
+            Planes Aprobados
+          </p>
+          <p className="text-sm font-medium leading-snug">
+            RES 000289/11
+          </p>
+          <p className="text-sm font-medium leading-snug">
+            0800-3333-445
+          </p>
         </div>
       </div>
 
