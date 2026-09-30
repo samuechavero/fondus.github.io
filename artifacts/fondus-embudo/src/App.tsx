@@ -11,7 +11,6 @@ import {
   Gift,
   LockKeyhole,
   MessageCircle,
-  Play,
   RefreshCw,
   ShieldCheck,
   Sparkles,
@@ -1316,55 +1315,43 @@ function StepThreeCheckout({
               </div>
             </div>
 
-            {/* VIDEO PRINCIPAL GRANDE: "Te explico como funciona Fondus en 1 minuto" */}
-            <div className="rounded-3xl border border-[#93c46d]/40 bg-[#153863] p-6 sm:p-8 shadow-2xl">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#93c46d] text-[#1d497f]">
-                  <Play size={20} fill="currentColor" />
-                </div>
-                <div>
-                  <h3 className="font-display text-xl font-bold text-white">
-                    Te explico como funciona Fondus en 1 minuto
-                  </h3>
-                  <p className="text-xs text-[#93c46d] font-semibold">
-                    Mirá este breve video explicativo sobre tu sistema de capitalización
-                  </p>
-                </div>
-              </div>
-
-              {/* IFrame de YouTube con API jsapi habilitada */}
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10 shadow-lg bg-black">
+            {/* Contenedor Principal de Videos */}
+            <div className="flex flex-col items-center w-full max-w-4xl mx-auto gap-8 mt-6">
+              {/* Video Principal (Explicativo) */}
+              <div className="w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-black">
                 <iframe
                   id="fondus-explainer-player"
-                  className="h-full w-full border-0"
                   src="https://www.youtube.com/embed/_JywDCltepk?enablejsapi=1"
                   title="Te explico como funciona Fondus en 1 minuto"
+                  className="w-full h-full border-none"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 />
               </div>
-            </div>
 
-            {/* Sección de Testimonios debajo del video explicativo */}
-            <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-[#153863]/90 p-6 sm:p-8 shadow-xl">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#93c46d]/20 text-[#93c46d]">
-                  <Play size={16} fill="currentColor" />
-                </div>
-                <div>
-                  <h4 className="font-display text-lg font-bold text-white">Historias que ya avanzaron</h4>
-                  <p className="text-xs text-[#c0d1e3]">Conocé la experiencia de nuestros adjudicados reales</p>
-                </div>
-              </div>
+              {/* Video Secundario (Testimonio de Miguel) */}
+              <div className="flex flex-col items-center w-full gap-4">
+                <h3
+                  className="text-2xl font-bold text-[#1d497f] text-center"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    padding: '10px 24px',
+                    borderRadius: '16px',
+                    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.2)',
+                  }}
+                >
+                  Conocé la experiencia de nuestros adjudicados
+                </h3>
 
-              <div className="aspect-video w-full overflow-hidden rounded-2xl bg-black border border-white/10">
-                <iframe
-                  className="h-full w-full border-0"
-                  src="https://www.youtube.com/embed/AdyrPXND35c?rel=0&modestbranding=1"
-                  title="Historias que ya avanzaron - Fondus"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
+                <div className="w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-lg bg-black">
+                  <iframe
+                    src="https://www.youtube.com/embed/AdyrPXND35c"
+                    title="Conocé la experiencia de nuestros adjudicados"
+                    className="w-full h-full border-none"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
               </div>
             </div>
           </motion.div>
