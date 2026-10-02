@@ -37,7 +37,7 @@ Lógica de Chat: Simula a un asesor experto. Muestra el indicador "Escribiendo..
 
 "Hola, soy tu asesor experto de Fondus. Veo que tenés una gran meta. Nuestro sistema te permite hacer aportes mensuales accesibles a un fondo común."
 
-"Podés adjudicar tu capital anticipadamente por sorteo o licitación, siempre de forma transparente. ¿De cuánto es la cuota mensual que te resultaría cómoda para empezar hoy?"
+"Podés adjudicar tu capital por sorteo mensual garantizado, siempre de forma transparente. ¿De cuánto es la cuota mensual que te resultaría cómoda para empezar hoy?"
 
 Renderiza opciones de respuesta rápida para el usuario (ej. "$15.000", "$30.000", "Más de $50.000").
 

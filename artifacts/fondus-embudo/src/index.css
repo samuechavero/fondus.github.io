@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -49,7 +49,7 @@
   --accent-foreground: 215 40% 14%;
   --destructive: 0 62% 52%;
   --destructive-foreground: 0 0% 100%;
-  --app-font-sans: 'DM Sans', sans-serif;
+  --app-font-sans: 'Poppins', sans-serif;
   --app-font-mono: 'Space Mono', monospace;
   --radius: 1.125rem;
   --shadow-soft: 0 20px 60px rgba(13, 37, 66, .16);
@@ -85,7 +85,7 @@
 @keyframes pulse-ring { 0% { transform: scale(.86); opacity: .75; } 75%, 100% { transform: scale(1.15); opacity: 0; } }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 @keyframes draw-line { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
-.font-display { font-family: 'Manrope', sans-serif; }
+.font-display { font-family: 'Poppins', sans-serif; }
 .font-mono-custom { font-family: 'Space Mono', monospace; }
 .animate-float-slow { animation: float-slow 5s ease-in-out infinite; }
 .animate-pulse-ring { animation: pulse-ring 2.2s ease-out infinite; }

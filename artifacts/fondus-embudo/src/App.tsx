@@ -21,9 +21,11 @@ import {
   VolumeX,
   X,
   Zap,
+  RotateCcw,
 } from 'lucide-react';
 import { SocialProof } from './components/SocialProof';
 import { LegalFooterSection } from './components/LegalSection';
+import { PaymentGatewayForm, type PaymentData, isPaymentDataValid } from './components/PaymentGatewayForm';
 
 declare global {
   interface Window {
@@ -204,15 +206,11 @@ function StepHero({ onStart }: { onStart: () => void }) {
         
         {/* Titular Principal Exacto */}
         <h1 className="font-display max-w-4xl text-[clamp(2.65rem,7.5vw,6.4rem)] font-800 leading-[.97] tracking-[-.06em] text-white">
-          Con <span className="text-[#93c46d]">FONDUS</span> vas a poder
+          con fondus es posible.
         </h1>
         
-        <p className="mt-6 max-w-xl text-lg font-medium leading-relaxed text-[#93c46d] sm:text-xl">
-          En dos minutos te explicamos todo
-        </p>
-
-        <p className="mt-3 max-w-lg text-sm leading-relaxed text-[#d8e3ed] sm:text-base">
-          Una simulación ágil y guiada para convertir tu capacidad de ahorro en un capital concreto y adjudicado. Sin vueltas ni letra chica.
+        <p className="mt-6 max-w-xl text-base leading-relaxed text-[#d8e3ed] sm:text-lg">
+          Una simulación fácil, y guiada para convertir tu ahorro en tu objetivo financiero. Sin vueltas ni letra chica.
         </p>
 
         <div className="mt-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
@@ -243,11 +241,10 @@ function StepHero({ onStart }: { onStart: () => void }) {
 
       <div className="absolute bottom-8 right-8 hidden max-w-[220px] text-right lg:block">
         <p className="font-display text-3xl font-800 leading-none text-white/80">
-          Tu meta<br />
-          <span className="text-[#93c46d]">empieza hoy.</span>
+          Elegí tu plan
         </p>
         <p className="mt-3 text-xs leading-relaxed text-[#b3c7db]">
-          Elegí un plan. Nosotros te mostramos el camino de capitalización posible.
+          Nosotros te mostramos el camino de capitalización posible.
         </p>
       </div>
     </motion.main>
@@ -271,10 +268,10 @@ function StepOnePlans({
           Paso 01 / Elegí tu orden de compra
         </p>
         <h1 className="font-display text-[clamp(2.1rem,5vw,4.2rem)] font-800 leading-[1.02] tracking-[-.05em] text-white">
-          Seleccioná tu plan de capitalización
+          Selecciona tu plan
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-[#d8e3ed] sm:text-base">
-          Elegí el capital que querés alcanzar. Cuotas fijas en pesos pensadas para avanzar sin desbalancear tu economía.
+          Elegí el capital que querés alcanzar. Cuotas fijas en pesos pensadas 100% para vos.
         </p>
       </div>
 
@@ -438,7 +435,7 @@ function StepTwoSofia({
               {...fadeUp}
               className="max-w-[94%] rounded-2xl rounded-tl-sm bg-[#153863] px-5 py-4 text-[15px] leading-relaxed text-[#e0eaf3] shadow-md border border-white/10"
             >
-              Hola soy Sofia, tu asesora digital ¡Felicitaciones por el sistema que acabas de seleccionar! Tu plan seleccionado es en cuotas fijas y en pesos las primeras 4 tienen un valor mayor pero desde la 5ta en adelenta ya baja, hasta que salgas adjudicado o decidas continuar con tu sistema de capitalización y recorda que si salis adjudicado ¡NO VAS A PAGAR MAS! Antes de continuar decime:
+              ¡Hola! 👋 Soy Sofía, tu asesora digital. ¡Felicitaciones por el plan que acabás de seleccionar, hiciste una gran elección! 🎉 A partir de ahora tu ahorro empezará a trabajar para vos, generando intereses a tu favor mes a mes. Además, tu plan viene con beneficios exclusivos incluidos, y lo mejor de todo: si salís adjudicado, no pagás más. Muchas personas ya confiaron en nosotros y hoy ya cumplieron su objetivo financiero, y vos podés ser el próximo. Antes de continuar decime:
             </motion.div>
           )}
         </AnimatePresence>
@@ -920,15 +917,36 @@ function calculateDrawCountdown(now = new Date()) {
 function StepThreeCheckout({
   selectedPlan,
   assignedNumber,
+  onReset,
 }: {
   selectedPlan: Plan;
   assignedNumber: string;
+  onReset?: () => void;
 }) {
   const [submitted, setSubmitted] = useState(false);
   const [acceptedCapitalization, setAcceptedCapitalization] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isBasesModalOpen, setIsBasesModalOpen] = useState(false);
   const [countdown, setCountdown] = useState(() => calculateDrawCountdown());
+
+  const [paymentData, setPaymentData] = useState<PaymentData>({
+    method: 'credit_card',
+    cardNumber: '',
+    cardHolder: '',
+    expiry: '',
+    cvv: '',
+  });
+
+  const isPaymentValid = useMemo(() => isPaymentDataValid(paymentData), [paymentData]);
+
+  const handleLocalReset = () => {
+    if (onReset) {
+      onReset();
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setSubmitted(false);
+    }
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -993,7 +1011,7 @@ function StepThreeCheckout({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!acceptedCapitalization || !acceptedTerms) return;
+    if (!acceptedCapitalization || !acceptedTerms || !isPaymentValid) return;
     if (form.name && form.dni && form.phone) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       setSubmitted(true);
@@ -1005,7 +1023,14 @@ function StepThreeCheckout({
       <div className="mx-auto max-w-6xl px-5 pb-16 sm:px-9 lg:px-12">
         {/* Barra superior de checkout */}
         <div className="flex items-center justify-between border-b border-white/10 py-5">
-          <Logo />
+          <div
+            onClick={submitted ? handleLocalReset : undefined}
+            className={submitted ? 'cursor-pointer transition hover:opacity-80' : ''}
+            role={submitted ? 'button' : undefined}
+            title={submitted ? 'Volver al inicio' : undefined}
+          >
+            <Logo />
+          </div>
           <div className="flex items-center gap-3">
             <span className="hidden items-center gap-2 text-xs text-[#c0d1e3] sm:flex">
               <ShieldCheck size={16} className="text-[#93c46d]" /> Proceso 100% Automático y Encriptado
@@ -1277,9 +1302,15 @@ function StepThreeCheckout({
                     </label>
                   </div>
 
+                  {/* Pasarela de Pago Oficial */}
+                  <PaymentGatewayForm
+                    paymentData={paymentData}
+                    onChange={setPaymentData}
+                  />
+
                   <button
                     type="submit"
-                    disabled={!acceptedTerms || !acceptedCapitalization}
+                    disabled={!acceptedTerms || !acceptedCapitalization || !isPaymentValid}
                     className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c] disabled:opacity-50 disabled:cursor-not-allowed"
                     data-testid="button-submit-adhesion"
                   >
@@ -1343,7 +1374,7 @@ function StepThreeCheckout({
                   Conocé la experiencia de nuestros adjudicados
                 </h3>
 
-                <div className="w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-lg bg-black">
+                <div className="w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-lg bg-black">
                   <iframe
                     src="https://www.youtube.com/embed/AdyrPXND35c"
                     title="Conocé la experiencia de nuestros adjudicados"
@@ -1353,6 +1384,17 @@ function StepThreeCheckout({
                   />
                 </div>
               </div>
+
+              {/* Botón secundario para volver al inicio */}
+              <button
+                type="button"
+                onClick={handleLocalReset}
+                className="mt-4 flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-white/20 hover:border-[#93c46d] shadow-lg"
+                data-testid="button-reset-to-start"
+              >
+                <RotateCcw size={16} className="text-[#93c46d]" />
+                <span>Toca acá para ir al inicio</span>
+              </button>
             </div>
           </motion.div>
         )}
@@ -1467,6 +1509,15 @@ function App() {
     window.setTimeout(() => setStep(4), 500); // Pasa a Gamificación
   };
 
+  const handleReset = () => {
+    setSelectedPlan(PLANS[1]);
+    setNumberMode('random');
+    setAssignedNumber('815');
+    setCalculating(false);
+    setStep(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const back = () => {
     if (step > 1 && !calculating) {
       setStep(step - 1);
@@ -1523,6 +1574,7 @@ function App() {
             key="step4"
             selectedPlan={selectedPlan}
             assignedNumber={assignedNumber}
+            onReset={handleReset}
           />
         )}
       </AnimatePresence>
