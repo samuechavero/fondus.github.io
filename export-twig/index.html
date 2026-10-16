@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fondus | Planes de Ahorro y Capitalización</title>
+  <meta name="description" content="Planes de capitalización y ahorro oficiales aprobados por la IGJ. Elegí tu capital, cuotas fijas en pesos y sorteos mensuales." />
+  <link rel="icon" type="image/svg+xml" href="public/favicon.svg" />
+
+  <!-- Google Fonts: Poppins & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS Oficial CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fondusBlue: "#1d497f",
+            fondusGreen: "#93c46d",
+            fondusOrange: "#FF5900"
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Estilos Personalizados -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-[#1d497f] text-white grain min-h-screen relative overflow-x-hidden">
+
+  <!-- Video de Fondo con Overlay -->
+  <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+    <video
+      id="bg-video"
+      autoplay
+      loop
+      muted
+      playsinline
+      class="h-full w-full object-cover opacity-20 filter contrast-125 saturate-50"
+    >
+      <source src="public/media/fondus-bg.mp4" type="video/mp4" />
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#1d497f]/90 via-[#1d497f]/95 to-[#102c4f]"></div>
+  </div>
+
+  <!-- Botón Flotante de Audio Superior -->
+  <button
+    type="button"
+    id="button-floating-audio"
+    class="fixed top-4 right-4 z-[60] flex items-center gap-2 rounded-full border border-[#93c46d]/40 bg-[#1d497f]/90 px-3.5 py-2 text-xs font-semibold text-white shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-md transition hover:scale-105 hover:border-[#93c46d] hover:bg-[#255793]"
+    title="Activar o silenciar audio"
+  >
+    <i id="floating-audio-icon" data-lucide="volume-2" class="text-[#93c46d] w-4 h-4"></i>
+    <span id="floating-audio-text" class="hidden sm:inline">Audio activado</span>
+  </button>
+
+  <!-- Header Dinámico del Wizard -->
+  <header id="step-header" class="relative z-20 border-b border-white/10 bg-[#1d497f]/80 backdrop-blur-md transition-all">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+      <div class="flex items-center gap-4">
+        <button
+          type="button"
+          id="header-back-btn"
+          class="flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/10 opacity-0 pointer-events-none"
+        >
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Volver</span>
+        </button>
+
+        <!-- Logo Institucional -->
+        <div class="flex items-center gap-3 cursor-pointer btn-reset-to-start" title="Volver al inicio">
+          <div class="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-md overflow-hidden p-1">
+            <img src="public/media/fondus-logo.jpeg" alt="Logo Fondus" class="h-full w-full object-contain" />
+          </div>
+          <div>
+            <span class="font-display block text-lg font-black tracking-tight text-white leading-none">FONDUS</span>
+            <span class="block text-[9px] font-semibold tracking-wider text-[#93c46d] uppercase mt-0.5">Agencia Digital</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Indicador de Paso y Progreso -->
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:block text-right">
+          <span id="header-step-text" class="font-mono-custom text-xs font-bold uppercase tracking-wider text-[#93c46d]">
+            Simulación
+          </span>
+          <div class="mt-1 h-1.5 w-24 rounded-full bg-white/15 overflow-hidden">
+            <div id="header-step-progress" class="h-full bg-[#93c46d] transition-all duration-300" style="width: 33%"></div>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center gap-1.5 rounded-full border border-[#93c46d]/30 bg-[#93c46d]/10 px-3 py-1 text-[11px] font-semibold text-[#93c46d]">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          <span>100% Digital y Oficial</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL (PASOS DEL EMBUDO) -->
+  <main class="relative z-10 mx-auto max-w-6xl px-5 py-8 sm:px-8">
+
+    <!-- ============================================== -->
+    <!-- HERO SECTION (PASO 1) -->
+    <!-- ============================================== -->
+    <section id="step-hero" class="step-container py-10 sm:py-16 text-center max-w-4xl mx-auto">
+      <div class="inline-flex items-center gap-2 rounded-full border border-[#93c46d]/40 bg-[#93c46d]/15 px-4 py-1.5 text-xs font-bold text-[#93c46d] uppercase tracking-wider mb-6 shadow-sm">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        <span>Planes Oficiales de Capitalización y Ahorro</span>
+      </div>
+
+      <h1 class="font-display text-[clamp(2.5rem,7vw,5.2rem)] font-extrabold leading-[1] tracking-[-0.05em] text-white">
+        con fondus es posible.
+      </h1>
+
+      <p class="mt-6 text-base sm:text-xl font-normal leading-relaxed text-[#d8e3ed] max-w-2xl mx-auto">
+        Una simulación fácil, y guiada para convertir tu ahorro en tu objetivo financiero. Sin vueltas ni letra chica.
+      </p>
+
+      <!-- Beneficios Clave del Hero -->
+      <div class="mt-10 grid gap-4 sm:grid-cols-3 max-w-3xl mx-auto text-left">
+        <div class="rounded-2xl border border-white/10 bg-[#153863]/80 p-5 backdrop-blur-sm">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#93c46d]/20 text-[#93c46d] mb-3">
+            <i data-lucide="award" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-bold text-sm text-white">Cuotas Fijas en Pesos</h3>
+          <p class="text-xs text-[#b8cee2] mt-1">Valores claros y previsibles durante todo tu plan sin sorpresas.</p>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-[#153863]/80 p-5 backdrop-blur-sm">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#93c46d]/20 text-[#93c46d] mb-3">
+            <i data-lucide="ticket" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-bold text-sm text-white">Sorteos Mensuales</h3>
+          <p class="text-xs text-[#b8cee2] mt-1">Participás todos los meses. Si salís adjudicado, no pagás más.</p>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-[#153863]/80 p-5 backdrop-blur-sm">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#93c46d]/20 text-[#93c46d] mb-3">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-bold text-sm text-white">Regulado por IGJ</h3>
+          <p class="text-xs text-[#b8cee2] mt-1">Seguridad jurídica y respaldo oficial del Ministerio de Justicia.</p>
+        </div>
+      </div>
+
+      <!-- CTA Botón -->
+      <div class="mt-12 flex flex-col items-center justify-center gap-4">
+        <button
+          type="button"
+          id="btn-start-hero"
+          class="flex items-center gap-3 rounded-2xl bg-[#93c46d] px-10 py-5 text-base sm:text-lg font-black uppercase tracking-wider text-[#1d497f] shadow-[0_10px_35px_rgba(147,196,109,0.4)] transition hover:bg-[#82b55c] hover:scale-105 active:scale-95"
+        >
+          <span>Elegí tu plan</span>
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </button>
+        <span class="flex items-center gap-2 text-xs text-[#a4bdd4]">
+          <i data-lucide="lock-keyhole" class="w-3.5 h-3.5 text-[#93c46d]"></i> Proceso 100% digital, transparente y seguro
+        </span>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- PASO 1: SELECCIÓN DE PLANES -->
+    <!-- ============================================== -->
+    <section id="step-plans" class="step-container hidden py-6">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <p class="font-mono-custom text-xs uppercase tracking-[0.24em] text-[#93c46d]">
+          Paso 01 / Simulación Personalizada
+        </p>
+        <h2 class="font-display mt-2 text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Selecciona tu plan
+        </h2>
+        <p class="mt-3 text-sm sm:text-base text-[#d8e3ed]">
+          Elegí el capital que querés alcanzar. Cuotas fijas en pesos pensadas 100% para vos.
+        </p>
+      </div>
+
+      <!-- Grilla de Planes -->
+      <div class="grid gap-6 md:grid-cols-3 max-w-6xl mx-auto">
+        <!-- Plan 1: 7.5M -->
+        <div class="relative flex flex-col justify-between rounded-3xl border border-white/15 bg-[#153863]/90 p-6 sm:p-7 shadow-xl backdrop-blur-md transition hover:border-[#93c46d]/60 hover:shadow-2xl">
+          <div>
+            <span class="inline-block rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#93c46d]">
+              Ideal para empezar
+            </span>
+            <h3 class="font-display mt-4 text-xl sm:text-2xl font-black text-white leading-snug">
+              ORDEN DE COMPRA $7.500.000
+            </h3>
+            
+            <div class="mt-6 rounded-2xl bg-black/25 p-4 border border-white/10">
+              <div class="flex items-baseline justify-between border-b border-white/10 pb-2.5">
+                <span class="text-xs text-[#a4bdd4]">Cuotas 1 a 4:</span>
+                <span class="font-mono-custom text-lg font-bold text-white">$43.800</span>
+              </div>
+              <div class="flex items-baseline justify-between pt-2.5">
+                <span class="text-xs text-[#a4bdd4]">Desde cuota 5:</span>
+                <span class="font-mono-custom text-xl font-black text-[#93c46d]">$25.875</span>
+              </div>
+            </div>
+
+            <ul class="mt-6 space-y-2.5 text-xs text-[#d8e3ed]">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Sorteos mensuales desde cuota 1. Si ganas, no pagas más.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Disponibilidad de fondos desde cuota 18.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Telemedicina 24/7.</span>
+              </li>
+            </ul>
+          </div>
+
+          <button
+            type="button"
+            class="btn-select-plan mt-8 flex w-full items-center justify-center gap-2 rounded-2xl bg-white/10 py-3.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#93c46d] hover:text-[#1d497f]"
+            data-plan-id="plan-7.5m"
+          >
+            <span>Elegir este plan</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Plan 2: 10M (Popular) -->
+        <div class="relative flex flex-col justify-between rounded-3xl border-2 border-[#93c46d] bg-gradient-to-b from-[#194273] to-[#133256] p-6 sm:p-7 shadow-[0_0_35px_rgba(147,196,109,0.25)] scale-100 md:scale-105">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#93c46d] px-4 py-1 text-[11px] font-black uppercase tracking-wider text-[#1d497f] shadow-md flex items-center gap-1.5">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-[#1d497f]"></i>
+            <span>Más elegido</span>
+          </div>
+
+          <div>
+            <span class="inline-block rounded-full bg-[#93c46d]/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#93c46d] mt-2">
+              Recomendado
+            </span>
+            <h3 class="font-display mt-4 text-xl sm:text-2xl font-black text-white leading-snug">
+              ORDEN DE COMPRA $10.000.000
+            </h3>
+            
+            <div class="mt-6 rounded-2xl bg-black/35 p-4 border border-[#93c46d]/40">
+              <div class="flex items-baseline justify-between border-b border-white/10 pb-2.5">
+                <span class="text-xs text-[#a4bdd4]">Cuotas 1 a 4:</span>
+                <span class="font-mono-custom text-lg font-bold text-white">$58.400</span>
+              </div>
+              <div class="flex items-baseline justify-between pt-2.5">
+                <span class="text-xs text-[#a4bdd4]">Desde cuota 5:</span>
+                <span class="font-mono-custom text-2xl font-black text-[#93c46d]">$34.500</span>
+              </div>
+            </div>
+
+            <ul class="mt-6 space-y-2.5 text-xs text-[#d8e3ed]">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Sorteos mensuales desde cuota 1. Si ganas, no pagas más.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Disponibilidad de fondos desde cuota 18.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Asistencia al hogar 24/7.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Telemedicina 24/7.</span>
+              </li>
+            </ul>
+          </div>
+
+          <button
+            type="button"
+            class="btn-select-plan mt-8 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#93c46d] py-4 text-xs font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c]"
+            data-plan-id="plan-10m"
+          >
+            <span>Elegir este plan</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Plan 3: 20M -->
+        <div class="relative flex flex-col justify-between rounded-3xl border border-white/15 bg-[#153863]/90 p-6 sm:p-7 shadow-xl backdrop-blur-md transition hover:border-[#93c46d]/60 hover:shadow-2xl">
+          <div>
+            <span class="inline-block rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#93c46d]">
+              Máximo capital
+            </span>
+            <h3 class="font-display mt-4 text-xl sm:text-2xl font-black text-white leading-snug">
+              ORDEN DE COMPRA $20.000.000
+            </h3>
+            
+            <div class="mt-6 rounded-2xl bg-black/25 p-4 border border-white/10">
+              <div class="flex items-baseline justify-between border-b border-white/10 pb-2.5">
+                <span class="text-xs text-[#a4bdd4]">Cuotas 1 a 4:</span>
+                <span class="font-mono-custom text-lg font-bold text-white">$116.800</span>
+              </div>
+              <div class="flex items-baseline justify-between pt-2.5">
+                <span class="text-xs text-[#a4bdd4]">Desde cuota 5:</span>
+                <span class="font-mono-custom text-xl font-black text-[#93c46d]">$69.000</span>
+              </div>
+            </div>
+
+            <ul class="mt-6 space-y-2.5 text-xs text-[#d8e3ed]">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Sorteos mensuales desde cuota 1. Si ganas, no pagas más.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Disponibilidad de fondos desde cuota 18.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Asistencia total en viajes y al hogar.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+                <span>Telemedicina VIP 24/7.</span>
+              </li>
+            </ul>
+          </div>
+
+          <button
+            type="button"
+            class="btn-select-plan mt-8 flex w-full items-center justify-center gap-2 rounded-2xl bg-white/10 py-3.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#93c46d] hover:text-[#1d497f]"
+            data-plan-id="plan-20m"
+          >
+            <span>Elegir este plan</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pantalla Intermedia de Cálculo (Loading) -->
+    <section id="step-calculating" class="hidden min-h-[60vh] flex-col items-center justify-center text-center px-4">
+      <div class="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#93c46d]/40 mb-8">
+        <span class="absolute inset-1 rounded-full border border-dashed border-[#93c46d] animate-spin"></span>
+        <i data-lucide="zap" class="w-7 h-7 text-[#93c46d]"></i>
+      </div>
+      <h2 id="calculating-plan-name" class="font-display text-2xl font-black text-white">
+        Configurando posibilidades con tu plan...
+      </h2>
+      <p class="mt-3 text-sm text-[#d8e3ed]">
+        Ajustando el esquema de cuotas fijas y sorteos mensuales.
+      </p>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- ASESORA DIGITAL SOFÍA -->
+    <!-- ============================================== -->
+    <section id="step-sofia" class="step-container hidden py-8 max-w-3xl mx-auto">
+      <div class="text-center mb-8">
+        <p class="font-mono-custom text-xs uppercase tracking-[0.24em] text-[#93c46d]">
+          Asesora Digital
+        </p>
+        <h2 class="font-display mt-2 text-3xl sm:text-4xl font-extrabold text-white">
+          Asesoramiento Personalizado
+        </h2>
+      </div>
+
+      <!-- Tarjeta de Conversación con Sofía -->
+      <div class="rounded-3xl border border-[#93c46d]/30 bg-[#153863]/90 p-6 sm:p-9 shadow-2xl backdrop-blur-md">
+        <!-- Identidad de Sofía -->
+        <div class="flex items-center gap-4 border-b border-white/10 pb-5">
+          <div class="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#93c46d] to-[#1d497f] text-white shadow-md">
+            <i data-lucide="message-circle" class="w-7 h-7"></i>
+            <span class="absolute bottom-0 right-0 h-4 w-4 rounded-full bg-green-500 border-2 border-[#153863]"></span>
+          </div>
+          <div>
+            <h3 class="font-display text-lg font-bold text-white flex items-center gap-2">
+              <span>Sofía</span>
+              <span class="rounded-full bg-[#93c46d]/20 px-2.5 py-0.5 text-[10px] font-bold text-[#93c46d] uppercase">Asesora Digital Fondus</span>
+            </h3>
+            <p class="text-xs text-[#a4bdd4]">En línea · Respuesta inmediata</p>
+          </div>
+        </div>
+
+        <!-- Mensaje Oficial de Sofía -->
+        <div class="mt-6 rounded-2xl bg-black/25 p-5 sm:p-6 border border-white/10 text-sm sm:text-base leading-relaxed text-[#e0eaf3]">
+          <p>
+            ¡Hola! 👋 Soy Sofía, tu asesora digital. ¡Felicitaciones por el plan que acabás de seleccionar, hiciste una gran elección! 🎉 A partir de ahora tu ahorro empezará a trabajar para vos, generando intereses a tu favor mes a mes. Además, tu plan viene con beneficios exclusivos incluidos, y lo mejor de todo: si salís adjudicado, no pagás más. Muchas personas ya confiaron en nosotros y hoy ya cumplieron su objetivo financiero, y vos podés ser el próximo. Antes de continuar decime:
+          </p>
+        </div>
+
+        <!-- Opciones de Selección de Número -->
+        <div class="mt-8 grid gap-4 sm:grid-cols-2">
+          <button
+            type="button"
+            id="button-choose-manual"
+            class="flex items-center justify-between rounded-2xl border border-[#93c46d] bg-[#93c46d]/15 px-5 py-4 text-sm font-bold text-white transition hover:bg-[#93c46d] hover:text-[#1d497f] shadow-md group"
+          >
+            <span>Me gustaría seleccionar mi numero</span>
+            <i data-lucide="ticket" class="w-5 h-5 text-[#93c46d] group-hover:text-[#1d497f] transition"></i>
+          </button>
+
+          <button
+            type="button"
+            id="button-choose-random"
+            class="flex items-center justify-between rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-sm font-bold text-white transition hover:border-[#93c46d] hover:bg-[#93c46d] hover:text-[#1d497f] shadow-md group"
+          >
+            <span>Que me toque aleatoriamente</span>
+            <i data-lucide="sparkles" class="w-5 h-5 text-[#93c46d] group-hover:text-[#1d497f] transition"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-6 flex items-center justify-center gap-2 text-xs text-[#a4bdd4]">
+        <i data-lucide="lock-keyhole" class="w-3.5 h-3.5 text-[#93c46d]"></i>
+        <span>Conversación confidencial · 100% Digital y Segura</span>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- GAMIFICACIÓN (CAJA Y NÚMERO) -->
+    <!-- ============================================== -->
+    <section id="step-gamification" class="step-container hidden py-8 max-w-3xl mx-auto text-center">
+      <p class="font-mono-custom text-xs uppercase tracking-[0.24em] text-[#93c46d]">
+        Asignación de Número Oficial
+      </p>
+
+      <h2 id="gamification-title" class="font-display mt-3 text-3xl sm:text-5xl font-extrabold text-white">
+        Tu número asignado <span class="text-[#93c46d]">te espera.</span>
+      </h2>
+
+      <p id="gamification-subtitle" class="mt-3 text-sm sm:text-base text-[#d8e3ed] max-w-lg mx-auto">
+        Abrí la caja para revelar el número que el sistema preparó aleatoriamente para vos.
+      </p>
+
+      <!-- Caja Cerrada con Animación Pulse Ring -->
+      <div id="gift-box-closed" class="mt-10 flex flex-col items-center">
+        <button
+          type="button"
+          id="button-open-gift"
+          class="group relative flex h-44 w-44 sm:h-52 sm:w-52 items-center justify-center transition-transform hover:scale-105 active:scale-95"
+        >
+          <span class="absolute inset-0 rounded-full border border-[#93c46d]/40 animate-pulse-ring"></span>
+          <span class="absolute inset-4 rounded-full bg-[#93c46d]/10"></span>
+          <div class="relative flex h-28 w-28 sm:h-32 sm:w-32 items-center justify-center rounded-3xl border-2 border-[#93c46d] bg-gradient-to-br from-[#93c46d] to-[#1d497f] text-white shadow-2xl">
+            <i data-lucide="gift" class="w-14 h-14 text-white"></i>
+          </div>
+        </button>
+        <span class="mt-4 text-xs font-bold uppercase tracking-wider text-[#93c46d]">Toca la caja para abrirla</span>
+      </div>
+
+      <!-- Caja Abierta / Números Revelados -->
+      <div id="gift-box-opened" class="hidden mt-10">
+        <!-- Contenedor Manual (3 tarjetas para elegir) -->
+        <div id="gamification-manual-container" class="hidden">
+          <p class="mb-4 font-mono-custom text-xs uppercase tracking-wider text-[#c0d1e3]">
+            Hacé clic en el número que querés seleccionar:
+          </p>
+          <div id="manual-cards-wrapper" class="flex justify-center gap-3 sm:gap-4 flex-wrap"></div>
+        </div>
+
+        <!-- Contenedor Aleatorio (1 tarjeta con re-sorteo) -->
+        <div id="gamification-random-container" class="hidden flex flex-col items-center">
+          <div class="rounded-3xl border-2 border-[#93c46d] bg-[#153863] p-6 sm:p-8 shadow-[0_0_35px_rgba(147,196,109,0.3)] max-w-sm w-full">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#a4bdd4]">Tu número adjudicado oficial:</span>
+            <div id="random-revealed-number" class="font-mono-custom text-5xl font-black text-[#93c46d] my-3">
+              815
+            </div>
+            <p class="text-xs text-[#d8e3ed]">Participás en el sorteo de fin de mes.</p>
+          </div>
+
+          <button
+            type="button"
+            id="button-reroll-random"
+            class="mt-4 flex items-center gap-2 text-xs font-semibold text-[#a4bdd4] hover:text-[#93c46d] transition"
+          >
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>Sortear otro número aleatorio</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Pop-up Bonificación 100% -->
+    <div id="modal-bonification" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
+      <div class="relative w-full max-w-md rounded-3xl border-2 border-[#93c46d] bg-[#153863] p-7 text-center shadow-2xl">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#93c46d] text-[#1d497f] shadow-lg mb-4">
+          <i data-lucide="sparkles" class="w-7 h-7"></i>
+        </div>
+        <span class="inline-block rounded-full bg-[#93c46d]/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-[#93c46d] mb-2">
+          ¡Beneficio Exclusivo Desbloqueado!
+        </span>
+        <h3 class="font-display text-2xl font-black text-white">
+          ¡Suscripción 100% Bonificada!
+        </h3>
+        <p class="mt-2 text-xs sm:text-sm text-[#d8e3ed]">
+          Te otorgamos una bonificación total en tu cuota de suscripción. Avanzá para completar tus datos y asegurar tu participación en el sorteo mensual.
+        </p>
+
+        <div class="mt-5 rounded-2xl bg-black/30 p-3.5 text-left text-xs text-[#e0eaf3] space-y-2 border border-white/10">
+          <div class="flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-[#93c46d]"></i>
+            <span>Bonificación del 100% activa en tu adhesión.</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-[#93c46d]"></i>
+            <span>Participación inmediata desde el primer sorteo.</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          id="btn-continue-bonification"
+          class="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#93c46d] py-4 text-xs font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c]"
+        >
+          <span>Continuar con bonificación</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 1. PASO 2: COMPLETÁ TUS DATOS -->
+    <!-- ============================================== -->
+    <section id="step-user-data" class="step-container hidden py-6 max-w-2xl mx-auto">
+      <div class="text-center mb-8">
+        <p class="font-mono-custom text-xs uppercase tracking-[0.24em] text-[#93c46d]">
+          Paso 02 / Captura de Datos
+        </p>
+        <h2 class="font-display mt-2 text-3xl sm:text-4xl font-extrabold text-white">
+          Completá tus datos
+        </h2>
+        <p class="mt-2 text-sm sm:text-base text-[#d8e3ed]">
+          Necesitamos esta información para generar tu contrato y continuar con la activación de tu plan.
+        </p>
+      </div>
+
+      <div class="rounded-3xl border border-white/15 bg-[#153863] p-6 sm:p-8 shadow-xl">
+        <form id="user-data-form" class="space-y-4">
+          <!-- NOMBRE y APELLIDO -->
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="input-nombre" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                NOMBRE
+              </label>
+              <input
+                type="text"
+                id="input-nombre"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Nombre"
+              />
+            </div>
+            <div>
+              <label for="input-apellido" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                APELLIDO
+              </label>
+              <input
+                type="text"
+                id="input-apellido"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Apellido"
+              />
+            </div>
+          </div>
+
+          <!-- DNI y FECHA DE NACIMIENTO -->
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="input-dni" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                DNI
+              </label>
+              <input
+                type="text"
+                id="input-dni"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Ej: 32456789"
+              />
+            </div>
+            <div>
+              <label for="input-fecha-nacimiento" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                FECHA DE NACIMIENTO
+              </label>
+              <input
+                type="text"
+                id="input-fecha-nacimiento"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="dd/mm/aaaa"
+              />
+            </div>
+          </div>
+
+          <!-- ESTADO CIVIL y PROVINCIA -->
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="input-estado-civil" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                ESTADO CIVIL
+              </label>
+              <select
+                id="input-estado-civil"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition focus:border-[#93c46d]"
+              >
+                <option value="" disabled selected>Selecciona tu estado civil</option>
+                <option value="Soltero/a">Soltero/a</option>
+                <option value="Casado/a">Casado/a</option>
+                <option value="Divorciado/a">Divorciado/a</option>
+                <option value="Viudo/a">Viudo/a</option>
+                <option value="Unión convivencial">Unión convivencial</option>
+              </select>
+            </div>
+            <div>
+              <label for="input-provincia" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                PROVINCIA
+              </label>
+              <select
+                id="input-provincia"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition focus:border-[#93c46d]"
+              >
+                <option value="" disabled selected>Selecciona tu provincia</option>
+                <option value="Córdoba">Córdoba</option>
+                <option value="Buenos Aires">Buenos Aires</option>
+                <option value="Ciudad Autónoma de Buenos Aires">Ciudad Autónoma de Buenos Aires</option>
+                <option value="Santa Fe">Santa Fe</option>
+                <option value="Mendoza">Mendoza</option>
+                <option value="Tucumán">Tucumán</option>
+                <option value="Entre Ríos">Entre Ríos</option>
+                <option value="Salta">Salta</option>
+                <option value="Misiones">Misiones</option>
+                <option value="Chaco">Chaco</option>
+                <option value="Corrientes">Corrientes</option>
+                <option value="Santiago del Estero">Santiago del Estero</option>
+                <option value="San Juan">San Juan</option>
+                <option value="Jujuy">Jujuy</option>
+                <option value="Río Negro">Río Negro</option>
+                <option value="Neuquén">Neuquén</option>
+                <option value="Formosa">Formosa</option>
+                <option value="Chubut">Chubut</option>
+                <option value="San Luis">San Luis</option>
+                <option value="Catamarca">Catamarca</option>
+                <option value="La Rioja">La Rioja</option>
+                <option value="La Pampa">La Pampa</option>
+                <option value="Santa Cruz">Santa Cruz</option>
+                <option value="Tierra del Fuego">Tierra del Fuego</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- LOCALIDAD y TELEFONO -->
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="input-localidad" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                LOCALIDAD
+              </label>
+              <input
+                type="text"
+                id="input-localidad"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Tu localidad"
+              />
+            </div>
+            <div>
+              <label for="input-telefono" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                TELEFONO
+              </label>
+              <input
+                type="tel"
+                id="input-telefono"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Ej: 3511234567"
+              />
+            </div>
+          </div>
+
+          <!-- EMAIL -->
+          <div>
+            <label for="input-email" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+              EMAIL
+            </label>
+            <input
+              type="email"
+              id="input-email"
+              required
+              class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+              placeholder="tu@email.com"
+            />
+          </div>
+
+          <!-- Botón de Acción -->
+          <button
+            type="submit"
+            id="btn-submit-step2"
+            class="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c]"
+          >
+            <span>Continuar con mi suscripción</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- 2. PASO 3: CONFIRMACIÓN Y RESUMEN ("REVISÁ TU PLAN") -->
+    <!-- ============================================== -->
+    <section id="step-review-checkout" class="step-container hidden py-6">
+      <div class="text-left mb-8">
+        <p class="font-mono-custom text-xs uppercase tracking-[0.24em] text-[#93c46d]">
+          Paso 03 / Confirmación y Resumen
+        </p>
+        <h2 class="font-display mt-2 text-3xl sm:text-5xl font-extrabold text-white">
+          Revisá tu plan antes de continuar
+        </h2>
+        <p class="mt-2 text-base text-[#d8e3ed]">
+          Chequeá el detalle final y aceptá explícitamente las condiciones antes de seguir con Naranja X.
+        </p>
+      </div>
+
+      <!-- Contador Dinámico de Sorteos -->
+      <div class="mb-10 rounded-3xl border border-[#93c46d]/40 bg-[#153863]/90 p-6 sm:p-8 shadow-xl">
+        <div class="grid gap-6 md:grid-cols-2 md:items-center">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full bg-[#93c46d]/20 border border-[#93c46d]/40 px-3 py-1 text-xs font-bold text-[#93c46d] mb-2">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Último número adjudicado: 390</span>
+            </div>
+            <h3 class="font-display text-xl sm:text-2xl font-bold mt-1 text-white">
+              Tu oportunidad tiene fecha.
+            </h3>
+            <p class="mt-2 text-xs sm:text-sm text-[#d8e3ed]">
+              Si te suscribís hoy, participás por el sorteo de la adjudicación del <strong id="cd-draw-date" class="text-white">...</strong> (Cierre de suscripciones: <span id="cd-cutoff-date">...</span>).
+            </p>
+          </div>
+
+          <div class="flex items-center justify-start md:justify-end gap-2.5 sm:gap-3 text-center">
+            <div class="rounded-2xl bg-black/25 px-3.5 py-3 border border-white/10 min-w-[62px]">
+              <span id="cd-days" class="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">00</span>
+              <span class="block text-[9px] uppercase text-[#a4bdd4]">días</span>
+            </div>
+            <span class="text-[#93c46d] font-bold text-xl">:</span>
+            <div class="rounded-2xl bg-black/25 px-3.5 py-3 border border-white/10 min-w-[62px]">
+              <span id="cd-hours" class="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">00</span>
+              <span class="block text-[9px] uppercase text-[#a4bdd4]">hs</span>
+            </div>
+            <span class="text-[#93c46d] font-bold text-xl">:</span>
+            <div class="rounded-2xl bg-black/25 px-3.5 py-3 border border-white/10 min-w-[62px]">
+              <span id="cd-mins" class="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">00</span>
+              <span class="block text-[9px] uppercase text-[#a4bdd4]">min</span>
+            </div>
+            <span class="text-[#93c46d] font-bold text-xl hidden sm:inline">:</span>
+            <div class="rounded-2xl bg-black/25 px-3.5 py-3 border border-white/10 min-w-[62px] hidden sm:block">
+              <span id="cd-secs" class="font-mono-custom text-2xl sm:text-3xl font-bold text-[#93c46d]">00</span>
+              <span class="block text-[9px] uppercase text-[#a4bdd4]">seg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grilla: Tarjeta "Plan elegido" y Textos Legales + Formulario Pasarela y Checkboxes -->
+      <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+        <!-- Columna Izquierda: Tarjeta "Plan elegido" + Textos Legales Descriptivos -->
+        <div class="space-y-6">
+          <div class="rounded-3xl border border-[#93c46d]/40 bg-[#153863]/90 p-6 sm:p-8 shadow-xl space-y-5">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#93c46d] flex items-center gap-1.5">
+                <i data-lucide="award" class="w-4 h-4"></i> Plan elegido
+              </span>
+              <span class="rounded-full bg-[#93c46d]/20 px-3 py-0.5 text-[10px] font-bold text-[#93c46d] border border-[#93c46d]/30">
+                Suscripción 100% Bonificada
+              </span>
+            </div>
+
+            <!-- Datos de la Tarjeta Plan Elegido -->
+            <div class="space-y-4 text-sm">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs text-[#a4bdd4]">Orden de compra</span>
+                <span id="review-orden-compra" class="font-display text-xl font-black text-white">$10.000.000</span>
+              </div>
+
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs text-[#a4bdd4]">Tipo de plan</span>
+                <span class="font-semibold text-xs sm:text-sm text-white">Plan de Capitalización y Ahorro</span>
+              </div>
+
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs text-[#a4bdd4]">Cuotas 1 a 4</span>
+                <span id="review-cuotas-1a4" class="font-mono-custom text-base font-bold text-white">$58.400</span>
+              </div>
+
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs text-[#a4bdd4]">Desde cuota 5</span>
+                <span id="review-cuota-desde5" class="font-mono-custom text-xl font-black text-[#93c46d]">$34.500</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-1">
+                <span class="text-xs text-[#a4bdd4]">Número de sorteo asignado:</span>
+                <span id="review-numero-asignado" class="font-mono-custom text-2xl font-black text-[#93c46d]">815</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Textos Legales Descriptivos (debajo de la tarjeta) -->
+          <div class="rounded-2xl border border-white/10 bg-[#102c4f]/70 p-5 space-y-3 text-xs leading-relaxed text-[#c5d8eb]">
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+              <span>Tu plan participa de los sorteos mensuales según las condiciones vigentes y contará con un número de sorteo asignado.</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+              <span>Si resultás adjudicado, accedés al beneficio correspondiente al plan y dejás de abonar las cuotas restantes, de acuerdo con las condiciones contractuales.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Pasarela de Pago Naranja X + Checkboxes Obligatorios + Botones de Navegación -->
+        <div class="rounded-3xl border border-white/15 bg-[#153863] p-6 sm:p-8 shadow-xl">
+          <form id="review-checkout-form" class="space-y-6">
+            <!-- Pasarela de Pago Oficial -->
+            <div class="rounded-2xl border border-white/15 bg-[#102c4f]/90 p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#93c46d] flex items-center gap-1.5">
+                  <i data-lucide="shield-check" class="w-4 h-4"></i> Pasarela de Pago Oficial Naranja X
+                </span>
+                <span id="card-brand-badge" class="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold text-white">
+                  Tarjeta
+                </span>
+              </div>
+
+              <!-- Selector Crédito / Débito -->
+              <div class="flex rounded-xl bg-black/30 p-1 border border-white/10">
+                <button
+                  type="button"
+                  id="tab-credit-card"
+                  class="flex-1 rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 bg-[#93c46d] text-[#1d497f] shadow-md"
+                >
+                  <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                  <span>Tarjeta de Crédito</span>
+                </button>
+                <button
+                  type="button"
+                  id="tab-direct-debit"
+                  class="flex-1 rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                >
+                  <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                  <span>Débito Automático</span>
+                </button>
+              </div>
+
+              <!-- Selector Tipo de Tarjeta (Naranja vs Otras) -->
+              <div>
+                <label for="card-type-select" class="block text-[11px] font-bold uppercase text-[#d8e3ed] mb-1">
+                  Tipo de Tarjeta
+                </label>
+                <select
+                  id="card-type-select"
+                  class="w-full rounded-xl border border-white/15 bg-[#153863] py-2 px-3 text-xs text-white outline-none focus:border-[#93c46d]"
+                >
+                  <option value="naranja" selected>Tarjeta Naranja X (BIN 5895)</option>
+                  <option value="general">Otras Tarjetas (Visa, Mastercard, Amex, Cabal)</option>
+                </select>
+              </div>
+
+              <!-- Preview Visual de Tarjeta Interactiva -->
+              <div class="relative overflow-hidden rounded-2xl bg-gradient-to-tr from-[#1d497f] via-[#245b9e] to-[#93c46d] p-5 text-white shadow-xl border border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                  <span id="preview-card-method" class="text-[10px] font-bold tracking-widest text-[#93c46d] uppercase">CRÉDITO</span>
+                  <span id="preview-card-brand" class="font-bold text-xs uppercase tracking-wider">Tarjeta Naranja</span>
+                </div>
+                <div id="preview-card-number" class="font-mono-custom text-base sm:text-lg font-bold tracking-widest mb-3">
+                  •••• •••• •••• ••••
+                </div>
+                <div class="flex items-center justify-between text-[10px] uppercase text-[#d8e3ed]">
+                  <div>
+                    <span class="block opacity-70 text-[8px]">Titular</span>
+                    <span id="preview-card-holder" class="font-semibold">NOMBRE Y APELLIDO</span>
+                  </div>
+                  <div>
+                    <span class="block opacity-70 text-[8px]">Vence</span>
+                    <span id="preview-card-expiry" class="font-semibold">MM/AA</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Inputs de Tarjeta -->
+              <div class="space-y-3">
+                <div>
+                  <label for="card-number" class="mb-1 block text-[11px] font-bold uppercase text-[#d8e3ed]">
+                    Número de Tarjeta
+                  </label>
+                  <input
+                    type="text"
+                    id="card-number"
+                    maxlength="19"
+                    placeholder="5895 •••• •••• ••••"
+                    class="w-full rounded-xl border border-white/15 bg-[#153863] py-2.5 px-3 text-xs text-white outline-none focus:border-[#93c46d] transition"
+                  />
+                  <span id="card-number-error" class="hidden mt-1 text-[11px] text-red-400 font-semibold block"></span>
+                </div>
+
+                <div>
+                  <label for="card-holder" class="mb-1 block text-[11px] font-bold uppercase text-[#d8e3ed]">
+                    Nombre del Titular (Como figura en la tarjeta)
+                  </label>
+                  <input
+                    type="text"
+                    id="card-holder"
+                    placeholder="JUAN PEREZ"
+                    class="w-full rounded-xl border border-white/15 bg-[#153863] py-2.5 px-3 text-xs text-white outline-none focus:border-[#93c46d] transition uppercase"
+                  />
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label for="card-expiry" class="mb-1 block text-[11px] font-bold uppercase text-[#d8e3ed]">
+                      Vencimiento (MM/AA)
+                    </label>
+                    <input
+                      type="text"
+                      id="card-expiry"
+                      maxlength="5"
+                      placeholder="MM/AA"
+                      class="w-full rounded-xl border border-white/15 bg-[#153863] py-2.5 px-3 text-xs text-white outline-none focus:border-[#93c46d] transition"
+                    />
+                  </div>
+                  <div>
+                    <label for="card-cvv" class="mb-1 block text-[11px] font-bold uppercase text-[#d8e3ed]">
+                      Código de Seg. (CVV)
+                    </label>
+                    <input
+                      type="password"
+                      id="card-cvv"
+                      maxlength="4"
+                      placeholder="•••"
+                      class="w-full rounded-xl border border-white/15 bg-[#153863] py-2.5 px-3 text-xs text-white outline-none focus:border-[#93c46d] transition"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Checkboxes Obligatorios -->
+            <div class="space-y-3 pt-2">
+              <!-- Checkbox 1: Entiendo que estoy contratando un plan de capitalizacion y ahorro. -->
+              <label
+                id="box-checkbox-capitalization"
+                class="flex items-start gap-3 rounded-2xl border-2 border-white/15 bg-[#102c4f]/80 p-4 transition cursor-pointer hover:border-[#93c46d]/60"
+              >
+                <input
+                  type="checkbox"
+                  id="checkbox-capitalization"
+                  class="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
+                />
+                <div class="flex-1 text-left">
+                  <span class="text-xs font-semibold leading-relaxed text-white">
+                    Entiendo que estoy contratando un plan de capitalizacion y ahorro.
+                  </span>
+                  <p id="cap-confirmed-text" class="hidden mt-1 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Confirmado y comprendido.
+                  </p>
+                </div>
+              </label>
+
+              <!-- Checkbox 2: Acepto los Términos y Condiciones de Fondus S.A. -->
+              <div
+                id="box-checkbox-terms"
+                class="rounded-2xl border-2 border-white/15 bg-[#102c4f]/80 p-4 transition cursor-pointer hover:border-[#93c46d]/60"
+              >
+                <div class="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    id="checkbox-terms"
+                    disabled
+                    class="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
+                  />
+                  <div class="flex-1 text-left">
+                    <span class="text-xs font-semibold leading-relaxed text-white">
+                      Acepto los Términos y Condiciones de Fondus S.A.
+                    </span>
+                    <p id="terms-prompt-text" class="mt-1 text-[11px] font-bold text-[#93c46d] underline hover:text-white">
+                      [ Tocar aquí para leer y validar términos ]
+                    </p>
+                    <p id="terms-confirmed-text" class="hidden mt-1 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
+                      <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Términos validados y autorizados.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones de Navegación: "Volver" y "Confirmar adhesion" -->
+            <div class="flex items-center gap-4 pt-2">
+              <button
+                type="button"
+                id="btn-back-to-step2"
+                class="flex-1 rounded-2xl border border-white/20 bg-white/5 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-white/10 text-center"
+              >
+                Volver
+              </button>
+
+              <button
+                type="submit"
+                id="button-submit-adhesion"
+                disabled
+                class="flex-[2] flex items-center justify-center gap-2 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>Confirmar adhesion</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <p class="flex items-center justify-center gap-2 text-[10px] text-[#a4bdd4]">
+              <i data-lucide="lock-keyhole" class="w-3.5 h-3.5 text-[#93c46d]"></i>
+              <span>Tus datos están protegidos bajo estricto secreto financiero y encriptación SSL.</span>
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- PANTALLA FINAL (ÉXITO) -->
+    <!-- ============================================== -->
+    <section id="step-success" class="step-container hidden py-6 space-y-12">
+      <!-- Tarjeta Principal de Éxito -->
+      <div class="rounded-3xl border border-[#93c46d]/40 bg-[#153863] p-8 text-center max-w-2xl mx-auto shadow-2xl">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#93c46d] text-[#1d497f] shadow-lg">
+          <i data-lucide="check" class="w-9 h-9 stroke-[3]"></i>
+        </div>
+        <h2 class="font-display mt-5 text-3xl font-extrabold text-white">
+          ¡Adhesión Registrada con Éxito!
+        </h2>
+        <p class="mt-2 text-sm text-[#d8e3ed]">
+          Tu proceso se ha completado automáticamente. Tu suscripción está 100% bonificada y tu participación se encuentra activa.
+        </p>
+
+        <div class="mt-6 rounded-2xl bg-black/25 p-4 border border-[#93c46d]/30 max-w-xs mx-auto">
+          <p class="text-xs uppercase text-[#a4bdd4]">Número Oficial Asignado:</p>
+          <p id="success-assigned-number" class="font-mono-custom text-4xl font-black text-[#93c46d] mt-1">815</p>
+          <p id="success-plan-capital" class="text-[11px] text-white mt-1">ORDEN DE COMPRA $10.000.000</p>
+        </div>
+      </div>
+
+      <!-- Contenedor de Videos Responsivos de YouTube -->
+      <div class="flex flex-col items-center w-full max-w-4xl mx-auto gap-8 mt-6">
+        <!-- Video Principal (Explicativo) -->
+        <div class="w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-2xl bg-black">
+          <iframe
+            id="fondus-explainer-player"
+            src="https://www.youtube.com/embed/_JywDCltepk?enablejsapi=1"
+            title="Te explico como funciona Fondus en 1 minuto"
+            class="w-full h-full border-none"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+
+        <!-- Video Secundario (Testimonio de Miguel) -->
+        <div class="flex flex-col items-center w-full gap-4">
+          <h3
+            class="text-2xl font-bold text-[#1d497f] text-center"
+            style="background-color: rgba(255, 255, 255, 0.95); padding: 10px 24px; borderRadius: 16px; boxShadow: 0 8px 30px rgba(0, 0, 0, 0.2);"
+          >
+            Conocé la experiencia de nuestros adjudicados
+          </h3>
+
+          <div class="w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-lg bg-black">
+            <iframe
+              src="https://www.youtube.com/embed/AdyrPXND35c"
+              title="Conocé la experiencia de nuestros adjudicados"
+              class="w-full h-full border-none"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+
+        <!-- Botón Secundario de Reinicio -->
+        <button
+          type="button"
+          class="btn-reset-to-start mt-4 flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-white/20 hover:border-[#93c46d] shadow-lg"
+        >
+          <i data-lucide="rotate-ccw" class="w-4 h-4 text-[#93c46d]"></i>
+          <span>Toca acá para ir al inicio</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- FOOTER INSTITUCIONAL Y MÓDULO LEGAL HÍBRIDO -->
+  <!-- ============================================== -->
+  <footer class="mt-16 border-t border-white/15 pt-10 pb-16 text-[11px] leading-relaxed text-[#b3c7db] relative z-20 bg-[#102c4f]/90">
+    <div class="mx-auto max-w-6xl px-5 sm:px-8">
+      <!-- Logo Footer -->
+      <div class="mb-8 flex items-center gap-3">
+        <div class="relative flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-sm overflow-hidden p-0.5">
+          <img src="public/media/fondus-logo.jpeg" alt="Logo Fondus" class="h-full w-full object-contain" />
+        </div>
+        <div>
+          <span class="font-display block text-base font-black tracking-tight text-white leading-none">FONDUS</span>
+          <span class="block text-[8px] font-semibold tracking-wider text-[#93c46d] uppercase mt-0.5">Agencia Digital</span>
+        </div>
+      </div>
+
+      <!-- Sección de Condiciones Generales y Enlaces Legales -->
+      <div class="border-t border-white/10 pt-6">
+        <h4 class="font-mono-custom text-xs font-bold uppercase tracking-wider text-[#93c46d] mb-4">
+          Condiciones Generales y Documentación Legal
+        </h4>
+
+        <!-- Botones de Enlace / Descarga / Modales -->
+        <div class="flex flex-wrap gap-2.5">
+          <!-- 1. Condiciones Generales (PDF) -->
+          <a
+            href="public/condiciones.pdf"
+            download="condiciones.pdf"
+            target="_blank"
+            class="flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-xs font-semibold text-white transition hover:border-[#93c46d] hover:bg-white/10"
+          >
+            <i data-lucide="download" class="w-3.5 h-3.5 text-[#93c46d]"></i>
+            <span>CONDICIONES GENERALES (PDF)</span>
+          </a>
+
+          <!-- 2. Título de Capitalización (PDF) -->
+          <a
+            href="public/titulo.pdf"
+            download="titulo.pdf"
+            target="_blank"
+            class="flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-xs font-semibold text-white transition hover:border-[#93c46d] hover:bg-white/10"
+          >
+            <i data-lucide="download" class="w-3.5 h-3.5 text-[#93c46d]"></i>
+            <span>TÍTULO DE CAPITALIZACIÓN (PDF)</span>
+          </a>
+
+          <!-- 3. Valores de Rescate (PDF) -->
+          <a
+            href="public/rescate.pdf"
+            download="rescate.pdf"
+            target="_blank"
+            class="flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-xs font-semibold text-white transition hover:border-[#93c46d] hover:bg-white/10"
+          >
+            <i data-lucide="download" class="w-3.5 h-3.5 text-[#93c46d]"></i>
+            <span>VALORES DE RESCATE (PDF)</span>
+          </a>
+
+          <!-- 4. Bases del Sorteo (Modal Visor) -->
+          <button
+            type="button"
+            id="btn-view-sorteo"
+            class="flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-xs font-semibold text-white transition hover:border-[#93c46d] hover:bg-white/10"
+          >
+            <i data-lucide="zoom-in" class="w-3.5 h-3.5 text-[#93c46d]"></i>
+            <span>BASES DEL SORTEO (VISOR)</span>
+          </button>
+
+          <!-- 5. Participación de Resultados Financieros (Modal Visor) -->
+          <button
+            type="button"
+            id="btn-view-participacion"
+            class="flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-xs font-semibold text-white transition hover:border-[#93c46d] hover:bg-white/10"
+          >
+            <i data-lucide="zoom-in" class="w-3.5 h-3.5 text-[#93c46d]"></i>
+            <span>PARTICIPACIÓN RESULTADOS FINANCIEROS (VISOR)</span>
+          </button>
+
+          <!-- 6. Botón de Arrepentimiento (Ley 24.240) -->
+          <button
+            type="button"
+            id="btn-arrepentimiento-open"
+            class="flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-2.5 text-xs font-semibold text-amber-300 transition hover:bg-amber-500/20"
+          >
+            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+            <span>BOTÓN DE ARREPENTIMIENTO (LEY 24.240)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bloque Oficial IGJ y Respaldos Gubernamentales -->
+      <div class="mt-8 rounded-2xl bg-[#e6e6e6] p-6 text-black shadow-md">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex items-center gap-4">
+            <span class="text-5xl font-black tracking-tighter text-black">IGJ</span>
+            <img src="public/igj-logo.png" alt="Logotipo IGJ" class="h-12 w-auto object-contain" />
+            <div class="h-10 w-px bg-black/20"></div>
+            <div class="flex items-center gap-2">
+              <img src="public/escudo-argentina.png" alt="Escudo Argentino" class="h-10 w-auto object-contain" />
+              <div class="text-[9px] leading-tight text-neutral-800 font-medium">
+                Ministerio de Justicia<br />y Derechos Humanos<br />Presidencia de la Nación
+              </div>
+            </div>
+          </div>
+
+          <div class="text-[10px] leading-normal text-neutral-700 max-w-xl text-center md:text-right">
+            Fondus S.A. de Capitalización y Ahorro. Planes autorizados por la Inspección General de Justicia (IGJ) de la Nación según Resolución General IGJ Nº 191/2021 y normas concordantes.
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-6 border-t border-white/10 pt-4 text-[10px] text-[#8ca3ba] text-center">
+        La presente simulación es informativa y no vinculante hasta la formalización del contrato digital de capitalización y ahorro.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ============================================== -->
+  <!-- MODAL: TÉRMINOS Y CONDICIONES (SCROLL OBLIGATORIO) -->
+  <!-- ============================================== -->
+  <div id="modal-terms" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4 backdrop-blur-md">
+    <div class="relative flex max-h-[85vh] w-full max-w-2xl flex-col rounded-3xl border border-white/20 bg-[#153863] text-white shadow-2xl">
+      <!-- Header Modal -->
+      <div class="flex items-center justify-between border-b border-white/10 px-6 py-4">
+        <div>
+          <h3 class="font-display text-base sm:text-lg font-bold text-white">
+            Términos y Condiciones - Débito Automático
+          </h3>
+          <p class="text-[11px] text-[#a4bdd4]">Fondus S.A. de Capitalización y Ahorro</p>
+        </div>
+        <button type="button" id="button-close-terms" class="rounded-full p-1.5 text-white/70 hover:bg-white/10 hover:text-white transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Contenedor con Scroll Obligatorio -->
+      <div id="terms-scroll-container" class="custom-scrollbar flex-1 overflow-y-auto px-6 py-5 text-xs sm:text-sm leading-relaxed text-[#d8e3ed] space-y-4">
+        <p class="font-bold text-white">
+          Términos y Condiciones - Autorización de débito automático<br />
+          Fondus S.A. de Capitalización y Ahorro<br />
+          Presente
+        </p>
+        <p>De mi mayor consideración:</p>
+        <p>
+          Por la presente les solicito que los importes correspondientes al servicio de pagos mensuales del plan de capitalización contratado a vuestra empresa sean facturados y cobrados a través de mi tarjeta de crédito/débito.
+        </p>
+        <p>
+          En tal sentido, autorizo expresamente a Fondus S.A. de Capitalización y Ahorro a debitar de la tarjeta indicada precedentemente el monto correspondiente a la cuota mensual de mi plan de capitalización, el que se efectuará a partir del período correspondiente al mes de adhesión y en forma sucesiva en los períodos mensuales subsiguientes.
+        </p>
+        <p>
+          El débito se considerará como pago válido del servicio únicamente una vez que el emisor de la tarjeta haya acreditado el monto correspondiente en la cuenta de Fondus S.A. de Capitalización y Ahorro.
+        </p>
+        <p>
+          Asimismo, declaro bajo juramento que los fondos y la tarjeta utilizados para el pago provienen de actividades lícitas y que soy el legítimo titular o me encuentro facultado para ordenar este pago.
+        </p>
+        <p>
+          Por otro lado, informo que no se me ha solicitado clave o información confidencial que no sea necesaria para la ejecución de las tareas relativas a los débitos que les permito efectuar, como por ejemplo claves de banca electrónica, homebanking, token, o similares con las mismas características.
+        </p>
+        <p>
+          Entiendo que puedo suspender o cancelar la presente autorización de débito automático en cualquier momento, notificando fehacientemente a Fondus S.A. con una antelación mínima de 30 días corridos a la fecha de vencimiento de la próxima cuota.
+        </p>
+        <p class="pt-4 border-t border-white/10 font-bold text-[#93c46d]">
+          Fin de los Términos y Condiciones Oficiales.
+        </p>
+      </div>
+
+      <!-- Footer Modal -->
+      <div class="border-t border-white/10 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#102c4f]/80 rounded-b-3xl">
+        <span id="terms-scroll-prompt" class="text-[11px] text-[#93c46d] font-semibold">
+          Deslizá hasta el final del documento para habilitar el botón.
+        </span>
+        <button
+          type="button"
+          id="button-accept-terms"
+          disabled
+          class="w-full sm:w-auto rounded-xl bg-[#93c46d] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[#1d497f] transition opacity-50 cursor-not-allowed shadow-md"
+        >
+          Aceptar Términos
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: VISOR DE DOCUMENTOS CON ZOOM -->
+  <!-- ============================================== -->
+  <div id="modal-doc-viewer" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 p-3 sm:p-6 backdrop-blur-md">
+    <div class="relative flex h-[90vh] w-full max-w-5xl flex-col rounded-3xl border border-white/20 bg-[#153863] shadow-2xl overflow-hidden">
+      <!-- Barra Superior del Visor -->
+      <div class="flex items-center justify-between border-b border-white/10 bg-[#102c4f] px-5 py-3">
+        <h3 id="doc-viewer-title" class="font-display text-sm sm:text-base font-bold text-white truncate max-w-md">
+          Visor de Documento Oficial
+        </h3>
+        <!-- Controles de Zoom -->
+        <div class="flex items-center gap-2">
+          <button type="button" id="viewer-zoom-out" class="rounded-lg bg-white/10 p-2 text-white hover:bg-white/20 transition" title="Reducir zoom">
+            <i data-lucide="minus" class="w-4 h-4"></i>
+          </button>
+          <span id="viewer-zoom-level" class="font-mono-custom text-xs font-bold text-[#93c46d] min-w-[45px] text-center">100%</span>
+          <button type="button" id="viewer-zoom-in" class="rounded-lg bg-white/10 p-2 text-white hover:bg-white/20 transition" title="Aumentar zoom">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+          </button>
+          <button type="button" id="viewer-zoom-reset" class="rounded-lg bg-white/10 px-2.5 py-1 text-xs text-white hover:bg-white/20 transition" title="Restablecer">
+            Reset
+          </button>
+          <button type="button" id="doc-viewer-close" class="rounded-lg bg-red-500/20 p-2 text-red-300 hover:bg-red-500/40 transition ml-2" title="Cerrar">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Área de Imagen Interactiva -->
+      <div class="custom-scrollbar relative flex-1 overflow-auto bg-[#0b1c31] flex items-center justify-center p-4">
+        <img
+          id="doc-viewer-image"
+          src=""
+          alt="Documento Oficial Fondus"
+          class="max-w-none transition-transform duration-100 select-none cursor-grab"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: BOTÓN DE ARREPENTIMIENTO (LEY 24.240) -->
+  <!-- ============================================== -->
+  <div id="modal-arrepentimiento" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4 backdrop-blur-md">
+    <div class="relative w-full max-w-md rounded-3xl border border-white/20 bg-[#153863] p-6 text-white shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="font-display text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 text-amber-400"></i>
+          <span>Botón de Arrepentimiento</span>
+        </h3>
+        <button type="button" id="btn-arrepentimiento-close" class="text-white/70 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <p class="mt-3 text-xs text-[#d8e3ed] leading-relaxed">
+        Conforme al Art. 34 de la Ley 24.240 de Defensa del Consumidor, contás con 10 días corridos para revocar tu aceptación sin cargo alguno.
+      </p>
+
+      <form id="form-arrepentimiento" class="mt-4 space-y-3">
+        <div>
+          <label for="arrep-name" class="block text-[11px] font-bold text-[#d8e3ed] mb-1">Nombre Completo</label>
+          <input type="text" id="arrep-name" required class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-2 px-3 text-xs text-white outline-none focus:border-[#93c46d]" />
+        </div>
+        <div>
+          <label for="arrep-dni" class="block text-[11px] font-bold text-[#d8e3ed] mb-1">DNI del Titular</label>
+          <input type="text" id="arrep-dni" required class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-2 px-3 text-xs text-white outline-none focus:border-[#93c46d]" />
+        </div>
+        <div>
+          <label for="arrep-email" class="block text-[11px] font-bold text-[#d8e3ed] mb-1">Email de Contacto</label>
+          <input type="email" id="arrep-email" required class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-2 px-3 text-xs text-white outline-none focus:border-[#93c46d]" />
+        </div>
+        <div>
+          <label for="arrep-reason" class="block text-[11px] font-bold text-[#d8e3ed] mb-1">Motivo (Opcional)</label>
+          <textarea id="arrep-reason" rows="2" class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-2 px-3 text-xs text-white outline-none focus:border-[#93c46d]"></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full rounded-xl bg-amber-500 py-3 text-xs font-bold uppercase tracking-wider text-[#1d497f] hover:bg-amber-400 transition"
+        >
+          Enviar Solicitud de Revocación
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- NOTIFICACIÓN FLOTANTE (PRUEBA SOCIAL CADA 10S) -->
+  <!-- ============================================== -->
+  <div
+    id="social-proof-toast"
+    class="fixed bottom-4 left-4 z-50 hidden max-w-xs rounded-2xl border border-[#93c46d]/40 bg-[#153863]/95 p-3.5 shadow-2xl backdrop-blur-md transition-all duration-500 opacity-0 translate-y-4"
+  >
+    <div class="flex items-start gap-3">
+      <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#93c46d]/20 text-[#93c46d]">
+        <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5">
+          <span id="sp-name" class="font-bold text-xs text-white">Lucas T.</span>
+          <span class="text-[10px] text-[#93c46d]">· recién</span>
+        </div>
+        <p class="text-[11px] text-[#b3c7db]">
+          desde <span id="sp-location" class="font-semibold text-white">Córdoba</span>
+        </p>
+        <p id="sp-plan" class="mt-0.5 text-[11px] font-bold text-[#93c46d]">
+          O. de compra $10.000.000
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Principal Vanilla JS -->
+  <script src="script.js"></script>
+</body>
+</html>
