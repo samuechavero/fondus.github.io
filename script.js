@@ -557,7 +557,7 @@ function initCountdown() {
 // 2. PASO 3: CONFIRMACIÓN Y RESUMEN ("REVISÁ TU PLAN")
 // ====================================================
 function initReviewCheckout() {
-  const form = document.getElementById("review-checkout-form");
+  const form = document.getElementById("paymentForm");
   const checkboxCap = document.getElementById("checkbox-capitalization");
   const boxCheckboxTerms = document.getElementById("box-checkbox-terms");
   const btnBackStep2 = document.getElementById("btn-back-to-step2");
@@ -608,118 +608,108 @@ function initReviewCheckout() {
 }
 
 // ====================================================
-// PASARELA DE PAGO GLOBAL & VALIDACIÓN TARJETA
+// PASARELA DE PAGO UNIVERSAL & VALIDACIÓN ABIERTA (PHP/TWIG)
 // ====================================================
+
+// SVGs oficiales para feedback visual en tiempo real
+const BRAND_ICONS = {
+  visa: '<svg class="h-6 w-9 rounded shadow-sm" viewBox="0 0 36 24" fill="none"><rect width="36" height="24" rx="4" fill="#00579F"/><path d="M14.7 15.6H12.6L13.9 8.4H16L14.7 15.6ZM22.4 8.6C22 8.4 21.3 8.2 20.4 8.2C18.2 8.2 16.7 9.4 16.7 11.1C16.7 12.3 17.8 13 18.6 13.4C19.4 13.8 19.7 14.1 19.7 14.5C19.7 15.1 19 15.4 18.3 15.4C17.4 15.4 16.8 15.2 16.2 14.9L15.8 14.7L15.4 16.6C16 16.9 17.1 17.2 18.2 17.2C20.6 17.2 22.1 16 22.1 14.2C22.1 13.2 21.4 12.5 20.1 11.9C19.4 11.5 19 11.3 19 10.9C19 10.5 19.4 10.1 20.3 10.1C21 10.1 21.6 10.3 22 10.5L22.2 10.6L22.4 8.6ZM26.4 8.4H24.8C24.3 8.4 23.9 8.6 23.7 9.1L20.4 15.6H22.7L23.2 14.2H25.9L26.2 15.6H28.2L26.4 8.4ZM23.8 12.6L24.9 9.6L25.6 12.6H23.8ZM11.4 8.4L9.3 13.5L9.1 12.4C8.7 11.1 7.5 9.7 6.1 8.9L8 15.6H10.4L13.7 8.4H11.4Z" fill="white"/></svg>',
+  mastercard: '<svg class="h-6 w-9 rounded shadow-sm" viewBox="0 0 36 24" fill="none"><rect width="36" height="24" rx="4" fill="#252525"/><circle cx="14" cy="12" r="7" fill="#EB001B"/><circle cx="22" cy="12" r="7" fill="#F79E1B" fill-opacity="0.85"/></svg>',
+  amex: '<svg class="h-6 w-9 rounded shadow-sm" viewBox="0 0 36 24" fill="none"><rect width="36" height="24" rx="4" fill="#0077A6"/><text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="8" font-weight="900" font-family="sans-serif">AMEX</text></svg>',
+  generic: '<i data-lucide="credit-card" class="w-6 h-6 text-white/60"></i>'
+};
+
 function detectCardBrand(number) {
   const clean = number.replace(/\D/g, "");
-  if (/^5895/.test(clean)) return { brand: "NaranjaX", name: "Tarjeta Naranja" };
-  if (/^4/.test(clean)) return { brand: "Visa", name: "Visa" };
-  if (/^(5[1-5]|2[2-7])/.test(clean)) return { brand: "Mastercard", name: "Mastercard" };
-  if (/^3[47]/.test(clean)) return { brand: "Amex", name: "American Express" };
-  if (/^(58|60|63)/.test(clean)) return { brand: "Cabal", name: "Cabal" };
-  return { brand: "Tarjeta", name: "Tarjeta de Crédito / Débito" };
+  const first = clean.charAt(0);
+  if (first === "4") return { brand: "Visa", name: "Visa", key: "visa" };
+  if (first === "5") return { brand: "Mastercard", name: "Mastercard", key: "mastercard" };
+  if (first === "3") return { brand: "Amex", name: "American Express", key: "amex" };
+  if (/^(58|60|63)/.test(clean)) return { brand: "Cabal", name: "Cabal", key: "generic" };
+  if (/^5895/.test(clean)) return { brand: "Naranja", name: "Tarjeta Naranja", key: "generic" };
+  return { brand: "Tarjeta", name: "Tarjeta de Crédito / Débito", key: "generic" };
+}
+
+function updateCardBrandIcon(cleanNumber) {
+  const iconContainer = document.getElementById("cardBrandIconContainer");
+  const brandBadge = document.getElementById("card-brand-badge");
+  const previewBrand = document.getElementById("preview-card-brand");
+  if (!iconContainer) return;
+
+  const first = cleanNumber.charAt(0);
+  let html = BRAND_ICONS.generic;
+  let brandName = "Tarjeta de Crédito / Débito";
+  let badgeText = "Tarjeta";
+
+  if (first === "4") {
+    html = BRAND_ICONS.visa;
+    brandName = "Visa";
+    badgeText = "Visa";
+  } else if (first === "5") {
+    html = BRAND_ICONS.mastercard;
+    brandName = "Mastercard";
+    badgeText = "Mastercard";
+  } else if (first === "3") {
+    html = BRAND_ICONS.amex;
+    brandName = "American Express";
+    badgeText = "Amex";
+  }
+
+  iconContainer.innerHTML = html;
+  if (brandBadge) brandBadge.textContent = badgeText;
+  if (previewBrand) previewBrand.textContent = brandName;
+  if (first !== "4" && first !== "5" && first !== "3") {
+    initIcons();
+  }
 }
 
 function initPaymentGateway() {
+  const form = document.getElementById("paymentForm");
   const tabCredit = document.getElementById("tab-credit-card");
   const tabDebit = document.getElementById("tab-direct-debit");
-  const cardTypeSelect = document.getElementById("card-type-select");
-  const cardNumberInput = document.getElementById("card-number");
-  const cardHolderInput = document.getElementById("card-holder");
-  const cardExpiryInput = document.getElementById("card-expiry");
-  const cardCvvInput = document.getElementById("card-cvv");
-  const cardErrorSpan = document.getElementById("card-number-error");
+  const cardNumberInput = document.getElementById("cardNumber");
+  const cardHolderInput = document.getElementById("cardHolder");
+  const cardExpiryInput = document.getElementById("cardExpiry");
+  const cardCvvInput = document.getElementById("cardCvv");
+  const submitBtn = document.getElementById("button-submit-adhesion");
 
+  // Botón inicia estrictamente deshabilitado
+  if (submitBtn) {
+    submitBtn.disabled = true;
+  }
+
+  // Pestañas Crédito / Débito
   if (tabCredit && tabDebit) {
     tabCredit.addEventListener("click", () => {
       state.payment.method = "credit_card";
-      tabCredit.className = "flex-1 rounded-xl py-2.5 text-xs font-bold transition flex items-center justify-center gap-2 bg-[#93c46d] text-[#1d497f] shadow-md";
-      tabDebit.className = "flex-1 rounded-xl py-2.5 text-xs font-bold transition flex items-center justify-center gap-2 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white";
+      tabCredit.className = "flex-1 rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 bg-[#93c46d] text-[#1d497f] shadow-md";
+      tabDebit.className = "flex-1 rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white";
       updateCardPreview();
-      validatePayment();
-      validateReviewForm();
+      validateUniversalPayment();
     });
 
     tabDebit.addEventListener("click", () => {
       state.payment.method = "direct_debit";
-      tabDebit.className = "flex-1 rounded-xl py-2.5 text-xs font-bold transition flex items-center justify-center gap-2 bg-[#93c46d] text-[#1d497f] shadow-md";
-      tabCredit.className = "flex-1 rounded-xl py-2.5 text-xs font-bold transition flex items-center justify-center gap-2 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white";
+      tabDebit.className = "flex-1 rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 bg-[#93c46d] text-[#1d497f] shadow-md";
+      tabCredit.className = "flex-1 rounded-xl py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white";
       updateCardPreview();
-      validatePayment();
-      validateReviewForm();
+      validateUniversalPayment();
     });
   }
 
-  if (cardTypeSelect) {
-    cardTypeSelect.addEventListener("change", (e) => {
-      state.payment.cardType = e.target.value;
-      validateCardNumber();
-      validatePayment();
-      validateReviewForm();
-    });
-  }
-
+  // 2. LÓGICA DE VALIDACIÓN ABIERTA (Sin restricción de BIN)
   if (cardNumberInput) {
     cardNumberInput.addEventListener("input", () => {
       let raw = cardNumberInput.value.replace(/\D/g, "").slice(0, 16);
+      // Formateo visual: espacio cada 4 dígitos
       cardNumberInput.value = raw.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
       state.payment.cardNumber = raw;
-      validateCardNumber();
+      
+      // 3. Feedback visual del primer dígito
+      updateCardBrandIcon(raw);
       updateCardPreview();
-      validatePayment();
-      validateReviewForm();
+      validateUniversalPayment();
     });
-  }
-
-  function validateCardNumber() {
-    const raw = cardNumberInput.value.replace(/\D/g, "");
-    const brandInfo = detectCardBrand(raw);
-    const brandBadge = document.getElementById("card-brand-badge");
-    const previewBrand = document.getElementById("preview-card-brand");
-
-    if (brandBadge) brandBadge.textContent = brandInfo.brand;
-    if (previewBrand) previewBrand.textContent = brandInfo.brand;
-
-    const isNaranjaRequired = state.payment.cardType === "naranja";
-    if (isNaranjaRequired) {
-      if (raw.length >= 4 && !raw.startsWith("5895")) {
-        if (cardErrorSpan) {
-          cardErrorSpan.textContent = "El BIN debe comenzar con 5895 para Tarjeta Naranja.";
-          cardErrorSpan.classList.remove("hidden");
-        }
-        cardNumberInput.classList.add("border-red-500");
-        cardNumberInput.classList.remove("border-[#93c46d]");
-        return false;
-      } else if (raw.length < 16) {
-        if (cardErrorSpan) {
-          cardErrorSpan.textContent = raw.length > 0 ? "Completá los 16 dígitos de la tarjeta." : "";
-          if (raw.length === 0) cardErrorSpan.classList.add("hidden");
-          else cardErrorSpan.classList.remove("hidden");
-        }
-        return false;
-      } else {
-        if (cardErrorSpan) cardErrorSpan.classList.add("hidden");
-        cardNumberInput.classList.remove("border-red-500");
-        cardNumberInput.classList.add("border-[#93c46d]");
-        return true;
-      }
-    } else {
-      if (raw.length > 0 && raw.length < 15) {
-        if (cardErrorSpan) {
-          cardErrorSpan.textContent = "Completá el número de tarjeta (15-16 dígitos).";
-          cardErrorSpan.classList.remove("hidden");
-        }
-        return false;
-      } else if (raw.length >= 15) {
-        if (cardErrorSpan) cardErrorSpan.classList.add("hidden");
-        cardNumberInput.classList.remove("border-red-500");
-        cardNumberInput.classList.add("border-[#93c46d]");
-        return true;
-      } else {
-        if (cardErrorSpan) cardErrorSpan.classList.add("hidden");
-        return false;
-      }
-    }
   }
 
   if (cardHolderInput) {
@@ -728,8 +718,7 @@ function initPaymentGateway() {
       cardHolderInput.value = cardHolderInput.value.toUpperCase();
       state.payment.cardHolder = cardHolderInput.value;
       updateCardPreview();
-      validatePayment();
-      validateReviewForm();
+      validateUniversalPayment();
     });
   }
 
@@ -743,8 +732,7 @@ function initPaymentGateway() {
       }
       state.payment.expiry = cardExpiryInput.value;
       updateCardPreview();
-      validatePayment();
-      validateReviewForm();
+      validateUniversalPayment();
     });
   }
 
@@ -754,8 +742,18 @@ function initPaymentGateway() {
       cardCvvInput.value = val;
       state.payment.cvv = val;
       updateCardPreview();
-      validatePayment();
-      validateReviewForm();
+      validateUniversalPayment();
+    });
+  }
+
+  // Envío del Formulario Universal
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!validateUniversalPayment()) return;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      goToStep(7); // Pantalla final de éxito
     });
   }
 }
@@ -782,30 +780,40 @@ function updateCardPreview() {
   }
 }
 
-function isPaymentValid() {
-  const rawNum = state.payment.cardNumber.replace(/\D/g, "");
-  const isNaranja = state.payment.cardType === "naranja";
-  const numValid = isNaranja ? (rawNum.startsWith("5895") && rawNum.length === 16) : rawNum.length >= 15;
-  const holderValid = (state.payment.cardHolder || "").trim().length >= 3;
-  const expValid = /^\d{2}\/\d{2}$/.test(state.payment.expiry || "");
-  const cvvValid = (state.payment.cvv || "").length >= 3;
+function validateUniversalPayment() {
+  const cardNumberInput = document.getElementById("cardNumber");
+  const cardExpiryInput = document.getElementById("cardExpiry");
+  const cardHolderInput = document.getElementById("cardHolder");
+  const cardCvvInput = document.getElementById("cardCvv");
+  const submitBtn = document.getElementById("button-submit-adhesion");
 
-  return numValid && holderValid && expValid && cvvValid;
-}
+  const rawNumber = (cardNumberInput ? cardNumberInput.value : "").replace(/\D/g, "");
+  const expiryVal = cardExpiryInput ? cardExpiryInput.value.trim() : "";
+  const holderVal = cardHolderInput ? cardHolderInput.value.trim() : "";
+  const cvvVal = cardCvvInput ? cardCvvInput.value.trim() : "";
 
-function validatePayment() {
-  return isPaymentValid();
+  // Condiciones de validación abierta:
+  // 1. Al menos 15 caracteres numéricos válidos en la tarjeta
+  const isCardNumberValid = rawNumber.length >= 15;
+  // 2. Vencimiento con formato MM/AA
+  const isExpiryValid = /^\d{2}\/\d{2}$/.test(expiryVal);
+  // 3. Titular y CVV completos
+  const isHolderValid = holderVal.length >= 3;
+  const isCvvValid = cvvVal.length >= 3;
+  // 4. Checkboxes legales tildados
+  const isTermsAccepted = Boolean(state.acceptedTerms);
+  const isCapAccepted = Boolean(state.acceptedCapitalization);
+
+  const isAllValid = isCardNumberValid && isExpiryValid && isHolderValid && isCvvValid && isTermsAccepted && isCapAccepted;
+
+  if (submitBtn) {
+    submitBtn.disabled = !isAllValid;
+  }
+  return isAllValid;
 }
 
 function validateReviewForm() {
-  const submitBtn = document.getElementById("button-submit-adhesion");
-  const paymentOk = isPaymentValid();
-  const allValid = state.acceptedTerms && state.acceptedCapitalization && paymentOk;
-
-  if (submitBtn) {
-    submitBtn.disabled = !allValid;
-  }
-  return allValid;
+  return validateUniversalPayment();
 }
 
 // ====================================================

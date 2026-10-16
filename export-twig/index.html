@@ -721,7 +721,7 @@
           Revisá tu plan antes de continuar
         </h2>
         <p class="mt-2 text-base text-[#d8e3ed]">
-          Chequeá el detalle final y aceptá explícitamente las condiciones antes de seguir con Naranja X.
+          Chequeá el detalle final y aceptá explícitamente las condiciones para confirmar tu adhesión.
         </p>
       </div>
 
@@ -821,14 +821,14 @@
           </div>
         </div>
 
-        <!-- Columna Derecha: Pasarela de Pago Naranja X + Checkboxes Obligatorios + Botones de Navegación -->
+        <!-- Columna Derecha: Formulario Universal de Pago (PHP/Twig Ready) -->
         <div class="rounded-3xl border border-white/15 bg-[#153863] p-6 sm:p-8 shadow-xl">
-          <form id="review-checkout-form" class="space-y-6">
-            <!-- Pasarela de Pago Oficial -->
+          <form method="POST" id="paymentForm" class="space-y-6">
+            <!-- Pasarela de Pago Universal -->
             <div class="rounded-2xl border border-white/15 bg-[#102c4f]/90 p-5 space-y-4">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <span class="text-xs font-bold uppercase tracking-wider text-[#93c46d] flex items-center gap-1.5">
-                  <i data-lucide="shield-check" class="w-4 h-4"></i> Pasarela de Pago Oficial Naranja X
+                  <i data-lucide="shield-check" class="w-4 h-4"></i> Pasarela de Pago Segura
                 </span>
                 <span id="card-brand-badge" class="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold text-white">
                   Tarjeta
@@ -855,25 +855,11 @@
                 </button>
               </div>
 
-              <!-- Selector Tipo de Tarjeta (Naranja vs Otras) -->
-              <div>
-                <label for="card-type-select" class="block text-[11px] font-bold uppercase text-[#d8e3ed] mb-1">
-                  Tipo de Tarjeta
-                </label>
-                <select
-                  id="card-type-select"
-                  class="w-full rounded-xl border border-white/15 bg-[#153863] py-2 px-3 text-xs text-white outline-none focus:border-[#93c46d]"
-                >
-                  <option value="naranja" selected>Tarjeta Naranja X (BIN 5895)</option>
-                  <option value="general">Otras Tarjetas (Visa, Mastercard, Amex, Cabal)</option>
-                </select>
-              </div>
-
               <!-- Preview Visual de Tarjeta Interactiva -->
               <div class="relative overflow-hidden rounded-2xl bg-gradient-to-tr from-[#1d497f] via-[#245b9e] to-[#93c46d] p-5 text-white shadow-xl border border-white/20">
                 <div class="flex items-center justify-between mb-4">
                   <span id="preview-card-method" class="text-[10px] font-bold tracking-widest text-[#93c46d] uppercase">CRÉDITO</span>
-                  <span id="preview-card-brand" class="font-bold text-xs uppercase tracking-wider">Tarjeta Naranja</span>
+                  <span id="preview-card-brand" class="font-bold text-xs uppercase tracking-wider">Tarjeta de Crédito / Débito</span>
                 </div>
                 <div id="preview-card-number" class="font-mono-custom text-base sm:text-lg font-bold tracking-widest mb-3">
                   •••• •••• •••• ••••
@@ -890,64 +876,79 @@
                 </div>
               </div>
 
-              <!-- Inputs de Tarjeta -->
-              <div class="space-y-3">
+              <!-- Inputs de Tarjeta con Atributos name para PHP -->
+              <div class="space-y-4">
                 <div>
-                  <label for="card-number" class="mb-1 block text-[11px] font-bold uppercase text-[#d8e3ed]">
+                  <label for="cardNumber" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
                     Número de Tarjeta
                   </label>
-                  <input
-                    type="text"
-                    id="card-number"
-                    maxlength="19"
-                    placeholder="5895 •••• •••• ••••"
-                    class="w-full rounded-xl border border-white/15 bg-[#153863] py-2.5 px-3 text-xs text-white outline-none focus:border-[#93c46d] transition"
-                  />
-                  <span id="card-number-error" class="hidden mt-1 text-[11px] text-red-400 font-semibold block"></span>
+                  <div class="relative">
+                    <input
+                      type="text"
+                      id="cardNumber"
+                      name="card_number"
+                      maxlength="19"
+                      placeholder="0000 0000 0000 0000"
+                      required
+                      class="w-full rounded-xl border border-white/15 bg-[#153863] py-3 pl-4 pr-16 text-sm text-white outline-none focus:border-[#93c46d] transition font-mono-custom tracking-wider"
+                    />
+                    <!-- Feedback visual: icono/logo según primer dígito -->
+                    <div id="cardBrandIconContainer" class="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+                      <span id="cardBrandIcon" class="flex items-center justify-center text-white/60">
+                        <i data-lucide="credit-card" class="w-6 h-6"></i>
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
-                  <label for="card-holder" class="mb-1 block text-[11px] font-bold uppercase text-[#d8e3ed]">
-                    Nombre del Titular (Como figura en la tarjeta)
+                  <label for="cardHolder" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                    Nombre del Titular
                   </label>
                   <input
                     type="text"
-                    id="card-holder"
-                    placeholder="JUAN PEREZ"
-                    class="w-full rounded-xl border border-white/15 bg-[#153863] py-2.5 px-3 text-xs text-white outline-none focus:border-[#93c46d] transition uppercase"
+                    id="cardHolder"
+                    name="card_holder"
+                    placeholder="Como figura en la tarjeta"
+                    required
+                    class="w-full rounded-xl border border-white/15 bg-[#153863] py-3 px-4 text-sm text-white outline-none focus:border-[#93c46d] transition uppercase"
                   />
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                   <div>
-                    <label for="card-expiry" class="mb-1 block text-[11px] font-bold uppercase text-[#d8e3ed]">
-                      Vencimiento (MM/AA)
+                    <label for="cardExpiry" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                      Vencimiento
                     </label>
                     <input
                       type="text"
-                      id="card-expiry"
-                      maxlength="5"
+                      id="cardExpiry"
+                      name="card_expiry"
                       placeholder="MM/AA"
-                      class="w-full rounded-xl border border-white/15 bg-[#153863] py-2.5 px-3 text-xs text-white outline-none focus:border-[#93c46d] transition"
+                      maxlength="5"
+                      required
+                      class="w-full rounded-xl border border-white/15 bg-[#153863] py-3 px-4 text-sm text-white outline-none focus:border-[#93c46d] transition text-center font-mono-custom"
                     />
                   </div>
                   <div>
-                    <label for="card-cvv" class="mb-1 block text-[11px] font-bold uppercase text-[#d8e3ed]">
-                      Código de Seg. (CVV)
+                    <label for="cardCvv" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                      Código de Seguridad
                     </label>
                     <input
                       type="password"
-                      id="card-cvv"
+                      id="cardCvv"
+                      name="card_cvv"
+                      placeholder="CVV"
                       maxlength="4"
-                      placeholder="•••"
-                      class="w-full rounded-xl border border-white/15 bg-[#153863] py-2.5 px-3 text-xs text-white outline-none focus:border-[#93c46d] transition"
+                      required
+                      class="w-full rounded-xl border border-white/15 bg-[#153863] py-3 px-4 text-sm text-white outline-none focus:border-[#93c46d] transition text-center font-mono-custom"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Checkboxes Obligatorios -->
+            <!-- Checkboxes Obligatorios (Renderizados justo arriba del botón de pago) -->
             <div class="space-y-3 pt-2">
               <!-- Checkbox 1: Entiendo que estoy contratando un plan de capitalizacion y ahorro. -->
               <label
@@ -957,6 +958,7 @@
                 <input
                   type="checkbox"
                   id="checkbox-capitalization"
+                  name="accepted_capitalization"
                   class="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
                 />
                 <div class="flex-1 text-left">
@@ -978,6 +980,7 @@
                   <input
                     type="checkbox"
                     id="checkbox-terms"
+                    name="accepted_terms"
                     disabled
                     class="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
                   />
@@ -996,7 +999,7 @@
               </div>
             </div>
 
-            <!-- Botones de Navegación: "Volver" y "Confirmar adhesion" -->
+            <!-- Botones de Navegación: "Volver" y "Confirmar Adhesión" -->
             <div class="flex items-center gap-4 pt-2">
               <button
                 type="button"
@@ -1012,7 +1015,7 @@
                 disabled
                 class="flex-[2] flex items-center justify-center gap-2 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span>Confirmar adhesion</span>
+                <span>Confirmar Adhesión</span>
                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
             </div>
