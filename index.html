@@ -109,7 +109,7 @@
   <main class="relative z-10 mx-auto max-w-6xl px-5 py-8 sm:px-8">
 
     <!-- ============================================== -->
-    <!-- PASO 1: HERO SECTION -->
+    <!-- HERO SECTION (PASO 1) -->
     <!-- ============================================== -->
     <section id="step-hero" class="step-container py-10 sm:py-16 text-center max-w-4xl mx-auto">
       <div class="inline-flex items-center gap-2 rounded-full border border-[#93c46d]/40 bg-[#93c46d]/15 px-4 py-1.5 text-xs font-bold text-[#93c46d] uppercase tracking-wider mb-6 shadow-sm">
@@ -169,7 +169,7 @@
     </section>
 
     <!-- ============================================== -->
-    <!-- PASO 2: SELECCIÓN DE PLANES -->
+    <!-- PASO 1: SELECCIÓN DE PLANES -->
     <!-- ============================================== -->
     <section id="step-plans" class="step-container hidden py-6">
       <div class="text-center max-w-2xl mx-auto mb-10">
@@ -357,12 +357,12 @@
     </section>
 
     <!-- ============================================== -->
-    <!-- PASO 3: ASESORA DIGITAL SOFÍA -->
+    <!-- ASESORA DIGITAL SOFÍA -->
     <!-- ============================================== -->
     <section id="step-sofia" class="step-container hidden py-8 max-w-3xl mx-auto">
       <div class="text-center mb-8">
         <p class="font-mono-custom text-xs uppercase tracking-[0.24em] text-[#93c46d]">
-          Paso 02 / Asesora Digital
+          Asesora Digital
         </p>
         <h2 class="font-display mt-2 text-3xl sm:text-4xl font-extrabold text-white">
           Asesoramiento Personalizado
@@ -422,11 +422,11 @@
     </section>
 
     <!-- ============================================== -->
-    <!-- PASO 4: GAMIFICACIÓN (CAJA Y NÚMERO) -->
+    <!-- GAMIFICACIÓN (CAJA Y NÚMERO) -->
     <!-- ============================================== -->
     <section id="step-gamification" class="step-container hidden py-8 max-w-3xl mx-auto text-center">
       <p class="font-mono-custom text-xs uppercase tracking-[0.24em] text-[#93c46d]">
-        Paso 02 / Asignación de Número Oficial
+        Asignación de Número Oficial
       </p>
 
       <h2 id="gamification-title" class="font-display mt-3 text-3xl sm:text-5xl font-extrabold text-white">
@@ -524,18 +524,204 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- PASO 5: CHECKOUT ("REPASEMOS JUNTOS") -->
+    <!-- 1. PASO 2: COMPLETÁ TUS DATOS -->
     <!-- ============================================== -->
-    <section id="step-checkout" class="step-container hidden py-6">
+    <section id="step-user-data" class="step-container hidden py-6 max-w-2xl mx-auto">
+      <div class="text-center mb-8">
+        <p class="font-mono-custom text-xs uppercase tracking-[0.24em] text-[#93c46d]">
+          Paso 02 / Captura de Datos
+        </p>
+        <h2 class="font-display mt-2 text-3xl sm:text-4xl font-extrabold text-white">
+          Completá tus datos
+        </h2>
+        <p class="mt-2 text-sm sm:text-base text-[#d8e3ed]">
+          Necesitamos esta información para generar tu contrato y continuar con la activación de tu plan.
+        </p>
+      </div>
+
+      <div class="rounded-3xl border border-white/15 bg-[#153863] p-6 sm:p-8 shadow-xl">
+        <form id="user-data-form" class="space-y-4">
+          <!-- NOMBRE y APELLIDO -->
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="input-nombre" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                NOMBRE
+              </label>
+              <input
+                type="text"
+                id="input-nombre"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Nombre"
+              />
+            </div>
+            <div>
+              <label for="input-apellido" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                APELLIDO
+              </label>
+              <input
+                type="text"
+                id="input-apellido"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Apellido"
+              />
+            </div>
+          </div>
+
+          <!-- DNI y FECHA DE NACIMIENTO -->
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="input-dni" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                DNI
+              </label>
+              <input
+                type="text"
+                id="input-dni"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Ej: 32456789"
+              />
+            </div>
+            <div>
+              <label for="input-fecha-nacimiento" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                FECHA DE NACIMIENTO
+              </label>
+              <input
+                type="text"
+                id="input-fecha-nacimiento"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="dd/mm/aaaa"
+              />
+            </div>
+          </div>
+
+          <!-- ESTADO CIVIL y PROVINCIA -->
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="input-estado-civil" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                ESTADO CIVIL
+              </label>
+              <select
+                id="input-estado-civil"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition focus:border-[#93c46d]"
+              >
+                <option value="" disabled selected>Selecciona tu estado civil</option>
+                <option value="Soltero/a">Soltero/a</option>
+                <option value="Casado/a">Casado/a</option>
+                <option value="Divorciado/a">Divorciado/a</option>
+                <option value="Viudo/a">Viudo/a</option>
+                <option value="Unión convivencial">Unión convivencial</option>
+              </select>
+            </div>
+            <div>
+              <label for="input-provincia" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                PROVINCIA
+              </label>
+              <select
+                id="input-provincia"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition focus:border-[#93c46d]"
+              >
+                <option value="" disabled selected>Selecciona tu provincia</option>
+                <option value="Córdoba">Córdoba</option>
+                <option value="Buenos Aires">Buenos Aires</option>
+                <option value="Ciudad Autónoma de Buenos Aires">Ciudad Autónoma de Buenos Aires</option>
+                <option value="Santa Fe">Santa Fe</option>
+                <option value="Mendoza">Mendoza</option>
+                <option value="Tucumán">Tucumán</option>
+                <option value="Entre Ríos">Entre Ríos</option>
+                <option value="Salta">Salta</option>
+                <option value="Misiones">Misiones</option>
+                <option value="Chaco">Chaco</option>
+                <option value="Corrientes">Corrientes</option>
+                <option value="Santiago del Estero">Santiago del Estero</option>
+                <option value="San Juan">San Juan</option>
+                <option value="Jujuy">Jujuy</option>
+                <option value="Río Negro">Río Negro</option>
+                <option value="Neuquén">Neuquén</option>
+                <option value="Formosa">Formosa</option>
+                <option value="Chubut">Chubut</option>
+                <option value="San Luis">San Luis</option>
+                <option value="Catamarca">Catamarca</option>
+                <option value="La Rioja">La Rioja</option>
+                <option value="La Pampa">La Pampa</option>
+                <option value="Santa Cruz">Santa Cruz</option>
+                <option value="Tierra del Fuego">Tierra del Fuego</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- LOCALIDAD y TELEFONO -->
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="input-localidad" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                LOCALIDAD
+              </label>
+              <input
+                type="text"
+                id="input-localidad"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Tu localidad"
+              />
+            </div>
+            <div>
+              <label for="input-telefono" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+                TELEFONO
+              </label>
+              <input
+                type="tel"
+                id="input-telefono"
+                required
+                class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+                placeholder="Ej: 3511234567"
+              />
+            </div>
+          </div>
+
+          <!-- EMAIL -->
+          <div>
+            <label for="input-email" class="mb-1 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
+              EMAIL
+            </label>
+            <input
+              type="email"
+              id="input-email"
+              required
+              class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 px-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
+              placeholder="tu@email.com"
+            />
+          </div>
+
+          <!-- Botón de Acción -->
+          <button
+            type="submit"
+            id="btn-submit-step2"
+            class="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c]"
+          >
+            <span>Continuar con mi suscripción</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- 2. PASO 3: CONFIRMACIÓN Y RESUMEN ("REVISÁ TU PLAN") -->
+    <!-- ============================================== -->
+    <section id="step-review-checkout" class="step-container hidden py-6">
       <div class="text-left mb-8">
         <p class="font-mono-custom text-xs uppercase tracking-[0.24em] text-[#93c46d]">
-          Paso 03 / Adhesión Digital Inmediata
+          Paso 03 / Confirmación y Resumen
         </p>
         <h2 class="font-display mt-2 text-3xl sm:text-5xl font-extrabold text-white">
-          Repasemos juntos
+          Revisá tu plan antes de continuar
         </h2>
         <p class="mt-2 text-base text-[#d8e3ed]">
-          Ahora sí, hacerlo tangible. Estás a un paso de terminar el proceso de adhesión
+          Chequeá el detalle final y aceptá explícitamente las condiciones antes de seguir con Naranja X.
         </p>
       </div>
 
@@ -579,170 +765,70 @@
         </div>
       </div>
 
-      <!-- Grilla: Cuadro de Resumen + Formulario Checkout con Pasarela de Pago -->
-      <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-        <!-- 1. Cuadro de Resumen Obligatorio -->
-        <div class="rounded-3xl border border-[#93c46d]/40 bg-[#153863]/90 p-6 sm:p-8 shadow-xl space-y-6">
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-[#93c46d]">Resumen de tu Adhesión</span>
-            <p id="summary-capital" class="font-display text-2xl font-black text-white mt-1">
-              ORDEN DE COMPRA $10.000.000
-            </p>
-          </div>
-
-          <div class="rounded-2xl bg-black/25 p-4 border border-white/10 flex items-center justify-between">
-            <div>
-              <p class="text-[11px] uppercase tracking-wider text-[#a4bdd4]">Tu número elegido:</p>
-              <p id="summary-number" class="font-mono-custom text-3xl font-black text-[#93c46d] mt-0.5">815</p>
-            </div>
-            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#93c46d]/15 text-[#93c46d]">
-              <i data-lucide="ticket" class="w-6 h-6"></i>
-            </div>
-          </div>
-
-          <div class="space-y-3 text-xs sm:text-sm text-[#e0eaf3]">
-            <div class="flex items-start gap-2.5">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
-              <span>Participás el último sábado de cada mes.</span>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
-              <span>
-                Cuota 1 a 4: <strong id="summary-cuotas-1a4" class="text-white">$58.400</strong> / Desde cuota 5: <strong id="summary-cuota-desde5" class="text-[#93c46d]">$34.500</strong>.
+      <!-- Grilla: Tarjeta "Plan elegido" y Textos Legales + Formulario Pasarela y Checkboxes -->
+      <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+        <!-- Columna Izquierda: Tarjeta "Plan elegido" + Textos Legales Descriptivos -->
+        <div class="space-y-6">
+          <div class="rounded-3xl border border-[#93c46d]/40 bg-[#153863]/90 p-6 sm:p-8 shadow-xl space-y-5">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#93c46d] flex items-center gap-1.5">
+                <i data-lucide="award" class="w-4 h-4"></i> Plan elegido
+              </span>
+              <span class="rounded-full bg-[#93c46d]/20 px-3 py-0.5 text-[10px] font-bold text-[#93c46d] border border-[#93c46d]/30">
+                Suscripción 100% Bonificada
               </span>
             </div>
-            <div class="flex items-start gap-2.5">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
-              <span>Si salís adjudicado no pagás más.</span>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
-              <span>Disponibilidad de retiro a partir del mes 18.</span>
+
+            <!-- Datos de la Tarjeta Plan Elegido -->
+            <div class="space-y-4 text-sm">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs text-[#a4bdd4]">Orden de compra</span>
+                <span id="review-orden-compra" class="font-display text-xl font-black text-white">$10.000.000</span>
+              </div>
+
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs text-[#a4bdd4]">Tipo de plan</span>
+                <span class="font-semibold text-xs sm:text-sm text-white">Plan de Capitalización y Ahorro</span>
+              </div>
+
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs text-[#a4bdd4]">Cuotas 1 a 4</span>
+                <span id="review-cuotas-1a4" class="font-mono-custom text-base font-bold text-white">$58.400</span>
+              </div>
+
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-xs text-[#a4bdd4]">Desde cuota 5</span>
+                <span id="review-cuota-desde5" class="font-mono-custom text-xl font-black text-[#93c46d]">$34.500</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-1">
+                <span class="text-xs text-[#a4bdd4]">Número de sorteo asignado:</span>
+                <span id="review-numero-asignado" class="font-mono-custom text-2xl font-black text-[#93c46d]">815</span>
+              </div>
             </div>
           </div>
 
-          <div class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-[#93c46d] font-semibold">
-            <i data-lucide="sparkles" class="w-4 h-4"></i> Bonificación del 100% de suscripción activa
+          <!-- Textos Legales Descriptivos (debajo de la tarjeta) -->
+          <div class="rounded-2xl border border-white/10 bg-[#102c4f]/70 p-5 space-y-3 text-xs leading-relaxed text-[#c5d8eb]">
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+              <span>Tu plan participa de los sorteos mensuales según las condiciones vigentes y contará con un número de sorteo asignado.</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-[#93c46d] shrink-0 mt-0.5"></i>
+              <span>Si resultás adjudicado, accedés al beneficio correspondiente al plan y dejás de abonar las cuotas restantes, de acuerdo con las condiciones contractuales.</span>
+            </div>
           </div>
         </div>
 
-        <!-- 2. Formulario Checkout y Pasarela -->
+        <!-- Columna Derecha: Pasarela de Pago Naranja X + Checkboxes Obligatorios + Botones de Navegación -->
         <div class="rounded-3xl border border-white/15 bg-[#153863] p-6 sm:p-8 shadow-xl">
-          <form id="checkout-form" class="space-y-5">
-            <div>
-              <h3 class="font-display text-xl font-bold text-white">
-                Confirmá tus Datos Personales
-              </h3>
-              <p class="text-xs text-[#c0d1e3]">
-                Flujo 100% digital. Completá tu información para emitir tu título oficial.
-              </p>
-            </div>
-
-            <!-- Campos Personales -->
-            <div class="space-y-4">
-              <div>
-                <label for="checkout-name" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
-                  Nombre y apellido
-                </label>
-                <div class="relative">
-                  <i data-lucide="user-round" class="w-4 h-4 absolute left-4 top-3.5 text-[#9bb3ca]"></i>
-                  <input
-                    type="text"
-                    id="checkout-name"
-                    required
-                    class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
-                    placeholder="Ej. Juan Pérez"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label for="checkout-dni" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
-                  DNI (Documento Nacional de Identidad)
-                </label>
-                <div class="relative">
-                  <i data-lucide="credit-card" class="w-4 h-4 absolute left-4 top-3.5 text-[#9bb3ca]"></i>
-                  <input
-                    type="text"
-                    id="checkout-dni"
-                    required
-                    class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
-                    placeholder="Sin puntos ni espacios (Ej. 38450123)"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label for="checkout-phone" class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#d8e3ed]">
-                  Teléfono / WhatsApp
-                </label>
-                <div class="relative">
-                  <i data-lucide="message-circle" class="w-4 h-4 absolute left-4 top-3.5 text-[#9bb3ca]"></i>
-                  <input
-                    type="tel"
-                    id="checkout-phone"
-                    required
-                    class="w-full rounded-xl border border-white/15 bg-[#102c4f] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-[#6a87a4] focus:border-[#93c46d]"
-                    placeholder="11 5555 5555"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <!-- Doble Checkbox de Validación Legal -->
-            <div class="space-y-3 pt-2">
-              <!-- Casilla 1: Acepto Términos y Condiciones -->
-              <div
-                id="box-checkbox-terms"
-                class="rounded-2xl border-2 border-white/15 bg-[#102c4f]/80 p-4 transition cursor-pointer hover:border-[#93c46d]/60"
-              >
-                <div class="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    id="checkbox-terms"
-                    disabled
-                    class="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
-                  />
-                  <div class="flex-1 text-left">
-                    <span class="text-xs font-semibold leading-relaxed text-white">
-                      Acepto Términos y Condiciones.
-                    </span>
-                    <p id="terms-prompt-text" class="mt-1 text-[11px] font-bold text-[#93c46d] underline hover:text-white">
-                      [ Tocar aquí para leer y validar términos ]
-                    </p>
-                    <p id="terms-confirmed-text" class="hidden mt-1 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
-                      <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Términos validados y autorizados.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Casilla 2: Entiendo que me suscribo -->
-              <label
-                id="box-checkbox-capitalization"
-                class="flex items-start gap-3 rounded-2xl border-2 border-white/15 bg-[#102c4f]/80 p-4 transition cursor-pointer hover:border-[#93c46d]/60"
-              >
-                <input
-                  type="checkbox"
-                  id="checkbox-capitalization"
-                  class="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
-                />
-                <div class="flex-1 text-left">
-                  <span class="text-xs font-semibold leading-relaxed text-white">
-                    Entiendo que me estoy suscribiendo a un plan de capitalización y ahorro.
-                  </span>
-                  <p id="cap-confirmed-text" class="hidden mt-1 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
-                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Confirmado y comprendido.
-                  </p>
-                </div>
-              </label>
-            </div>
-
+          <form id="review-checkout-form" class="space-y-6">
             <!-- Pasarela de Pago Oficial -->
             <div class="rounded-2xl border border-white/15 bg-[#102c4f]/90 p-5 space-y-4">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <span class="text-xs font-bold uppercase tracking-wider text-[#93c46d] flex items-center gap-1.5">
-                  <i data-lucide="shield-check" class="w-4 h-4"></i> Pasarela de Pago Segura
+                  <i data-lucide="shield-check" class="w-4 h-4"></i> Pasarela de Pago Oficial Naranja X
                 </span>
                 <span id="card-brand-badge" class="rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold text-white">
                   Tarjeta
@@ -778,7 +864,7 @@
                   id="card-type-select"
                   class="w-full rounded-xl border border-white/15 bg-[#153863] py-2 px-3 text-xs text-white outline-none focus:border-[#93c46d]"
                 >
-                  <option value="naranja" selected>Tarjeta Naranja (BIN 5895)</option>
+                  <option value="naranja" selected>Tarjeta Naranja X (BIN 5895)</option>
                   <option value="general">Otras Tarjetas (Visa, Mastercard, Amex, Cabal)</option>
                 </select>
               </div>
@@ -861,16 +947,75 @@
               </div>
             </div>
 
-            <!-- Botón de Envío Oficial -->
-            <button
-              type="submit"
-              id="button-submit-adhesion"
-              disabled
-              class="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c] disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span>Confirmar adhesión</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </button>
+            <!-- Checkboxes Obligatorios -->
+            <div class="space-y-3 pt-2">
+              <!-- Checkbox 1: Entiendo que estoy contratando un plan de capitalizacion y ahorro. -->
+              <label
+                id="box-checkbox-capitalization"
+                class="flex items-start gap-3 rounded-2xl border-2 border-white/15 bg-[#102c4f]/80 p-4 transition cursor-pointer hover:border-[#93c46d]/60"
+              >
+                <input
+                  type="checkbox"
+                  id="checkbox-capitalization"
+                  class="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
+                />
+                <div class="flex-1 text-left">
+                  <span class="text-xs font-semibold leading-relaxed text-white">
+                    Entiendo que estoy contratando un plan de capitalizacion y ahorro.
+                  </span>
+                  <p id="cap-confirmed-text" class="hidden mt-1 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Confirmado y comprendido.
+                  </p>
+                </div>
+              </label>
+
+              <!-- Checkbox 2: Acepto los Términos y Condiciones de Fondus S.A. -->
+              <div
+                id="box-checkbox-terms"
+                class="rounded-2xl border-2 border-white/15 bg-[#102c4f]/80 p-4 transition cursor-pointer hover:border-[#93c46d]/60"
+              >
+                <div class="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    id="checkbox-terms"
+                    disabled
+                    class="mt-0.5 h-4 w-4 rounded border-gray-400 text-[#93c46d] focus:ring-[#93c46d] cursor-pointer"
+                  />
+                  <div class="flex-1 text-left">
+                    <span class="text-xs font-semibold leading-relaxed text-white">
+                      Acepto los Términos y Condiciones de Fondus S.A.
+                    </span>
+                    <p id="terms-prompt-text" class="mt-1 text-[11px] font-bold text-[#93c46d] underline hover:text-white">
+                      [ Tocar aquí para leer y validar términos ]
+                    </p>
+                    <p id="terms-confirmed-text" class="hidden mt-1 text-[11px] text-[#93c46d] flex items-center gap-1 font-semibold">
+                      <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Términos validados y autorizados.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones de Navegación: "Volver" y "Confirmar adhesion" -->
+            <div class="flex items-center gap-4 pt-2">
+              <button
+                type="button"
+                id="btn-back-to-step2"
+                class="flex-1 rounded-2xl border border-white/20 bg-white/5 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-white/10 text-center"
+              >
+                Volver
+              </button>
+
+              <button
+                type="submit"
+                id="button-submit-adhesion"
+                disabled
+                class="flex-[2] flex items-center justify-center gap-2 rounded-2xl bg-[#93c46d] py-4 text-sm font-black uppercase tracking-wider text-[#1d497f] shadow-lg transition hover:bg-[#82b55c] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>Confirmar adhesion</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
 
             <p class="flex items-center justify-center gap-2 text-[10px] text-[#a4bdd4]">
               <i data-lucide="lock-keyhole" class="w-3.5 h-3.5 text-[#93c46d]"></i>
@@ -882,7 +1027,7 @@
     </section>
 
     <!-- ============================================== -->
-    <!-- PASO 6: PANTALLA FINAL (ÉXITO) -->
+    <!-- PANTALLA FINAL (ÉXITO) -->
     <!-- ============================================== -->
     <section id="step-success" class="step-container hidden py-6 space-y-12">
       <!-- Tarjeta Principal de Éxito -->

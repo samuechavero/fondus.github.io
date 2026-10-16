@@ -47,10 +47,21 @@ const PLANS = [
 
 // Estado global de la aplicación
 const state = {
-  currentStep: 1, // 1: Hero, 2: Plans, 3: Sofia, 4: Gamification, 5: Checkout, 6: Success
+  currentStep: 1, // 1: Hero, 2: Plans, 3: Sofia, 4: Gamification, 5: UserData (Paso 2), 6: Review/Checkout (Paso 3), 7: Success
   selectedPlan: PLANS[1],
   numberMode: "random", // "manual" | "random"
   assignedNumber: "815",
+  userData: {
+    nombre: "",
+    apellido: "",
+    dni: "",
+    fechaNacimiento: "",
+    estadoCivil: "",
+    provincia: "",
+    localidad: "",
+    telefono: "",
+    email: ""
+  },
   acceptedTerms: false,
   acceptedCapitalization: false,
   boxOpened: false,
@@ -80,7 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initSofia();
   initGamification();
   initCountdown();
-  initCheckoutForm();
+  initUserDataForm();
+  initReviewCheckout();
   initPaymentGateway();
   initTermsModal();
   initLegalModals();
@@ -106,8 +118,9 @@ function goToStep(step) {
     { id: "step-plans", num: 2 },
     { id: "step-sofia", num: 3 },
     { id: "step-gamification", num: 4 },
-    { id: "step-checkout", num: 5 },
-    { id: "step-success", num: 6 }
+    { id: "step-user-data", num: 5 },
+    { id: "step-review-checkout", num: 6 },
+    { id: "step-success", num: 7 }
   ];
 
   steps.forEach(s => {
@@ -130,7 +143,7 @@ function goToStep(step) {
   const headerStepProgress = document.getElementById("header-step-progress");
 
   if (header) {
-    if (step >= 1 && step <= 5) {
+    if (step >= 1 && step <= 6) {
       header.classList.remove("hidden");
       if (headerBackBtn) {
         if (step > 1) {
@@ -142,28 +155,27 @@ function goToStep(step) {
         }
       }
 
-      // Indicadores de progreso (Pasos 2 a 5 corresponden a 1 a 3 del embudo)
+      // Indicadores de progreso (3 Pasos Oficiales)
       let stepNumDisplay = "";
-      let progressPercent = "33%";
-      if (step === 2) {
-        stepNumDisplay = "Paso 01";
+      let progressPercent = "15%";
+      if (step === 2 || step === 3 || step === 4) {
+        stepNumDisplay = "Paso 01 / 03";
         progressPercent = "33%";
-      } else if (step === 3 || step === 4) {
-        stepNumDisplay = "Paso 02";
-        progressPercent = "66%";
       } else if (step === 5) {
-        stepNumDisplay = "Paso 03";
+        stepNumDisplay = "Paso 02 / 03";
+        progressPercent = "66%";
+      } else if (step === 6) {
+        stepNumDisplay = "Paso 03 / 03";
         progressPercent = "100%";
       }
 
       if (headerStepText) {
-        headerStepText.textContent = stepNumDisplay ? `${stepNumDisplay} / 03` : "Simulación";
+        headerStepText.textContent = stepNumDisplay ? stepNumDisplay : "Simulación";
       }
       if (headerStepProgress) {
         headerStepProgress.style.width = progressPercent;
       }
     } else {
-      // En pantalla final ocultamos barra de pasos
       header.classList.add("hidden");
     }
   }
@@ -183,7 +195,7 @@ function initStepNavigation() {
   const headerBackBtn = document.getElementById("header-back-btn");
   if (headerBackBtn) {
     headerBackBtn.addEventListener("click", () => {
-      if (state.currentStep > 1 && state.currentStep < 6) {
+      if (state.currentStep > 1 && state.currentStep < 7) {
         goToStep(state.currentStep - 1);
       }
     });
@@ -229,7 +241,6 @@ function initAudioControl() {
 
   if (!bgVideo || !toggleBtn) return;
 
-  // Intento de autoplay
   bgVideo.muted = false;
   const playPromise = bgVideo.play();
   if (playPromise !== undefined) {
@@ -246,7 +257,6 @@ function initAudioControl() {
       });
   }
 
-  // Desmutear al primer clic de usuario
   const unlockAudio = () => {
     if (bgVideo.muted && state.audioMuted) {
       bgVideo.muted = false;
@@ -296,9 +306,8 @@ function initPlanSelection() {
         state.selectedPlan = foundPlan;
       }
 
-      // Mostrar pantalla intermedia de cálculo
       if (calcText) {
-        calcText.textContent = `Configurando posibilidades con ${state.selectedPlan.capital}...`;
+        calcText.textContent = "Configurando posibilidades con " + state.selectedPlan.capital + "...";
       }
       if (calcScreen) {
         calcScreen.classList.remove("hidden");
@@ -319,7 +328,7 @@ function initPlanSelection() {
 }
 
 // ====================================================
-// ASESORA DIGITAL SOFÍA (PASO 2)
+// ASESORA DIGITAL SOFÍA
 // ====================================================
 function initSofia() {
   const chooseManualBtn = document.getElementById("button-choose-manual");
@@ -344,7 +353,7 @@ function initSofia() {
 }
 
 // ====================================================
-// GAMIFICACIÓN Y SORTEO (PASO 3)
+// GAMIFICACIÓN Y SORTEO
 // ====================================================
 function generateRandomThreeDigit() {
   return String(Math.floor(100 + Math.random() * 900));
@@ -375,7 +384,6 @@ function initGamification() {
         if (randEl) randEl.textContent = state.assignedNumber;
       }
 
-      // Pop-up modal de bonificación automática a los 2.2 segundos
       setTimeout(() => {
         if (bonifModal) {
           bonifModal.classList.remove("hidden");
@@ -392,11 +400,10 @@ function initGamification() {
         bonifModal.classList.remove("flex");
       }
       updateUI();
-      goToStep(5); // Pasa a Checkout
+      goToStep(5); // Pasa a Paso 2: Completá tus datos
     });
   }
 
-  // Reroll random button
   const rerollRandomBtn = document.getElementById("button-reroll-random");
   if (rerollRandomBtn) {
     rerollRandomBtn.addEventListener("click", () => {
@@ -415,7 +422,7 @@ function renderGamificationOptions() {
   const randomContainer = document.getElementById("gamification-random-container");
 
   if (state.numberMode === "manual") {
-    if (titleEl) titleEl.innerHTML = `Elegí tu número <span class="text-[#93c46d]">ganador.</span>`;
+    if (titleEl) titleEl.innerHTML = 'Elegí tu número <span class="text-[#93c46d]">ganador.</span>';
     if (subtitleEl) subtitleEl.textContent = "Abrí la caja y seleccioná uno de los 3 números disponibles para participar el último sábado de cada mes.";
     if (manualContainer) manualContainer.classList.remove("hidden");
     if (randomContainer) randomContainer.classList.add("hidden");
@@ -424,22 +431,13 @@ function renderGamificationOptions() {
     state.assignedNumber = options[0];
     const cardsWrapper = document.getElementById("manual-cards-wrapper");
     if (cardsWrapper) {
-      cardsWrapper.innerHTML = options.map((num, idx) => `
-        <button
-          type="button"
-          class="manual-num-card flex h-20 w-28 flex-col items-center justify-center rounded-2xl border transition-all duration-300 ${
-            idx === 0
-              ? "border-[#93c46d] bg-[#93c46d] text-[#1d497f] shadow-[0_0_25px_rgba(147,196,109,0.5)] font-bold scale-105"
-              : "border-white/20 bg-white/[.08] text-white hover:border-[#93c46d] hover:bg-white/[.15]"
-          }"
-          data-number="${num}"
-        >
-          <span class="font-mono-custom text-3xl font-extrabold">${num}</span>
-          <span class="text-[9px] uppercase tracking-wider opacity-80 mt-0.5">Opción 0${idx + 1}</span>
-        </button>
-      `).join("");
+      cardsWrapper.innerHTML = options.map((num, idx) => {
+        const cls = idx === 0
+          ? "border-[#93c46d] bg-[#93c46d] text-[#1d497f] shadow-[0_0_25px_rgba(147,196,109,0.5)] font-bold scale-105"
+          : "border-white/20 bg-white/[.08] text-white hover:border-[#93c46d] hover:bg-white/[.15]";
+        return "<button type=\"button\" class=\"manual-num-card flex h-20 w-28 flex-col items-center justify-center rounded-2xl border transition-all duration-300 " + cls + "\" data-number=\"" + num + "\"><span class=\"font-mono-custom text-3xl font-extrabold\">" + num + "</span><span class=\"text-[9px] uppercase tracking-wider opacity-80 mt-0.5\">Opción 0" + (idx + 1) + "</span></button>";
+      }).join("");
 
-      // Event listener para las tarjetas manuales
       document.querySelectorAll(".manual-num-card").forEach(card => {
         card.addEventListener("click", () => {
           document.querySelectorAll(".manual-num-card").forEach(c => {
@@ -452,13 +450,47 @@ function renderGamificationOptions() {
       });
     }
   } else {
-    if (titleEl) titleEl.innerHTML = `Tu número asignado <span class="text-[#93c46d]">te espera.</span>`;
+    if (titleEl) titleEl.innerHTML = 'Tu número asignado <span class="text-[#93c46d]">te espera.</span>';
     if (subtitleEl) subtitleEl.textContent = "Abrí la caja para revelar el número que el sistema preparó aleatoriamente para vos.";
     if (manualContainer) manualContainer.classList.add("hidden");
     if (randomContainer) randomContainer.classList.remove("hidden");
     const randEl = document.getElementById("random-revealed-number");
     if (randEl) randEl.textContent = state.assignedNumber;
   }
+}
+
+// ====================================================
+// 1. PASO 2: COMPLETÁ TUS DATOS
+// ====================================================
+function initUserDataForm() {
+  const form = document.getElementById("user-data-form");
+  if (!form) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    state.userData.nombre = document.getElementById("input-nombre")?.value.trim() || "";
+    state.userData.apellido = document.getElementById("input-apellido")?.value.trim() || "";
+    state.userData.dni = document.getElementById("input-dni")?.value.trim() || "";
+    state.userData.fechaNacimiento = document.getElementById("input-fecha-nacimiento")?.value.trim() || "";
+    state.userData.estadoCivil = document.getElementById("input-estado-civil")?.value || "";
+    state.userData.provincia = document.getElementById("input-provincia")?.value || "";
+    state.userData.localidad = document.getElementById("input-localidad")?.value.trim() || "";
+    state.userData.telefono = document.getElementById("input-telefono")?.value.trim() || "";
+    state.userData.email = document.getElementById("input-email")?.value.trim() || "";
+
+    // Sincronizar titular de la tarjeta si aún no fue personalizado manualmente
+    const cardHolderInput = document.getElementById("card-holder");
+    if (cardHolderInput && !cardHolderInput.dataset.touched) {
+      const fullName = (state.userData.nombre + " " + state.userData.apellido).trim().toUpperCase();
+      cardHolderInput.value = fullName;
+      state.payment.cardHolder = fullName;
+      updateCardPreview();
+    }
+
+    updateUI();
+    goToStep(6); // Pasa a Paso 3: Confirmación y Resumen
+  });
 }
 
 // ====================================================
@@ -494,8 +526,8 @@ function calculateDrawCountdown() {
   const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
 
   const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-  const drawDateFormatted = `${drawDate.getDate()} de ${months[drawDate.getMonth()]}`;
-  const cutoffDateFormatted = `${cutoffWednesday.getDate()} de ${months[cutoffWednesday.getMonth()]} 23:59 hs`;
+  const drawDateFormatted = drawDate.getDate() + " de " + months[drawDate.getMonth()];
+  const cutoffDateFormatted = cutoffWednesday.getDate() + " de " + months[cutoffWednesday.getMonth()] + " 23:59 hs";
 
   return { days, hours, minutes, seconds, drawDateFormatted, cutoffDateFormatted };
 }
@@ -522,31 +554,37 @@ function initCountdown() {
 }
 
 // ====================================================
-// CHECKOUT Y FORMULARIO (PASO 4)
+// 2. PASO 3: CONFIRMACIÓN Y RESUMEN ("REVISÁ TU PLAN")
 // ====================================================
-function initCheckoutForm() {
-  const form = document.getElementById("checkout-form");
-  const nameInput = document.getElementById("checkout-name");
-  const dniInput = document.getElementById("checkout-dni");
-  const phoneInput = document.getElementById("checkout-phone");
+function initReviewCheckout() {
+  const form = document.getElementById("review-checkout-form");
   const checkboxCap = document.getElementById("checkbox-capitalization");
   const boxCheckboxTerms = document.getElementById("box-checkbox-terms");
+  const btnBackStep2 = document.getElementById("btn-back-to-step2");
 
-  // Checkbox 1 abre el modal si no está aceptado
+  // Botón Volver al Paso 2 (Completá tus datos)
+  if (btnBackStep2) {
+    btnBackStep2.addEventListener("click", () => {
+      goToStep(5);
+    });
+  }
+
+  // Checkbox: "Acepto los Términos y Condiciones de Fondus S.A."
   if (boxCheckboxTerms) {
     boxCheckboxTerms.addEventListener("click", () => {
       if (!state.acceptedTerms) {
         openTermsModal();
       } else {
         state.acceptedTerms = false;
-        document.getElementById("checkbox-terms").checked = false;
+        const cb = document.getElementById("checkbox-terms");
+        if (cb) cb.checked = false;
         updateTermsCheckboxUI();
-        validateCheckoutForm();
+        validateReviewForm();
       }
     });
   }
 
-  // Checkbox 2 de capitalización
+  // Checkbox: "Entiendo que estoy contratando un plan de capitalizacion y ahorro."
   if (checkboxCap) {
     checkboxCap.addEventListener("change", (e) => {
       state.acceptedCapitalization = e.target.checked;
@@ -554,31 +592,17 @@ function initCheckoutForm() {
       if (confirmText) {
         confirmText.classList.toggle("hidden", !state.acceptedCapitalization);
       }
-      validateCheckoutForm();
+      validateReviewForm();
     });
   }
-
-  [nameInput, dniInput, phoneInput].forEach(inp => {
-    if (inp) {
-      inp.addEventListener("input", () => {
-        validateCheckoutForm();
-        // Sincronizar titular con el nombre si no se ha modificado
-        const cardHolderInput = document.getElementById("card-holder");
-        if (inp === nameInput && cardHolderInput && !cardHolderInput.dataset.touched) {
-          cardHolderInput.value = nameInput.value.toUpperCase();
-          updateCardPreview();
-        }
-      });
-    }
-  });
 
   if (form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      if (!validateCheckoutForm()) return;
+      if (!validateReviewForm()) return;
 
       window.scrollTo({ top: 0, behavior: "smooth" });
-      goToStep(6); // Pantalla de éxito
+      goToStep(7); // Pantalla final de éxito
     });
   }
 }
@@ -606,7 +630,6 @@ function initPaymentGateway() {
   const cardCvvInput = document.getElementById("card-cvv");
   const cardErrorSpan = document.getElementById("card-number-error");
 
-  // Pestañas Crédito / Débito
   if (tabCredit && tabDebit) {
     tabCredit.addEventListener("click", () => {
       state.payment.method = "credit_card";
@@ -614,6 +637,7 @@ function initPaymentGateway() {
       tabDebit.className = "flex-1 rounded-xl py-2.5 text-xs font-bold transition flex items-center justify-center gap-2 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white";
       updateCardPreview();
       validatePayment();
+      validateReviewForm();
     });
 
     tabDebit.addEventListener("click", () => {
@@ -622,30 +646,28 @@ function initPaymentGateway() {
       tabCredit.className = "flex-1 rounded-xl py-2.5 text-xs font-bold transition flex items-center justify-center gap-2 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white";
       updateCardPreview();
       validatePayment();
+      validateReviewForm();
     });
   }
 
-  // Selector de Tarjeta Naranja vs Otras Tarjetas
   if (cardTypeSelect) {
     cardTypeSelect.addEventListener("change", (e) => {
       state.payment.cardType = e.target.value;
       validateCardNumber();
       validatePayment();
-      validateCheckoutForm();
+      validateReviewForm();
     });
   }
 
-  // Validación de Tarjeta Naranja y Formateo en Bloques de 4
   if (cardNumberInput) {
     cardNumberInput.addEventListener("input", () => {
       let raw = cardNumberInput.value.replace(/\D/g, "").slice(0, 16);
-      // Formateo de 4 en 4
       cardNumberInput.value = raw.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
       state.payment.cardNumber = raw;
       validateCardNumber();
       updateCardPreview();
       validatePayment();
-      validateCheckoutForm();
+      validateReviewForm();
     });
   }
 
@@ -658,10 +680,6 @@ function initPaymentGateway() {
     if (brandBadge) brandBadge.textContent = brandInfo.brand;
     if (previewBrand) previewBrand.textContent = brandInfo.brand;
 
-    // Directriz estricta del usuario:
-    // "Validación de Tarjeta Naranja: Convierte la validación del BIN a un Event Listener (input.addEventListener(input, ...)).
-    // Si el valor ingresado no empieza con 5895, muestra el mensaje de error manipulando el innerHTML o textContent del span de error
-    // y deshabilita el botón de pago con button.disabled = true."
     const isNaranjaRequired = state.payment.cardType === "naranja";
     if (isNaranjaRequired) {
       if (raw.length >= 4 && !raw.startsWith("5895")) {
@@ -686,7 +704,6 @@ function initPaymentGateway() {
         return true;
       }
     } else {
-      // Tarjetas generales (Visa, Mastercard, etc.)
       if (raw.length > 0 && raw.length < 15) {
         if (cardErrorSpan) {
           cardErrorSpan.textContent = "Completá el número de tarjeta (15-16 dígitos).";
@@ -705,7 +722,6 @@ function initPaymentGateway() {
     }
   }
 
-  // Titular de la tarjeta
   if (cardHolderInput) {
     cardHolderInput.addEventListener("input", () => {
       cardHolderInput.dataset.touched = "true";
@@ -713,27 +729,25 @@ function initPaymentGateway() {
       state.payment.cardHolder = cardHolderInput.value;
       updateCardPreview();
       validatePayment();
-      validateCheckoutForm();
+      validateReviewForm();
     });
   }
 
-  // Vencimiento MM/AA
   if (cardExpiryInput) {
     cardExpiryInput.addEventListener("input", () => {
       let val = cardExpiryInput.value.replace(/\D/g, "").slice(0, 4);
       if (val.length >= 3) {
-        cardExpiryInput.value = `${val.slice(0, 2)}/${val.slice(2)}`;
+        cardExpiryInput.value = val.slice(0, 2) + "/" + val.slice(2);
       } else {
         cardExpiryInput.value = val;
       }
       state.payment.expiry = cardExpiryInput.value;
       updateCardPreview();
       validatePayment();
-      validateCheckoutForm();
+      validateReviewForm();
     });
   }
 
-  // Código de seguridad (CVV)
   if (cardCvvInput) {
     cardCvvInput.addEventListener("input", () => {
       let val = cardCvvInput.value.replace(/\D/g, "").slice(0, 4);
@@ -741,7 +755,7 @@ function initPaymentGateway() {
       state.payment.cvv = val;
       updateCardPreview();
       validatePayment();
-      validateCheckoutForm();
+      validateReviewForm();
     });
   }
 }
@@ -783,15 +797,10 @@ function validatePayment() {
   return isPaymentValid();
 }
 
-function validateCheckoutForm() {
-  const name = document.getElementById("checkout-name")?.value.trim();
-  const dni = document.getElementById("checkout-dni")?.value.trim();
-  const phone = document.getElementById("checkout-phone")?.value.trim();
+function validateReviewForm() {
   const submitBtn = document.getElementById("button-submit-adhesion");
-
-  const personalDataValid = Boolean(name && dni && phone);
   const paymentOk = isPaymentValid();
-  const allValid = personalDataValid && state.acceptedTerms && state.acceptedCapitalization && paymentOk;
+  const allValid = state.acceptedTerms && state.acceptedCapitalization && paymentOk;
 
   if (submitBtn) {
     submitBtn.disabled = !allValid;
@@ -811,7 +820,6 @@ function initTermsModal() {
 
   if (!modal || !scrollContainer || !acceptBtn) return;
 
-  // Detección obligatoria de scroll hasta el final
   scrollContainer.addEventListener("scroll", () => {
     const isAtBottom = scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight - 15;
     if (isAtBottom) {
@@ -826,7 +834,7 @@ function initTermsModal() {
     state.acceptedTerms = true;
     closeTermsModal();
     updateTermsCheckboxUI();
-    validateCheckoutForm();
+    validateReviewForm();
   });
 
   if (closeBtn) {
@@ -843,7 +851,6 @@ function openTermsModal() {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
   }
-  // Si no estaba aceptado previamente, reiniciar botón
   if (!state.acceptedTerms && acceptBtn) {
     acceptBtn.disabled = true;
     acceptBtn.classList.add("opacity-50", "cursor-not-allowed");
@@ -883,7 +890,6 @@ function updateTermsCheckboxUI() {
 // MODALES LEGALES FOOTER Y VISOR CON ZOOM
 // ====================================================
 function initLegalModals() {
-  // Visor de Documentos (Sorteo y Participación)
   const viewerModal = document.getElementById("modal-doc-viewer");
   const viewerImg = document.getElementById("doc-viewer-image");
   const viewerTitle = document.getElementById("doc-viewer-title");
@@ -923,11 +929,11 @@ function initLegalModals() {
 
   function applyViewerTransform() {
     if (viewerImg) {
-      viewerImg.style.transform = `translate(${state.viewerPan.x}px, ${state.viewerPan.y}px) scale(${state.viewerZoom})`;
+      viewerImg.style.transform = "translate(" + state.viewerPan.x + "px, " + state.viewerPan.y + "px) scale(" + state.viewerZoom + ")";
     }
     const zoomText = document.getElementById("viewer-zoom-level");
     if (zoomText) {
-      zoomText.textContent = `${Math.round(state.viewerZoom * 100)}%`;
+      zoomText.textContent = Math.round(state.viewerZoom * 100) + "%";
     }
   }
 
@@ -989,12 +995,12 @@ function initLegalModals() {
       const email = document.getElementById("arrep-email")?.value || "";
       const reason = document.getElementById("arrep-reason")?.value || "Revocación voluntaria dentro del plazo legal";
 
-      const subject = encodeURIComponent(`Solicitud de Arrepentimiento - DNI ${dni} - ${name}`);
+      const subject = encodeURIComponent("Solicitud de Arrepentimiento - DNI " + dni + " - " + name);
       const body = encodeURIComponent(
-        `Estimado equipo de Fondus:\n\nPor medio de la presente, solicito ejercer mi derecho legal de revocación/arrepentimiento de mi solicitud de adhesión conforme a los términos de la Ley de Defensa del Consumidor (Art. 34 Ley 24.240).\n\nDatos del titular:\nNombre: ${name}\nDNI: ${dni}\nEmail: ${email}\nMotivo: ${reason}\n\nQuedo a la espera de la confirmación formal.`
+        "Estimado equipo de Fondus:\n\nPor medio de la presente, solicito ejercer mi derecho legal de revocación/arrepentimiento de mi solicitud de adhesión conforme a los términos de la Ley de Defensa del Consumidor (Art. 34 Ley 24.240).\n\nDatos del titular:\nNombre: " + name + "\nDNI: " + dni + "\nEmail: " + email + "\nMotivo: " + reason + "\n\nQuedo a la espera de la confirmación formal."
       );
 
-      window.location.href = `mailto:arrepentimiento@fondus.com.ar?subject=${subject}&body=${body}`;
+      window.location.href = "mailto:arrepentimiento@fondus.com.ar?subject=" + subject + "&body=" + body;
       alert("Solicitud generada con éxito. Se ha abierto tu gestor de correo para enviar la confirmación oficial a arrepentimiento@fondus.com.ar.");
       if (arrepModal) {
         arrepModal.classList.add("hidden");
@@ -1031,7 +1037,6 @@ function initSocialProof() {
     toast.classList.remove("hidden", "opacity-0", "translate-y-4");
     toast.classList.add("opacity-100", "translate-y-0");
 
-    // Ocultar a los 4 segundos
     setTimeout(() => {
       toast.classList.remove("opacity-100", "translate-y-0");
       toast.classList.add("opacity-0", "translate-y-4");
@@ -1041,7 +1046,6 @@ function initSocialProof() {
     }, 4000);
   }
 
-  // Intervalo estricto de 10 segundos
   setInterval(showNotification, 10000);
 }
 
@@ -1053,7 +1057,6 @@ function initYouTubePlayer() {
     new window.YT.Player("fondus-explainer-player", {
       events: {
         onStateChange: (event) => {
-          // Si el usuario reproduce el video explicativo, pausamos el audio del video de fondo
           if (event.data === 1) {
             const bgVideo = document.getElementById("bg-video");
             if (bgVideo && !bgVideo.paused) {
@@ -1077,16 +1080,18 @@ function initYouTubePlayer() {
 // ACTUALIZACIÓN DE UI SEGÚN ESTADO
 // ====================================================
 function updateUI() {
-  // Actualizar Resumen en Checkout
-  const summaryCapital = document.getElementById("summary-capital");
-  const summaryNumber = document.getElementById("summary-number");
-  const summaryCuotas1a4 = document.getElementById("summary-cuotas-1a4");
-  const summaryCuotaDesde5 = document.getElementById("summary-cuota-desde5");
+  // Actualizar Tarjeta "Plan elegido" en Paso 3
+  const ordenCompraEl = document.getElementById("review-orden-compra");
+  const cuotas1a4El = document.getElementById("review-cuotas-1a4");
+  const cuotaDesde5El = document.getElementById("review-cuota-desde5");
+  const numAsignadoEl = document.getElementById("review-numero-asignado");
 
-  if (summaryCapital) summaryCapital.textContent = state.selectedPlan.capital;
-  if (summaryNumber) summaryNumber.textContent = state.assignedNumber;
-  if (summaryCuotas1a4) summaryCuotas1a4.textContent = state.selectedPlan.cuotas1a4;
-  if (summaryCuotaDesde5) summaryCuotaDesde5.textContent = state.selectedPlan.cuotaDesde5;
+  const cleanCapital = state.selectedPlan.capital.replace(/^ORDEN DE COMPRA\s*/i, "");
+
+  if (ordenCompraEl) ordenCompraEl.textContent = cleanCapital;
+  if (cuotas1a4El) cuotas1a4El.textContent = state.selectedPlan.cuotas1a4;
+  if (cuotaDesde5El) cuotaDesde5El.textContent = state.selectedPlan.cuotaDesde5;
+  if (numAsignadoEl) numAsignadoEl.textContent = state.assignedNumber;
 
   // Actualizar Pantalla Final (Éxito)
   const successNumber = document.getElementById("success-assigned-number");
